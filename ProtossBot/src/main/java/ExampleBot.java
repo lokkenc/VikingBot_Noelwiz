@@ -55,8 +55,7 @@ public class ExampleBot extends DefaultBWListener {
     public void onFrame() {
         //game.setTextSize(10);
         game.drawTextScreen(10, 10, "Playing as " + self.getName() + " - " + self.getRace());
-        game.drawTextScreen(10, 230, "Resources: " + self.minerals() + " minerals,  " + self.gas() + " gas, " +
-                            self.supplyUsed() + "/" + self.supplyTotal());
+        game.drawTextScreen(10, 230, "Resources: " + self.minerals() + " minerals,  " + self.gas() + " gas, " + (self.supplyUsed() / 2) + "/" + (self.supplyTotal() / 2) + " psi");
 
         tabulateUnits ();
         updateEnemyBuildingMemory();
@@ -105,7 +104,7 @@ public class ExampleBot extends DefaultBWListener {
         }
         
         //if it's time to attack the enemy base
-        if (getUnitsOfType(UnitType.Protoss_Zealot) > 15) {
+        if (getUnitsOfType(UnitType.Protoss_Zealot) > 30) {
         	attackEnemyBase();
         }
         
@@ -121,38 +120,21 @@ public class ExampleBot extends DefaultBWListener {
 
         //iterate through my units
         for (Unit myUnit : self.getUnits()) {
-            // Draw unit's order pathing
-            if (myUnit.isGatheringMinerals() || myUnit.isCarrying()) {
-                game.drawLineMap(myUnit.getPosition().getX(), myUnit.getPosition().getY(), myUnit.getOrderTargetPosition().getX(),
-                        myUnit.getOrderTargetPosition().getY(), bwapi.Color.Blue);
-            }
-            else if (myUnit.isIdle()) {
-                game.drawLineMap(myUnit.getPosition().getX(), myUnit.getPosition().getY(), myUnit.getOrderTargetPosition().getX(),
-                        myUnit.getOrderTargetPosition().getY(), bwapi.Color.Black);
-            }
-            else if (myUnit.isConstructing() || myUnit.isBeingConstructed()) {
-                game.drawLineMap(myUnit.getPosition().getX(), myUnit.getPosition().getY(), myUnit.getOrderTargetPosition().getX(),
-                        myUnit.getOrderTargetPosition().getY(), bwapi.Color.Green);
-            }
-            else {
-                game.drawLineMap(myUnit.getPosition().getX(), myUnit.getPosition().getY(), myUnit.getOrderTargetPosition().getX(),
-                        myUnit.getOrderTargetPosition().getY(), bwapi.Color.White);
-            }
+            drawUnitPathing(myUnit);
 
-            if (myUnit.isAttacking() || myUnit.isUnderAttack()) {
-                game.drawLineMap(myUnit.getPosition().getX(), myUnit.getPosition().getY(), myUnit.getOrderTargetPosition().getX(),
-                        myUnit.getOrderTargetPosition().getY(), bwapi.Color.Red);
+            if (myUnit.getType() == UnitType.Protoss_Nexus && myUnit.isUnderAttack()) {
+                attackPosition(myUnit.getPosition());
             }
 
             //if there's enough minerals, train a Probe
-            if (myUnit.getType() == UnitType.Protoss_Nexus && self.minerals() >= 51 && (getUnitsOfType(UnitType.Protoss_Probe) < 8 || unitMemory.containsKey(UnitType.Protoss_Gateway))) {
-                if (self.supplyTotal() - self.supplyUsed() > 4 && getUnitsOfType(UnitType.Protoss_Probe) < 10) {
+            if (myUnit.getType() == UnitType.Protoss_Nexus && self.minerals() >= 50 && (getUnitsOfType(UnitType.Protoss_Probe) < 12 || unitMemory.containsKey(UnitType.Protoss_Gateway))) {
+                if (self.supplyTotal() - self.supplyUsed() > 4 && getUnitsOfType(UnitType.Protoss_Probe) < 12) {
                     myUnit.train(UnitType.Protoss_Probe);
                 }
             }
             
             //if there's enough minerals, train a Zealot
-            if (myUnit.getType() == UnitType.Protoss_Gateway && self.minerals() >= 101) {
+            if (myUnit.getType() == UnitType.Protoss_Gateway && self.minerals() >= 100) {
             	if	(self.supplyTotal() - self.supplyUsed() > 4) {
             		myUnit.train(UnitType.Protoss_Zealot);
             	}
@@ -182,10 +164,17 @@ public class ExampleBot extends DefaultBWListener {
         }
     }
 
+    /*
+     * TODO: Intelligence Agent
+     */
     private void tabulateUnits () {
         unitMemory.clear();
 
         for (Unit unit : self.getUnits()) {
+            if (unit.isTraining()) {
+                continue;
+            }
+
             updateUnitMemory(unit.getType(), 1);
         }
     }
@@ -206,6 +195,35 @@ public class ExampleBot extends DefaultBWListener {
 
             yPos += 10;
             i++;
+        }
+    }
+
+    private void drawUnitPathing (Unit unit) {
+        if (unit.getOrderTargetPosition().getX() == 0 && unit.getOrderTargetPosition().getY() == 0) {
+            return;
+        }
+
+        // Draw unit's order pathing
+        if (unit.isGatheringMinerals() || unit.isCarrying()) {
+            game.drawLineMap(unit.getPosition().getX(), unit.getPosition().getY(), unit.getOrderTargetPosition().getX(),
+                    unit.getOrderTargetPosition().getY(), Color.Blue);
+        }
+        else if (unit.isIdle()) {
+            game.drawLineMap(unit.getPosition().getX(), unit.getPosition().getY(), unit.getOrderTargetPosition().getX(),
+                    unit.getOrderTargetPosition().getY(), Color.Black);
+        }
+        else if (unit.isConstructing() || unit.isBeingConstructed()) {
+            game.drawLineMap(unit.getPosition().getX(), unit.getPosition().getY(), unit.getOrderTargetPosition().getX(),
+                    unit.getOrderTargetPosition().getY(), Color.Green);
+        }
+        else {
+            game.drawLineMap(unit.getPosition().getX(), unit.getPosition().getY(), unit.getOrderTargetPosition().getX(),
+                    unit.getOrderTargetPosition().getY(), Color.White);
+        }
+
+        if (unit.isAttacking() || unit.isUnderAttack()) {
+            game.drawLineMap(unit.getPosition().getX(), unit.getPosition().getY(), unit.getOrderTargetPosition().getX(),
+                    unit.getOrderTargetPosition().getY(), Color.Red);
         }
     }
 
@@ -476,6 +494,19 @@ public class ExampleBot extends DefaultBWListener {
     			}
     		}
     	}
+    }
+
+    /*
+     * TODO: CombatManager
+     */
+    private void attackPosition (Position targetPos) {
+        if (unitMemory.containsKey(UnitType.Protoss_Dragoon) || unitMemory.containsKey(UnitType.Protoss_Zealot)) {
+            for (Unit unit : self.getUnits()) {
+                if (unit.getType() == UnitType.Protoss_Dragoon || unit.getType() == UnitType.Protoss_Zealot) {
+                    unit.attack(targetPos, false);
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
