@@ -3,7 +3,6 @@ import bwta.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class ExampleBot extends DefaultBWListener {
@@ -13,9 +12,6 @@ public class ExampleBot extends DefaultBWListener {
     private Player self;
 
     private HashMap<UnitType, java.lang.Integer> unitMemory = new HashMap<UnitType, java.lang.Integer>();
-    private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
-    private int baseLoc = 0;
-    private ArrayList<Integer> scouts = new ArrayList<Integer>();
 
     public void run() {
         bwClient = new BWClient(this);
@@ -59,7 +55,6 @@ public class ExampleBot extends DefaultBWListener {
                             self.supplyUsed() + "/" + self.supplyTotal());
 
         tabulateUnits ();
-        updateEnemyBuildingMemory();
         displayUnits ();
 
         // If we're not at max population capacity
@@ -71,14 +66,13 @@ public class ExampleBot extends DefaultBWListener {
             }
         }
 
-        // build Forge / Cannons
         if (self.minerals() >= 150) {
             // Check if we have any forges built
-            game.drawTextScreen(10, 260, "Forge available");
+            game.drawTextScreen(10, 250, "Forge available");
             if (unitMemory.containsKey(UnitType.Protoss_Forge)) {
                 if ((unitMemory.get(UnitType.Protoss_Forge) - getBuildingUnitsOfType(UnitType.Protoss_Forge)) > 0) {
                     if (unitMemory.containsKey(UnitType.Protoss_Photon_Cannon)) {
-                        game.drawTextScreen(10, 270, String.format("Can build %d more Photon Cannons", (2 * unitMemory.get(UnitType.Protoss_Pylon)) - unitMemory.get(UnitType.Protoss_Photon_Cannon)));
+                        game.drawTextScreen(10, 260, String.format("Can build %d more Photon Cannons", (2 * unitMemory.get(UnitType.Protoss_Pylon)) - unitMemory.get(UnitType.Protoss_Photon_Cannon)));
                         if (unitMemory.get(UnitType.Protoss_Photon_Cannon) < (2 * unitMemory.get(UnitType.Protoss_Pylon))) {
                             buildPhotonCannon();
                         }
@@ -90,34 +84,6 @@ public class ExampleBot extends DefaultBWListener {
                 buildForge();
             }
         }
-        
-        // build Gateway
-        if(self.minerals() >= 150) {
-        	// Check if there is already a Gateway
-        	game.drawTextScreen(10, 250, "Gateway Avalaible");
-        	if(unitMemory.containsKey(UnitType.Protoss_Gateway)) { 
-	    		if(unitMemory.get(UnitType.Protoss_Gateway) + getBuildingUnitsOfType(UnitType.Protoss_Gateway) < 2) {
-	    			buildGateway();
-	    		}
-        	} else {
-        		buildGateway();
-        	}
-        }
-        
-        //if it's time to attack the enemy base
-        if (getUnitsOfType(UnitType.Protoss_Zealot) > 15) {
-        	attackEnemyBase();
-        }
-        
-        //if it's a worker and we have over 10 then send it as a scout
-        if (getUnitsOfType(UnitType.Protoss_Probe) >= 8) {
-        	if (baseLoc < BWTA.getStartLocations().size()) {
-	    		Unit scout = getAvailableWorker();
-	    		findEnemyBase(scout, BWTA.getStartLocations().get(baseLoc));
-	    		scouts.add(scout.getID());
-	    		baseLoc++;
-        	}
-    	}
 
         //iterate through my units
         for (Unit myUnit : self.getUnits()) {
@@ -145,39 +111,15 @@ public class ExampleBot extends DefaultBWListener {
             }
 
             //if there's enough minerals, train a Probe
-            if (myUnit.getType() == UnitType.Protoss_Nexus && self.minerals() >= 51 && (getUnitsOfType(UnitType.Protoss_Probe) < 8 || unitMemory.containsKey(UnitType.Protoss_Gateway))) {
-                if (self.supplyTotal() - self.supplyUsed() > 4 && getUnitsOfType(UnitType.Protoss_Probe) < 10) {
+            if (myUnit.getType() == UnitType.Protoss_Nexus && self.minerals() >= 51) {
+                if (self.supplyTotal() - self.supplyUsed() > 4) {
                     myUnit.train(UnitType.Protoss_Probe);
                 }
             }
-            
-            //if there's enough minerals, train a Zealot
-            if (myUnit.getType() == UnitType.Protoss_Gateway && self.minerals() >= 101) {
-            	if	(self.supplyTotal() - self.supplyUsed() > 4) {
-            		myUnit.train(UnitType.Protoss_Zealot);
-            	}
-            } 
-            
+
             //if it's a worker and it's idle, send it to the closest mineral patch
             if (myUnit.getType().isWorker() && myUnit.isIdle()) {
-            	boolean isScout = false;
-            	for(int IDs: scouts) {
-            		if (myUnit.getID() == IDs) {
-            			isScout = true;
-            		}
-            	}
-            	
-            	if(isScout) {
-            		if(!enemyBuildingMemory.isEmpty()) {
-        				for(Unit unit: self.getUnits()) {
-        					if(unit.getType() == UnitType.Protoss_Nexus) {
-        						gatherMinerals(myUnit, unit);
-        					}
-        				}
-        			}
-            	} else {
-                	gatherMinerals(myUnit);
-                }
+                gatherMinerals(myUnit);
             }
         }
     }
@@ -220,40 +162,6 @@ public class ExampleBot extends DefaultBWListener {
             unitMemory.put(type, amount);
         }
     }
-    
-    /*
-     * TODO: Intelligence Agent
-     */
-    private void updateEnemyBuildingMemory () {
-    	// update the hashset of enemy building positions
-        for (Unit enemyUnit: game.enemy().getUnits()) {
-        	if (enemyUnit.getType().isBuilding()) {
-        		if(!enemyBuildingMemory.contains(enemyUnit.getPosition())) {
-        			enemyBuildingMemory.add(enemyUnit.getPosition());
-        		}
-        	}
-        }
-        
-        //remove any destroyed buildings from the memory
-        for (Position pos: enemyBuildingMemory) {
-        	TilePosition tileCorrespondingToPos = new TilePosition(pos.getX()/32, pos.getY()/32);
-        	
-        	if(game.isVisible(tileCorrespondingToPos)) {
-        		boolean buildingStillThere = false;
-        		for (Unit enemyUnit: game.enemy().getUnits()) {
-        			if(enemyUnit.getType().isBuilding() && enemyUnit.getOrderTargetPosition().equals(pos)) {
-        				buildingStillThere = true;
-        				break;
-        			}
-        		}
-        		
-        		if (buildingStillThere == false) {
-        			enemyBuildingMemory.remove(pos);
-        			break;
-        		}
-        	}
-        }
-    }
 
     /*
      * TODO: WorkerManager
@@ -275,27 +183,6 @@ public class ExampleBot extends DefaultBWListener {
             worker.gather(closestMineral, false);
         }
     }
-    
-    /*
-     * TODO: WorkerManager
-     */
-    private void gatherMinerals (Unit worker, Unit base) {
-        Unit closestMineral = null;
-
-        //find the closest mineral
-        for (Unit neutralUnit : game.neutral().getUnits()) {
-            if (neutralUnit.getType().isMineralField()) {
-                if (closestMineral == null || base.getDistance(neutralUnit) < base.getDistance(closestMineral)) {
-                    closestMineral = neutralUnit;
-                }
-            }
-        }
-
-        //if a mineral patch was found, send the worker to gather it
-        if (closestMineral != null) {
-            worker.gather(closestMineral, false);
-        }
-    }
 
     /*
      * TODO: UnitManager
@@ -303,27 +190,12 @@ public class ExampleBot extends DefaultBWListener {
     private Unit getAvailableWorker () {
         // Find an available worker
         for (Unit unit : self.getUnits()) {
-            if (unit.getType().isWorker() && !scouts.contains(unit.getID())) {
+            if (unit.getType().isWorker()) {
                 return unit;
             }
         }
 
         return null;
-    }
-    
-    /*
-     * TODO: UnitManager
-     */
-    private int getUnitsOfType (UnitType type) {
-    	int numOfUnits = 0;
-    	
-    	for (Unit unit : self.getUnits()) {
-    		if (unit.getType() == type) {
-    			numOfUnits++;
-    		}
-    	}
-    	
-    	return numOfUnits;
     }
 
     /*
@@ -402,23 +274,6 @@ public class ExampleBot extends DefaultBWListener {
 
         return null;
     }
-    
-    /*
-     * TODO: BuildManager
-     */
-    private void buildGateway () {
-    	Unit worker;
-    	
-    	worker = getAvailableWorker();
-    	
-    	if((worker != null)) {
-    		TilePosition buildTile = game.getBuildLocation(UnitType.Protoss_Gateway, self.getStartLocation());
-    		
-    		if(buildTile != null) {
-    			worker.build(UnitType.Protoss_Gateway, buildTile);
-    		}
-    	}
-    }
 
     /*
      * TODO: BuildManager
@@ -454,28 +309,6 @@ public class ExampleBot extends DefaultBWListener {
                 worker.build(UnitType.Protoss_Photon_Cannon, buildTile);
             }
         }
-    }
-    
-    /*
-     * TODO: Intelligence Agent
-     */
-    private void findEnemyBase (Unit scout, BaseLocation basePos) {
-    	scout.attack(basePos.getPosition());
-    }
-    
-    /*
-     * TODO: CombatManager
-     */
-    private void attackEnemyBase () {
-    	for (Unit myUnit: self.getUnits()) {
-    		if(myUnit.getType() == UnitType.Protoss_Zealot) {
-    			if(enemyBuildingMemory.iterator().hasNext()) {
-    				myUnit.attack(enemyBuildingMemory.iterator().next());
-    			} else {
-    				myUnit.attack(BWTA.getStartLocations().get(BWTA.getStartLocations().size()).getPosition());
-    			}
-    		}
-    	}
     }
 
     public static void main(String[] args) {
