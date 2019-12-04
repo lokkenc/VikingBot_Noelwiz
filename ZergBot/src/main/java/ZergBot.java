@@ -1,10 +1,7 @@
 import bwapi.*;
 import bwta.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class ZergBot extends DefaultBWListener {
 
@@ -77,6 +74,49 @@ public class ZergBot extends DefaultBWListener {
             }
         }
 
+        List<Chokepoint> chokepoints = BWTA.getChokepoints();
+        Iterator<Chokepoint> chokepointIterator;
+        for(Unit currentUnit : getUnitsListOfType(UnitType.Zerg_Overlord)){
+            if(!currentUnit.isMoving()) {
+                boolean atChoke = false;
+                chokepointIterator = chokepoints.iterator();
+
+                //check if the unit is at a choke point
+                while(chokepointIterator.hasNext()){
+                    Chokepoint currentPoint =chokepointIterator.next();
+                    currentPoint.getCenter();
+                    if(currentUnit.getPosition() == currentPoint.getCenter()){
+                        atChoke = true;
+                        //the point is occupied
+                        chokepoints.remove(currentPoint);
+                    }
+                }
+
+                /*TODO: check if the overlord is not at a choke point because it is hiding in an
+                overlord blob for it's own saftey
+                atChoke = atChoke || some test of if it's around a point where we decided to hide overlords;
+                * */
+
+                //if it's not at a choke point and there's more than zero unguarded chokepoints
+                //TODO: if the few choke points near the base are observed, send off to a corner of the map
+                if(!atChoke && chokepoints.size() > 0) {
+                    //find the closest unoccupied chokepoint
+                    Position destination = chokepoints.get(0).getCenter();
+                    Position currentPosition;
+                    int distance = currentUnit.getPosition().getApproxDistance(destination);
+                    for(int i = 1; i < chokepoints.size(); i++){
+                        currentPosition = chokepoints.get(i).getCenter();
+                        if(distance > currentUnit.getPosition().getApproxDistance(currentPosition)){
+                            distance = currentUnit.getPosition().getApproxDistance(currentPosition);
+                            destination = currentPosition;
+                        }
+                    }
+                    currentUnit.move(destination);
+                }
+
+            }
+        }
+
         for (Unit myUnit : self.getUnits()) {
             drawUnitPathing(myUnit);
 
@@ -129,6 +169,18 @@ public class ZergBot extends DefaultBWListener {
         }
 
         return numOfUnits;
+    }
+
+    private List<Unit> getUnitsListOfType(UnitType type){
+        List<Unit> unitsList = new ArrayList<Unit>(4);
+
+        for (Unit unit : self.getUnits()) {
+            if (unit.getType() == type) {
+                unitsList.add(unit);
+            }
+        }
+
+        return unitsList;
     }
 
     private void drawUnitPathing (Unit unit) {
