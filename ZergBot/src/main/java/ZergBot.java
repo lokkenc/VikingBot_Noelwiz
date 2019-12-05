@@ -13,15 +13,53 @@ public class ZergBot extends DefaultBWListener {
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private int baseLoc = 0;
     private ArrayList<Integer> scouts = new ArrayList<Integer>();
+    private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
 
     public void run() {
         bwClient = new BWClient(this);
         bwClient.startGame();
     }
 
+    private void addWatchedPoint(Position p){
+        List<Chokepoint> unwatched = new ArrayList<Chokepoint>();
+        unwatched.addAll(BWTA.getChokepoints());
+        if(watched.size() > 0){
+            unwatched.removeAll(watched);
+        }
+
+        //find the closest unoccupied chokepoint
+        int closestIndex = 0;
+        Position destination = unwatched.get(0).getCenter();
+        Position currentPosition;
+        int distance = p.getApproxDistance(destination);
+        for(int i = 1; i < unwatched.size(); i++){
+            currentPosition = unwatched.get(i).getCenter();
+            if(distance > p.getApproxDistance(currentPosition)){
+                distance = p.getApproxDistance(currentPosition);
+                destination = currentPosition;
+                closestIndex = i;
+            }
+        }
+
+        watched.add(unwatched.get(closestIndex));
+    }
+
+    @Override
+    public void onUnitMorph(Unit unit) {
+        System.out.println("Morphed: "+unit.getType());
+
+        if(unit.getType() == UnitType.Zerg_Overlord){
+            addWatchedPoint(unit.getPosition());
+        }
+    }
+
     @Override
     public void onUnitCreate(Unit unit) {
         System.out.println("Created: " + unit.getType());
+
+        if(unit.getType() == UnitType.Zerg_Overlord){
+            addWatchedPoint(unit.getPosition());
+        }
     }
 
     public void onStart() {
@@ -74,51 +112,19 @@ public class ZergBot extends DefaultBWListener {
             }
         }
 
-        List<Chokepoint> chokepoints = BWTA.getChokepoints();
-        Iterator<Chokepoint> chokepointIterator;
-        for(Unit currentUnit : getUnitsListOfType(UnitType.Zerg_Overlord)){
-            if(!currentUnit.isMoving()) {
-                boolean atChoke = false;
-                chokepointIterator = chokepoints.iterator();
 
-                //check if the unit is at a choke point
-                while(chokepointIterator.hasNext()){
-                    Chokepoint currentPoint =chokepointIterator.next();
-                    currentPoint.getCenter();
-                    if(currentUnit.getPosition() == currentPoint.getCenter()){
-                        atChoke = true;
-                        //the point is occupied
-                        chokepoints.remove(currentPoint);
-                    }
-                }
-
-                /*TODO: check if the overlord is not at a choke point because it is hiding in an
-                overlord blob for it's own saftey
-                atChoke = atChoke || some test of if it's around a point where we decided to hide overlords;
-                * */
-
-                //if it's not at a choke point and there's more than zero unguarded chokepoints
-                //TODO: if the few choke points near the base are observed, send off to a corner of the map
-                if(!atChoke && chokepoints.size() > 0) {
-                    //find the closest unoccupied chokepoint
-                    Position destination = chokepoints.get(0).getCenter();
-                    Position currentPosition;
-                    int distance = currentUnit.getPosition().getApproxDistance(destination);
-                    for(int i = 1; i < chokepoints.size(); i++){
-                        currentPosition = chokepoints.get(i).getCenter();
-                        if(distance > currentUnit.getPosition().getApproxDistance(currentPosition)){
-                            distance = currentUnit.getPosition().getApproxDistance(currentPosition);
-                            destination = currentPosition;
-                        }
-                    }
-                    currentUnit.move(destination);
-                }
-
-            }
-        }
-
+        int currentCP = 0;
         for (Unit myUnit : self.getUnits()) {
             drawUnitPathing(myUnit);
+
+            if(myUnit.getType() == UnitType.Zerg_Overlord){
+                //TODO: if enough chokepoints are watched, send the overlords to go have a moshpit somewhere
+                if(myUnit.getPosition().getApproxDistance(watched.get(currentCP).getCenter()) > 2){
+                    myUnit.move(watched.get(currentCP).getCenter());
+                    System.out.println("Moving overlord to choke point");
+                }
+                currentCP++;
+            }
 
             //if there's enough minerals, morph larva into drone
             if (myUnit.getType() == UnitType.Zerg_Larva && self.minerals() >= 50 && getUnitsOfType(UnitType.Zerg_Drone) < 12) {
