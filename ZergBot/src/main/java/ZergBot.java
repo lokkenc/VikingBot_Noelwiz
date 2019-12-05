@@ -13,66 +13,15 @@ public class ZergBot extends DefaultBWListener {
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private int baseLoc = 0;
     private ArrayList<Integer> scouts = new ArrayList<Integer>();
-    private ArrayList<OverlordAgent> overlords = new ArrayList<OverlordAgent>();
-    private ArrayList<Chokepoint> watched;
 
     public void run() {
         bwClient = new BWClient(this);
         bwClient.startGame();
     }
 
-    private void OnOverlordCreate(Unit unit){
-        //decide if it should watch a chokepoint
-        //if so:
-        List<Chokepoint> chokepoints = getUnwatchedPoints();
-
-        if(chokepoints.size() > 0) {
-            //find the closest unoccupied chokepoint
-            int cp = 0;
-            Position destination = chokepoints.get(cp).getCenter();
-            Position currentPosition = chokepoints.get(cp).getCenter();
-            int distance = unit.getPosition().getApproxDistance(destination);
-            for(int i = 1; i < chokepoints.size(); i++){
-                currentPosition = chokepoints.get(i).getCenter();
-                if(distance > unit.getPosition().getApproxDistance(currentPosition)){
-                    distance = unit.getPosition().getApproxDistance(currentPosition);
-                    destination = currentPosition;
-                    cp = i;
-                }
-            }
-            OverlordAgent newagent = new OverlordAgent(unit, chokepoints.get(cp));
-            overlords.add(newagent);
-
-
-            //TODO: move this command to the Overlord Agent maybe.
-            unit.move(destination);
-            System.out.println("Sending the observer to a new choke point");
-        } else {
-            //TODO: send off to a safe corner of the map
-            OverlordAgent newagent = new OverlordAgent(unit, null);
-            overlords.add(newagent);
-            System.out.println("No choke point to send the observer to.");
-        }
-    }
-
     @Override
     public void onUnitCreate(Unit unit) {
         System.out.println("Created: " + unit.getType());
-
-        //required to set up the inital overlord spawned at the game start
-        if(unit.getType() == UnitType.Zerg_Overlord){
-            OnOverlordCreate(unit);
-        }
-    }
-
-    @Override
-    public void onUnitMorph(Unit unit) {
-        super.onUnitMorph(unit);
-        System.out.println("morphed "+ unit.getType());
-
-        if(unit.getType() == UnitType.Zerg_Overlord){
-            OnOverlordCreate(unit);
-        }
     }
 
     public void onStart() {
@@ -125,10 +74,46 @@ public class ZergBot extends DefaultBWListener {
             }
         }
 
-        for(OverlordAgent ola :overlords){
-            if(!ola.getUnit().isMoving()
-                    && ola.getUnit().getPosition().getApproxDistance(ola.getChokePoint().getCenter()) < 2){
-                ola.getUnit().move(ola.getChokePoint().getCenter());
+        List<Chokepoint> chokepoints = BWTA.getChokepoints();
+        Iterator<Chokepoint> chokepointIterator;
+        for(Unit currentUnit : getUnitsListOfType(UnitType.Zerg_Overlord)){
+            if(!currentUnit.isMoving()) {
+                boolean atChoke = false;
+                chokepointIterator = chokepoints.iterator();
+
+                //check if the unit is at a choke point
+                while(chokepointIterator.hasNext()){
+                    Chokepoint currentPoint =chokepointIterator.next();
+                    currentPoint.getCenter();
+                    if(currentUnit.getPosition() == currentPoint.getCenter()){
+                        atChoke = true;
+                        //the point is occupied
+                        chokepoints.remove(currentPoint);
+                    }
+                }
+
+                /*TODO: check if the overlord is not at a choke point because it is hiding in an
+                overlord blob for it's own saftey
+                atChoke = atChoke || some test of if it's around a point where we decided to hide overlords;
+                * */
+
+                //if it's not at a choke point and there's more than zero unguarded chokepoints
+                //TODO: if the few choke points near the base are observed, send off to a corner of the map
+                if(!atChoke && chokepoints.size() > 0) {
+                    //find the closest unoccupied chokepoint
+                    Position destination = chokepoints.get(0).getCenter();
+                    Position currentPosition;
+                    int distance = currentUnit.getPosition().getApproxDistance(destination);
+                    for(int i = 1; i < chokepoints.size(); i++){
+                        currentPosition = chokepoints.get(i).getCenter();
+                        if(distance > currentUnit.getPosition().getApproxDistance(currentPosition)){
+                            distance = currentUnit.getPosition().getApproxDistance(currentPosition);
+                            destination = currentPosition;
+                        }
+                    }
+                    currentUnit.move(destination);
+                }
+
             }
         }
 
@@ -162,6 +147,10 @@ public class ZergBot extends DefaultBWListener {
                 }
             }
         }
+
+
+
+
     }
 
     private void findEnemyBase (Unit scout, BaseLocation basePos) {
@@ -172,32 +161,26 @@ public class ZergBot extends DefaultBWListener {
 
     private int getUnitsOfType (UnitType type) {
         int numOfUnits = 0;
+
         for (Unit unit : self.getUnits()) {
             if (unit.getType() == type) {
                 numOfUnits++;
             }
         }
+
         return numOfUnits;
     }
 
     private List<Unit> getUnitsListOfType(UnitType type){
         List<Unit> unitsList = new ArrayList<Unit>(4);
+
         for (Unit unit : self.getUnits()) {
             if (unit.getType() == type) {
                 unitsList.add(unit);
             }
         }
+
         return unitsList;
-    }
-
-    private List<Chokepoint> getUnwatchedPoints(){
-        List<Chokepoint> cps = new ArrayList<Chokepoint>();
-        cps.addAll(BWTA.getChokepoints());
-
-        for(OverlordAgent overlord : overlords){
-            cps.remove(overlord.getChokePoint());
-        }
-        return  cps;
     }
 
     private void drawUnitPathing (Unit unit) {
