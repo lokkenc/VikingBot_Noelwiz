@@ -13,19 +13,65 @@ public class ZergBot extends DefaultBWListener {
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private int baseLoc = 0;
     private ArrayList<Integer> scouts = new ArrayList<Integer>();
-    //private ArrayList<OverlordAgent> overlords = new ArrayList<OverlordAgent>();
+    private ArrayList<OverlordAgent> overlords = new ArrayList<OverlordAgent>();
+    private ArrayList<Chokepoint> watched;
 
     public void run() {
         bwClient = new BWClient(this);
         bwClient.startGame();
     }
 
+    private void OnOverlordCreate(Unit unit){
+        //decide if it should watch a chokepoint
+        //if so:
+        List<Chokepoint> chokepoints = getUnwatchedPoints();
+
+        if(chokepoints.size() > 0) {
+            //find the closest unoccupied chokepoint
+            int cp = 0;
+            Position destination = chokepoints.get(cp).getCenter();
+            Position currentPosition = chokepoints.get(cp).getCenter();
+            int distance = unit.getPosition().getApproxDistance(destination);
+            for(int i = 1; i < chokepoints.size(); i++){
+                currentPosition = chokepoints.get(i).getCenter();
+                if(distance > unit.getPosition().getApproxDistance(currentPosition)){
+                    distance = unit.getPosition().getApproxDistance(currentPosition);
+                    destination = currentPosition;
+                    cp = i;
+                }
+            }
+            OverlordAgent newagent = new OverlordAgent(unit, chokepoints.get(cp));
+            overlords.add(newagent);
+
+
+            //TODO: move this command to the Overlord Agent maybe.
+            unit.move(destination);
+            System.out.println("Sending the observer to a new choke point");
+        } else {
+            //TODO: send off to a safe corner of the map
+            OverlordAgent newagent = new OverlordAgent(unit, null);
+            overlords.add(newagent);
+            System.out.println("No choke point to send the observer to.");
+        }
+    }
+
     @Override
     public void onUnitCreate(Unit unit) {
-
         System.out.println("Created: " + unit.getType());
-        if(unit.getType() == UnitType.Zerg_Overlord){
 
+        //required to set up the inital overlord spawned at the game start
+        if(unit.getType() == UnitType.Zerg_Overlord){
+            OnOverlordCreate(unit);
+        }
+    }
+
+    @Override
+    public void onUnitMorph(Unit unit) {
+        super.onUnitMorph(unit);
+        System.out.println("morphed "+ unit.getType());
+
+        if(unit.getType() == UnitType.Zerg_Overlord){
+            OnOverlordCreate(unit);
         }
     }
 
@@ -79,50 +125,10 @@ public class ZergBot extends DefaultBWListener {
             }
         }
 
-        List<Chokepoint> chokepoints = new ArrayList<Chokepoint>(5);
-        List<Unit> overlordsToMove = new ArrayList<Unit>();
-        //Error without this: unmodiffyable collection.remove, collections.java:1058
-        chokepoints.addAll(BWTA.getChokepoints());
-        for(Unit currentUnit : getUnitsListOfType(UnitType.Zerg_Overlord)){
-            if(!currentUnit.isMoving()) {
-                boolean atChoke = false;
-
-                /*TODO: check if the overlord is not at a choke point because it is hiding in an
-                overlord blob for it's own saftey
-                atChoke = atChoke || some test of if it's around a point where we decided to hide overlords;
-                * */
-
-                //check if the unit is at a choke point
-                for(int i = 0 ; i < chokepoints.size() && !atChoke; i++){
-                    Chokepoint currentPoint = chokepoints.get(i);
-                    if(currentPoint.getCenter().getApproxDistance(currentUnit.getPosition()) < 2){
-                        atChoke = true;
-                        chokepoints.remove(currentPoint);
-                        i--; //so no choke points are skipped due to removal of this
-                    }
-                }
-                if(!atChoke){
-                    overlordsToMove.add(currentUnit);
-                }
-            }
-        }
-
-        for (Unit currentOverlord: overlordsToMove){
-            //if it's not at a choke point and there's more than zero unguarded chokepoints
-            //TODO: if the few choke points near the base are observed, send off to a corner of the map
-            if(chokepoints.size() > 0) {
-                //find the closest unoccupied chokepoint
-                Position destination = chokepoints.get(0).getCenter();
-                Position currentPosition;
-                int distance = currentOverlord.getPosition().getApproxDistance(destination);
-                for(int i = 1; i < chokepoints.size(); i++){
-                    currentPosition = chokepoints.get(i).getCenter();
-                    if(distance > currentOverlord.getPosition().getApproxDistance(currentPosition)){
-                        distance = currentOverlord.getPosition().getApproxDistance(currentPosition);
-                        destination = currentPosition;
-                    }
-                }
-                currentOverlord.move(destination);
+        for(OverlordAgent ola :overlords){
+            if(!ola.getUnit().isMoving()
+                    && ola.getUnit().getPosition().getApproxDistance(ola.getChokePoint().getCenter()) < 2){
+                ola.getUnit().move(ola.getChokePoint().getCenter());
             }
         }
 
@@ -186,7 +192,11 @@ public class ZergBot extends DefaultBWListener {
 
     private List<Chokepoint> getUnwatchedPoints(){
         List<Chokepoint> cps = new ArrayList<Chokepoint>();
+        cps.addAll(BWTA.getChokepoints());
 
+        for(OverlordAgent overlord : overlords){
+            cps.remove(overlord.getChokePoint());
+        }
         return  cps;
     }
 
