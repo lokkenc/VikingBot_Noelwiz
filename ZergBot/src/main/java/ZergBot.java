@@ -1,10 +1,7 @@
 import bwapi.*;
 import bwta.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class ZergBot extends DefaultBWListener {
 
@@ -16,15 +13,53 @@ public class ZergBot extends DefaultBWListener {
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private int baseLoc = 0;
     private ArrayList<Integer> scouts = new ArrayList<Integer>();
+    private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
 
     public void run() {
         bwClient = new BWClient(this);
         bwClient.startGame();
     }
 
+    private void addWatchedPoint(Position p){
+        List<Chokepoint> unwatched = new ArrayList<Chokepoint>();
+        unwatched.addAll(BWTA.getChokepoints());
+        if(watched.size() > 0){
+            unwatched.removeAll(watched);
+        }
+
+        //find the closest unoccupied chokepoint
+        int closestIndex = 0;
+        Position destination = unwatched.get(0).getCenter();
+        Position currentPosition;
+        int distance = p.getApproxDistance(destination);
+        for(int i = 1; i < unwatched.size(); i++){
+            currentPosition = unwatched.get(i).getCenter();
+            if(distance > p.getApproxDistance(currentPosition)){
+                distance = p.getApproxDistance(currentPosition);
+                destination = currentPosition;
+                closestIndex = i;
+            }
+        }
+
+        watched.add(unwatched.get(closestIndex));
+    }
+
+    @Override
+    public void onUnitMorph(Unit unit) {
+        System.out.println("Morphed: "+unit.getType());
+
+        if(unit.getType() == UnitType.Zerg_Overlord){
+            addWatchedPoint(unit.getPosition());
+        }
+    }
+
     @Override
     public void onUnitCreate(Unit unit) {
         System.out.println("Created: " + unit.getType());
+
+        if(unit.getType() == UnitType.Zerg_Overlord){
+            addWatchedPoint(unit.getPosition());
+        }
     }
 
     public void onStart() {
@@ -77,8 +112,19 @@ public class ZergBot extends DefaultBWListener {
             }
         }
 
+
+        int currentCP = 0;
         for (Unit myUnit : self.getUnits()) {
             drawUnitPathing(myUnit);
+
+            if(myUnit.getType() == UnitType.Zerg_Overlord){
+                //TODO: if enough chokepoints are watched, send the overlords to go have a moshpit somewhere
+                if(myUnit.getPosition().getApproxDistance(watched.get(currentCP).getCenter()) > 2){
+                    myUnit.move(watched.get(currentCP).getCenter());
+                    System.out.println("Moving overlord to choke point");
+                }
+                currentCP++;
+            }
 
             //if there's enough minerals, morph larva into drone
             if (myUnit.getType() == UnitType.Zerg_Larva && self.minerals() >= 50 && getUnitsOfType(UnitType.Zerg_Drone) < 12) {
@@ -129,6 +175,18 @@ public class ZergBot extends DefaultBWListener {
         }
 
         return numOfUnits;
+    }
+
+    private List<Unit> getUnitsListOfType(UnitType type){
+        List<Unit> unitsList = new ArrayList<Unit>(4);
+
+        for (Unit unit : self.getUnits()) {
+            if (unit.getType() == type) {
+                unitsList.add(unit);
+            }
+        }
+
+        return unitsList;
     }
 
     private void drawUnitPathing (Unit unit) {
