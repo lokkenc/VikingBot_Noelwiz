@@ -26,8 +26,8 @@ TODO
 
 
 ## Replays
-A list of replays recorded at the end of each milestone.
+A list of replays recorded at the end of each milestone
 
 ### Milestone 1
  - [Protoss Bot Replay](https://www.youtube.com)
- - [Zerg Bot Replay](https://wwwu.youtube.com)
+ - [Zerg Bot Replay](https://youtu.be/QTV64Ol-k4o)
