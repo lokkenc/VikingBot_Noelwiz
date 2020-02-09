@@ -115,4 +115,24 @@ public class EconomyAgent {
             }
         }
     }
+
+    /**
+     * Returns the count of Buildings that are of type type
+     * @param self
+     * @param type
+     * @return
+     */
+    private int getBuildingUnitsOfType (Player self, UnitType type) {
+        int numberOfBuildingUnits = 0;
+
+        for (Unit unit : self.getUnits()) {
+            if (unit.getType() == type) {
+                if (unit.isBeingConstructed()) {
+                    numberOfBuildingUnits++;
+                }
+            }
+        }
+
+        return numberOfBuildingUnits;
+    }
 }

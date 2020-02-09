@@ -44,6 +44,19 @@ public class IntelligenceAgent {
     }
 
     /**
+     * Checks if player has units of type type
+     * @param type
+     * @return
+     */
+    public boolean unitExists(UnitType type) {
+        if(unitMemory.containsKey(type)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Returns true if unit with unitID is scout false otherwise
      * @param unitID
      * @return
@@ -98,6 +111,14 @@ public class IntelligenceAgent {
      */
     public void findEnemyBase (Unit scout, BaseLocation basePos) {
         scout.attack(basePos.getPosition());
+    }
+
+    /**
+     * Returns the current enemyBuildingMemory
+     * @return
+     */
+    public HashSet<Position> getEnemyBuildingMemory() {
+        return enemyBuildingMemory;
     }
 
     /**
