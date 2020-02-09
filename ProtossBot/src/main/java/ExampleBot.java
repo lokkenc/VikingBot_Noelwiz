@@ -165,7 +165,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: Intelligence Agent
+     * TODO: DONE
      */
     private void tabulateUnits () {
         unitMemory.clear();
@@ -228,7 +228,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: GameManager
+     * TODO: DONE
      */
     private void updateUnitMemory (UnitType type, int amount) {
         if (unitMemory.containsKey(type)) {
@@ -240,7 +240,7 @@ public class ExampleBot extends DefaultBWListener {
     }
     
     /*
-     * TODO: Intelligence Agent
+     * TODO: DONE
      */
     private void updateEnemyBuildingMemory () {
     	// update the hashset of enemy building positions
@@ -274,7 +274,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: WorkerManager
+     * TODO: DONE
      */
     private void gatherMinerals (Unit worker) {
         Unit closestMineral = null;
@@ -360,7 +360,7 @@ public class ExampleBot extends DefaultBWListener {
         return false;
     }
     /*
-     * TODO: BuildManager
+     * TODO: DONE
      */
     private int getBuildingUnitsOfType (UnitType type) {
         int numberOfBuildingUnits = 0;
@@ -483,7 +483,7 @@ public class ExampleBot extends DefaultBWListener {
     }
     
     /*
-     * TODO: CombatManager
+     * TODO: DONE
      */
     private void attackEnemyBase () {
     	for (Unit myUnit: self.getUnits()) {
@@ -498,7 +498,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: CombatManager
+     * TODO: DONE
      */
     private void attackPosition (Position targetPos) {
         if (unitMemory.containsKey(UnitType.Protoss_Dragoon) || unitMemory.containsKey(UnitType.Protoss_Zealot)) {
