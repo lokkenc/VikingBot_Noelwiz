@@ -1,6 +1,4 @@
 import bwapi.*;
-import bwta.*;
-
 
 public class EconomyAgent {
 
@@ -8,11 +6,11 @@ public class EconomyAgent {
 
     /**
      * Sends a worker to get the closest mineral to the specified base
-     * @param game
-     * @param worker
-     * @param base
+     * @param game Game value created on game start
+     * @param worker Unit to send to gather minerals
+     * @param base Base to gather minerals near
      */
-    private void gatherMinerals (Game game, Unit worker, Unit base) {
+    public void gatherMinerals (Game game, Unit worker, Unit base) {
         Unit closestMineral = null;
 
         //find the closest mineral
@@ -32,8 +30,8 @@ public class EconomyAgent {
 
     /**
      * Sends a worker to gather minerals that are closest to it
-     * @param game
-     * @param worker
+     * @param game Game value created on game start
+     * @param worker Unit to send to gather minerals
      */
     public void gatherMinerals (Game game, Unit worker) {
         Unit closestMineral = null;
@@ -55,8 +53,8 @@ public class EconomyAgent {
 
     /**
      * If player is Zerg morph a larva into an overlord. If player is Protoss build a pylon
-     * @param self
-     * @param game
+     * @param self Player assigned to the bot
+     * @param game Game value created on game start
      */
     public void expandPopulationCapacity(Player self, Game game) {
         if(self.getRace() == Race.Zerg) {
@@ -81,11 +79,11 @@ public class EconomyAgent {
 
     /**
      * Builds a building of type in a suitable position
-     * @param game
-     * @param self
-     * @param type
+     * @param game Game value created on game start
+     * @param self Player assigned to the bot
+     * @param type Building to be created
      */
-    private void createBuildingOfType(Game game, Player self, UnitType type) {
+    public void createBuildingOfType(Game game, Player self, UnitType type) {
         Unit worker = intel.getAvailableWorker(self);
 
         if((worker != null)) {
@@ -98,13 +96,13 @@ public class EconomyAgent {
 
     /**
      * Builds a building of type in a suitable position determined by the anchor and maxDistance
-     * @param game
-     * @param self
-     * @param type
-     * @param anchor
-     * @param maxDistance
+     * @param game Game value created on game start
+     * @param self Player assigned to the bot
+     * @param type Building to be created
+     * @param anchor Unit that serves as the anchor for the build position
+     * @param maxDistance maximum distance that building can be built from the anchor
      */
-    private void createBuildingOfTypeWithAnchor(Game game, Player self, UnitType type, Unit anchor, int maxDistance) {
+    public void createBuildingOfTypeWithAnchor(Game game, Player self, UnitType type, Unit anchor, int maxDistance) {
         Unit worker = intel.getAvailableWorker(self);
 
         if ((worker != null)) {
@@ -114,25 +112,5 @@ public class EconomyAgent {
                 worker.build(UnitType.Protoss_Forge, buildTile);
             }
         }
-    }
-
-    /**
-     * Returns the count of Buildings that are of type type
-     * @param self
-     * @param type
-     * @return
-     */
-    private int getBuildingUnitsOfType (Player self, UnitType type) {
-        int numberOfBuildingUnits = 0;
-
-        for (Unit unit : self.getUnits()) {
-            if (unit.getType() == type) {
-                if (unit.isBeingConstructed()) {
-                    numberOfBuildingUnits++;
-                }
-            }
-        }
-
-        return numberOfBuildingUnits;
     }
 }
