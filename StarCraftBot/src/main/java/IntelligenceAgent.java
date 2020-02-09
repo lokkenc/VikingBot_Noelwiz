@@ -16,7 +16,7 @@ public class IntelligenceAgent {
 
     /**
      * Clears current unitMemory and uses {@link #updateUnitMemory} to add all trained units to hashmap
-     * @param self
+     * @param self Player assigned to the bot
      */
     public void tabulateUnits (Player self) {
         unitMemory.clear();
@@ -31,8 +31,8 @@ public class IntelligenceAgent {
 
     /**
      * Used by {@link #tabulateUnits} to increment count of UnitType by the amount
-     * @param type
-     * @param amount
+     * @param type Unit to check memory for
+     * @param amount Total amount of units
      */
     private void updateUnitMemory (UnitType type, int amount) {
         if (unitMemory.containsKey(type)) {
@@ -45,8 +45,8 @@ public class IntelligenceAgent {
 
     /**
      * Checks if player has units of type type
-     * @param type
-     * @return
+     * @param type UnitType to check for
+     * @return True if unit of type type exists
      */
     public boolean unitExists(UnitType type) {
         if(unitMemory.containsKey(type)) {
@@ -58,8 +58,8 @@ public class IntelligenceAgent {
 
     /**
      * Returns true if unit with unitID is scout false otherwise
-     * @param unitID
-     * @return
+     * @param unitID Unit that should be checked
+     * @return True if unit is scout
      */
     public boolean isScout(int unitID) {
         if(scouts.contains(unitID)) {
@@ -71,7 +71,7 @@ public class IntelligenceAgent {
 
     /**
      * Updates hashset of enemy building locations
-     * @param game
+     * @param game Game value assigned at game start
      */
     public void updateEnemyBuildingMemory (Game game) {
         // update the hashset of enemy building positions
@@ -106,8 +106,8 @@ public class IntelligenceAgent {
 
     /**
      * Sends a scout to attack possible enemy base positions
-     * @param scout
-     * @param basePos
+     * @param scout Unit that is a scout
+     * @param basePos Possible location of a base to scout
      */
     public void findEnemyBase (Unit scout, BaseLocation basePos) {
         scout.attack(basePos.getPosition());
@@ -115,7 +115,7 @@ public class IntelligenceAgent {
 
     /**
      * Returns the current enemyBuildingMemory
-     * @return
+     * @return returns the current enemyBuildingMemory
      */
     public HashSet<Position> getEnemyBuildingMemory() {
         return enemyBuildingMemory;
@@ -123,7 +123,7 @@ public class IntelligenceAgent {
 
     /**
      * Finds and adds chokePoints to an arrayList
-     * @param p
+     * @param p Position to watch
      */
     public void addWatchedPoint(Position p){
         List<Chokepoint> unwatched = new ArrayList<Chokepoint>();
@@ -151,9 +151,9 @@ public class IntelligenceAgent {
 
     /**
      * Returns the total count of units of type
-     * @param self
-     * @param type
-     * @return
+     * @param self Player assigned to the bot
+     * @param type UnitType to get the count of
+     * @return returns the count of units of type
      */
     public int getUnitsOfType (Player self, UnitType type) {
         int numOfUnits = 0;
@@ -169,11 +169,11 @@ public class IntelligenceAgent {
 
     /**
      * Returns a list of units of type
-     * @param self
-     * @param type
-     * @return
+     * @param self Player assigned to the bot
+     * @param type UnitType to get the list of
+     * @return Returns a list of all units of type type
      */
-    private List<Unit> getUnitsListOfType(Player self, UnitType type){
+    public List<Unit> getUnitsListOfType(Player self, UnitType type){
         List<Unit> unitsList = new ArrayList<Unit>(4);
 
         for (Unit unit : self.getUnits()) {
@@ -187,11 +187,11 @@ public class IntelligenceAgent {
 
     /**
      * True if unit of type is within radius of position
-     * @param game
-     * @param position
-     * @param radius
-     * @param type
-     * @return
+     * @param game Game value assigned at game start
+     * @param position Position of the center point
+     * @param radius Value of the Radius
+     * @param type UnitType to search the radius for
+     * @return Returns true if unit of type is within the radius of position
      */
     public boolean isUnitInRadius (Game game, Position position, int radius, UnitType type) {
         List<Unit> units;
@@ -208,12 +208,12 @@ public class IntelligenceAgent {
 
     /**
      * Returns a unit of type target that has no units of type type in the specified radius
-     * @param game
-     * @param self
-     * @param target
-     * @param type
-     * @param radius
-     * @return
+     * @param game Game value assigned at game start
+     * @param self Player assigned to the bot
+     * @param target UnitType to use as the anchor for the radius
+     * @param type UnitType to check radius for
+     * @param radius Size of radius from the target unit
+     * @return returns a unit of type target with no units of type type in the radius
      */
     public Unit getUnitWithoutType (Game game, Player self, UnitType target, UnitType type, int radius) {
         for (Unit unit : self.getUnits()) {
@@ -229,9 +229,9 @@ public class IntelligenceAgent {
 
     /**
      * Returns an available unit of type
-     * @param self
-     * @param type
-     * @return
+     * @param self Player assigned to the bot
+     * @param type UnitType to search for availability
+     * @return Available unit of type type
      */
     public Unit getAvailableUnit(Player self, UnitType type) {
         for (Unit unit : self.getUnits()) {
@@ -244,8 +244,8 @@ public class IntelligenceAgent {
 
     /**
      * Returns a worker that is not a scout
-     * @param self
-     * @return
+     * @param self Player assigned to the bot
+     * @return Available worker unit
      */
     public Unit getAvailableWorker(Player self) {
         // Find an available worker
@@ -258,13 +258,14 @@ public class IntelligenceAgent {
     }
 
     /**
-     * Returns a pylon
-     * @param self
-     * @return
+     * Returns a Unit
+     * @param self Player assigned to the bot
+     * @param type UnitType to search for
+     * @return Unit of type type
      */
-    public Unit getPylon(Player self) {
+    public Unit getUnit(Player self, UnitType type) {
         for (Unit unit : self.getUnits()) {
-            if (unit.getType() == UnitType.Protoss_Pylon) {
+            if (unit.getType() == type) {
                 // Other checks in here?
                 return unit;
             }
@@ -275,9 +276,9 @@ public class IntelligenceAgent {
 
     /**
      * Returns the total amount of buildings of type
-     * @param self
-     * @param type
-     * @return
+     * @param self Player assigned to the bot
+     * @param type UnitType to get the count of
+     * @return Total count of unit of type type
      */
     public int getBuildingUnitsOfType(Player self, UnitType type) {
         int numberOfBuildingUnits = 0;

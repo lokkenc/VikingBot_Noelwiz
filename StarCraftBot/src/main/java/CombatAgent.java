@@ -9,9 +9,9 @@ public class CombatAgent {
 
     /**
      * Gives all units of type type the command to attack position targetPos
-     * @param self
-     * @param type
-     * @param targetPos
+     * @param self Player assigned to the bot
+     * @param type UnitType to send to attack
+     * @param targetPos Position to attack
      */
     public void attackPosition (Player self, UnitType type, Position targetPos) {
         if (intel.unitExists(type)) {
@@ -25,10 +25,10 @@ public class CombatAgent {
 
     /**
      * Sends units of type type to attack known enemy bases
-     * @param self
-     * @param type
+     * @param self Player assigned to the bot
+     * @param type UnitType that should be sent to attack
      */
-    private void attackEnemyBase (Player self, UnitType type) {
+    public void attackEnemyBase (Player self, UnitType type) {
         HashSet<Position> enemyBuildingMemory = intel.getEnemyBuildingMemory();
         for (Unit myUnit: self.getUnits()) {
             if(myUnit.getType() == type) {
