@@ -1,0 +1,24 @@
+public class ProtossGeneralKnowledge implements GeneralRaceProductionKnowledge {
+    // https://liquipedia.net/starcraft/Mining for numbers
+    // https://tl.net/forum/brood-war/89939-ideal-mining-thoughts
+    private static float gatherrate = 1.055f;
+    //per minute, so per 30*60 frames        0   3   6   9   12     15    18
+    private static float[] minneralRatePerWorkder = {0, 65f,65f,65f,58.5f, 54.6f, 51.7f, 50.1f, 28.6f, 47.6f, 44f};
+
+    //apparently asusmes 9 things of minerals per patch
+    public float AverageMineralProductionRate(int[] NumWorkers) {
+        float production = 0;
+
+        //good candidate for loop unrolling maybe, if used frequently
+        for (int patch = 0; patch < NumWorkers.length; patch++){
+            production += NumWorkers[patch] * minneralRatePerWorkder[Math.round(NumWorkers[patch]/3)]  ;
+        }
+
+        production = production * gatherrate;
+        return production;
+    }
+
+    public float AverageGasProductionRate(int[] NumWorkers) {
+        return 0;
+    }
+}
