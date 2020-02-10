@@ -21,6 +21,12 @@
             <artifactId>JBWAPI</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>edu.brown.cs.burlap</groupId>
+            <artifactId>burlap</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>
