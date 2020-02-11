@@ -159,12 +159,18 @@ public class ZergBot extends DefaultBWListener {
 
     }
 
+    /*
+     * TODO: DONE
+     */
     private void findEnemyBase (Unit scout, BaseLocation basePos) {
         if (basePos.equals(self.getStartLocation()))
             return;
         scout.attack(basePos.getPosition());
     }
 
+    /*
+     * TODO: DONE
+     */
     private int getUnitsOfType (UnitType type) {
         int numOfUnits = 0;
 
@@ -218,6 +224,9 @@ public class ZergBot extends DefaultBWListener {
         }
     }
 
+    /*
+     * TODO: DONE
+     */
     private void tabulateUnits () {
         unitMemory.clear();
 
@@ -230,6 +239,9 @@ public class ZergBot extends DefaultBWListener {
         }
     }
 
+    /*
+     * TODO: DONE
+     */
     private void updateEnemyBuildingMemory () {
         // update the hashset of enemy building positions
         for (Unit enemyUnit: game.enemy().getUnits()) {
@@ -280,6 +292,9 @@ public class ZergBot extends DefaultBWListener {
         }
     }
 
+    /*
+     * TODO: DONE
+     */
     private void updateUnitMemory (UnitType type, int amount) {
         if (unitMemory.containsKey(type)) {
             unitMemory.put(type, unitMemory.get(type) + amount);
@@ -298,6 +313,9 @@ public class ZergBot extends DefaultBWListener {
         return null;
     }
 
+    /*
+     * TODO: DONE
+     */
     private Unit getAvailableWorker() {
         // Find an available worker
         for (Unit unit : self.getUnits()) {
@@ -308,6 +326,9 @@ public class ZergBot extends DefaultBWListener {
         return null;
     }
 
+    /*
+     * TODO: DONE
+     */
     private void expandPopulationCapacity() {
         Unit larva = getAvailableLarva();
         if (larva != null) {
@@ -317,6 +338,9 @@ public class ZergBot extends DefaultBWListener {
         }
     }
 
+    /*
+     * TODO: DONE
+     */
     private void gatherMinerals (Unit worker) {
         Unit closestMineral = null;
 
@@ -335,6 +359,9 @@ public class ZergBot extends DefaultBWListener {
         }
     }
 
+    /*
+     * TODO: DONE
+     */
     private void gatherMinerals (Unit worker, Unit base) {
         Unit closestMineral = null;
 
