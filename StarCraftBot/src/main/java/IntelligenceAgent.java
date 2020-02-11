@@ -57,6 +57,15 @@ public class IntelligenceAgent {
     }
 
     /**
+     * Used to get the value mapped by the key of type
+     * @param type Unit type to search the list for
+     * @return value mapped by the key of type
+     */
+    public int getUnitMemoryValue(UnitType type) {
+        return unitMemory.get(type);
+    }
+
+    /**
      * Returns true if unit with unitID is scout false otherwise
      * @param unitID Unit that should be checked
      * @return True if unit is scout
@@ -67,6 +76,30 @@ public class IntelligenceAgent {
         } else{
             return false;
         }
+    }
+
+    /**
+     * This function adds a unit to the scout list
+     * @param unitID ID number of the unit to add
+     */
+    public void addScout(int unitID) {
+        scouts.add(unitID);
+    }
+
+    /**
+     * Changes BaseLoc variable to provided value
+     * @param newBaseLoc new value of BaseLoc
+     */
+    public void changeBaseLoc(int newBaseLoc) {
+        baseLoc = newBaseLoc;
+    }
+
+    /**
+     *
+     * @return the current value of baseLoc
+     */
+    public int getBaseLoc() {
+        return baseLoc;
     }
 
     /**
@@ -278,7 +311,7 @@ public class IntelligenceAgent {
      * Returns the total amount of buildings of type
      * @param self Player assigned to the bot
      * @param type UnitType to get the count of
-     * @return Total count of unit of type type
+     * @return Total count of building unit of type type
      */
     public int getBuildingUnitsOfType(Player self, UnitType type) {
         int numberOfBuildingUnits = 0;
