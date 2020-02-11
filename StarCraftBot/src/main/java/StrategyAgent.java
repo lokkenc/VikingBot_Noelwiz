@@ -132,6 +132,6 @@ public class StrategyAgent extends DefaultBWListener{
     }
 
     public static void main(String[] args) {
-        new ExampleBot().run();
+        new StrategyAgent().run();
     }
 }
