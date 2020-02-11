@@ -61,8 +61,6 @@ public class EconomyAgent {
             Unit larva = intel.getAvailableUnit(self, UnitType.Zerg_Larva);
             if (larva != null) {
                 larva.morph(UnitType.Zerg_Overlord);
-
-                //Additional checks to instead make another Hatchery...?
             }
         } else {
             Unit probe = intel.getAvailableUnit(self, UnitType.Protoss_Probe);
@@ -86,6 +84,8 @@ public class EconomyAgent {
     public void createBuildingOfType(Game game, Player self, UnitType type) {
         Unit worker = intel.getAvailableWorker(self);
 
+        assert type.isBuilding() : "Must Build Buildings.";
+
         if((worker != null)) {
             TilePosition buildTile = game.getBuildLocation(type, self.getStartLocation());
             if(buildTile != null) {
@@ -105,11 +105,13 @@ public class EconomyAgent {
     public void createBuildingOfTypeWithAnchor(Game game, Player self, UnitType type, Unit anchor, int maxDistance) {
         Unit worker = intel.getAvailableWorker(self);
 
+        assert type.isBuilding() : "Must Build Buildings.";
+
         if ((worker != null)) {
             TilePosition buildTile = game.getBuildLocation(type, anchor.getTilePosition(), maxDistance);
 
             if (buildTile != null) {
-                worker.build(UnitType.Protoss_Forge, buildTile);
+                worker.build(type, buildTile);
             }
         }
     }
