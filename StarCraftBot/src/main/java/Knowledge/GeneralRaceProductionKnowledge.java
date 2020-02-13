@@ -1,3 +1,5 @@
+package Knowledge;
+
 public interface GeneralRaceProductionKnowledge {
     // https://liquipedia.net/starcraft/Mining for numbers
     //TODO: IF WE CONVERT TO JAVA 8, MAKE THESE METHODS STATIC

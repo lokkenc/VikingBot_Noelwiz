@@ -1,3 +1,7 @@
+package Knowledge;
+
+import Knowledge.GeneralRaceProductionKnowledge;
+
 public class ProtossGeneralKnowledge implements GeneralRaceProductionKnowledge {
     // https://liquipedia.net/starcraft/Mining for numbers
     // https://tl.net/forum/brood-war/89939-ideal-mining-thoughts

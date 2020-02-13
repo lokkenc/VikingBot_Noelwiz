@@ -1,3 +1,5 @@
+package Knowledge;
+
 public class GeneralGameKnowledge {
 
     //int?
