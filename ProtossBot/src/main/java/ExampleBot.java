@@ -165,7 +165,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: Intelligence Agent
+     * TODO: DONE
      */
     private void tabulateUnits () {
         unitMemory.clear();
@@ -228,7 +228,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: GameManager
+     * TODO: DONE
      */
     private void updateUnitMemory (UnitType type, int amount) {
         if (unitMemory.containsKey(type)) {
@@ -240,7 +240,7 @@ public class ExampleBot extends DefaultBWListener {
     }
     
     /*
-     * TODO: Intelligence Agent
+     * TODO: DONE
      */
     private void updateEnemyBuildingMemory () {
     	// update the hashset of enemy building positions
@@ -274,7 +274,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: WorkerManager
+     * TODO: DONE
      */
     private void gatherMinerals (Unit worker) {
         Unit closestMineral = null;
@@ -293,9 +293,9 @@ public class ExampleBot extends DefaultBWListener {
             worker.gather(closestMineral, false);
         }
     }
-    
+
     /*
-     * TODO: WorkerManager
+     * TODO: DONE
      */
     private void gatherMinerals (Unit worker, Unit base) {
         Unit closestMineral = null;
@@ -316,7 +316,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: UnitManager
+     * TODO: DONE
      */
     private Unit getAvailableWorker () {
         // Find an available worker
@@ -330,7 +330,7 @@ public class ExampleBot extends DefaultBWListener {
     }
     
     /*
-     * TODO: UnitManager
+     * TODO: DONE
      */
     private int getUnitsOfType (UnitType type) {
     	int numOfUnits = 0;
@@ -345,7 +345,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: UnitManager
+     * TODO: DONE
      */
     private boolean isUnitInRadius (Position position, int radius, UnitType type) {
         List<Unit> units;
@@ -360,7 +360,7 @@ public class ExampleBot extends DefaultBWListener {
         return false;
     }
     /*
-     * TODO: BuildManager
+     * TODO: DONE
      */
     private int getBuildingUnitsOfType (UnitType type) {
         int numberOfBuildingUnits = 0;
@@ -377,7 +377,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: BuildManager
+     * TODO: DONE
      */
     private void expandPopulationCapacity () {
         Unit worker;
@@ -394,7 +394,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: BuildManager
+     * TODO: DONE
      */
     private Unit getPylon () {
         for (Unit unit : self.getUnits()) {
@@ -406,8 +406,9 @@ public class ExampleBot extends DefaultBWListener {
 
         return null;
     }
+
     /*
-     * TODO: BuildManager
+     * TODO: DONE
      */
     private Unit getPylonWithoutType (UnitType type) {
         for (Unit unit : self.getUnits()) {
@@ -422,16 +423,16 @@ public class ExampleBot extends DefaultBWListener {
     }
     
     /*
-     * TODO: BuildManager
+     * TODO: DONE
      */
     private void buildGateway () {
     	Unit worker;
-    	
+
     	worker = getAvailableWorker();
-    	
+
     	if((worker != null)) {
     		TilePosition buildTile = game.getBuildLocation(UnitType.Protoss_Gateway, self.getStartLocation());
-    		
+
     		if(buildTile != null) {
     			worker.build(UnitType.Protoss_Gateway, buildTile);
     		}
@@ -439,7 +440,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: BuildManager
+     * TODO: DONE
      */
     private void buildForge () {
        Unit worker, pylon;
@@ -457,7 +458,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: BuildManager
+     * TODO: DONE
      */
     private void buildPhotonCannon () {
         Unit worker, pylon;
@@ -475,14 +476,14 @@ public class ExampleBot extends DefaultBWListener {
     }
     
     /*
-     * TODO: Intelligence Agent
+     * TODO: DONE
      */
     private void findEnemyBase (Unit scout, BaseLocation basePos) {
     	scout.attack(basePos.getPosition());
     }
     
     /*
-     * TODO: CombatManager
+     * TODO: DONE
      */
     private void attackEnemyBase () {
     	for (Unit myUnit: self.getUnits()) {
@@ -497,7 +498,7 @@ public class ExampleBot extends DefaultBWListener {
     }
 
     /*
-     * TODO: CombatManager
+     * TODO: DONE
      */
     private void attackPosition (Position targetPos) {
         if (unitMemory.containsKey(UnitType.Protoss_Dragoon) || unitMemory.containsKey(UnitType.Protoss_Zealot)) {
