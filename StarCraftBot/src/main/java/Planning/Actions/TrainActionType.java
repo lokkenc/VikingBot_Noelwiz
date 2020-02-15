@@ -4,6 +4,7 @@ import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.state.State;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrainActionType implements ActionType {
@@ -21,6 +22,10 @@ public class TrainActionType implements ActionType {
 
     @Override
     public List<Action> allApplicableActions(State state) {
-        return null;
+        List<Action> actions = new ArrayList<Action>(3);
+        actions.add(new TrainAction("_what=worker_amount=1"));
+        actions.add(new TrainAction("_what=combatUnit_amount=1"));
+        actions.add(new TrainAction());
+        return actions;
     }
 }
