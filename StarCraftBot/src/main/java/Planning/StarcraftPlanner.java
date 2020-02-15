@@ -1,5 +1,6 @@
 package Planning;
 
+import Planning.Actions.*;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.singleagent.Episode;
@@ -55,8 +56,14 @@ public class StarcraftPlanner {
      */
     public void Initalize(State initalstate){
         SADomain domain = new SADomain();
-        //TODO: ADD ACTIONS TO THE DOMAIN
-        domain.addActionType(null);
+        //add actions to the domain
+        domain.addActionType(new AttackActionType());
+        domain.addActionType(new BuildActionType());
+        domain.addActionType(new ExpandActionType());
+        domain.addActionType(new ScoutActionType());
+        domain.addActionType(new TrainActionType());
+        domain.addActionType(new UpgradeActionType());
+
         //TODO: MAKE A class that implements SampleModel.
         domain.setModel(null);
 
