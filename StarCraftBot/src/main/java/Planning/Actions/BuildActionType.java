@@ -2,9 +2,9 @@ package Planning.Actions;
 
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
-import burlap.mdp.core.action.SimpleAction;
 import burlap.mdp.core.state.State;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BuildActionType implements ActionType {
@@ -17,11 +17,16 @@ public class BuildActionType implements ActionType {
 
     @Override
     public Action associatedAction(String s) {
-        return null;
+        return new BuildAction(s);
     }
 
     @Override
     public List<Action> allApplicableActions(State state) {
-        return null;
+        List<Action> actions = new ArrayList<Action>(3);
+        actions.add(new BuildAction("_research")); //a building for upgrade researching
+        actions.add(new BuildAction("_pop")); //building (or unit) that adds population
+        actions.add(new BuildAction("_train")); //building to train units eg hive, or warp gate
+        actions.add(new BuildAction());
+        return actions;
     }
 }

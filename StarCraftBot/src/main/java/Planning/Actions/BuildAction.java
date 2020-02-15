@@ -6,6 +6,14 @@ public class BuildAction implements Action {
     private String actionName;
     private static final String BaseActionName = "BuildAction";
 
+    public BuildAction(String s) {
+        actionName = BaseActionName.concat(s);
+    }
+
+    public BuildAction(){
+        actionName = BaseActionName;
+    }
+
     @Override
     public String actionName() {
         return actionName;
@@ -13,6 +21,6 @@ public class BuildAction implements Action {
 
     @Override
     public Action copy() {
-        return null;
+        return new BuildAction(actionName.substring(BaseActionName.length()));
     }
 }
