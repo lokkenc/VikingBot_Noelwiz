@@ -5,10 +5,17 @@ import burlap.mdp.singleagent.environment.Environment; //burlap.mdp.singleagent.
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import bwapi.Race;
 
-public class StarcraftEnviorment implements Environment {
+import java.util.PriorityQueue;
 
+public class StarcraftEnviorment implements Environment {
     private Race PlayerRace;
     private Race EnemyRace;
+
+    //TODO: QUEUE FOR ACTIONS. ... maybe.
+    //Would add an action to the queue in executeAction,
+    //then the bot would use the queue to decide what to do
+    //once a previous action was finished or something
+    private PriorityQueue<Action> ActionQueue;
 
     /**
      * Calls some unknown functions in the IntelligenceAgent to figure
@@ -28,8 +35,12 @@ public class StarcraftEnviorment implements Environment {
      * @return
      */
     public EnvironmentOutcome executeAction(Action action) {
+        //TODO: interperate actions based on their name.
+        String actionName = action.actionName();
+
         //TODO: SEND COMMANDS TO BOT BASED ON THE ACTION.
-        return null;
+        return new EnvironmentOutcome(currentObservation(),action, /*resulting state*/
+                predictState(action),  /*reward*/ 0, false);
     }
 
     public double lastReward() {
@@ -52,5 +63,13 @@ public class StarcraftEnviorment implements Environment {
      */
     public void resetEnvironment() {
 
+    }
+
+    /**
+     * TODO: predict the resulting state based on an action.
+     * @param action the action taken by the ai
+     * */
+    private State predictState(Action action){
+        return null;
     }
 }
