@@ -1,3 +1,6 @@
+import bwapi.Unit;
+
+import java.util.ArrayList;
 
 /*
  * Class: Units
@@ -8,31 +11,81 @@ public class Units {
 
     public Units(ArrayList<Unit> units) {
         this.units = units;
+    }
 
-        // TODO: Sort units in ascending order
+    public int getNumberOfUnits() {
+        return units.size();
+    }
+
+    public double getTotalHp() {
+        double totalHp = 0.0;
+
+        for(Unit unit : units) {
+            totalHp += unit.getHitPoints();
+        }
+
+        return totalHp;
+    }
+
+    public double getAverageHp() {
+        double totalHp = 0.0;
+        int numberOfUnits = units.size();
+
+        for(Unit unit : units) {
+            totalHp += unit.getHitPoints();
+        }
+
+        return totalHp / numberOfUnits;
     }
 
     // Get the sum of all unit distances
-    public double getUnitsSum() {
+    public double getTotalDistanceFromUnit(Unit source) {
+        double totalDistance = 0.0;
 
+        for(Unit unit : units) {
+            totalDistance += unit.getDistance(source);
+        }
+
+        return totalDistance;
     }
 
     // Get the average distance of all units
-    public double getUnitsAverage() {
+    public double getAverageDistanceFromUnit(Unit source) {
+        double totalDistance = 0.0;
+        int numberOfUnits = units.size();
 
+        for(Unit unit : units) {
+            totalDistance += unit.getDistance(source);
+        }
+
+        return totalDistance / numberOfUnits;
     }
 
     // Get the closest unit
-    public Unit getClosestUnit() {
-        if(!units.isEmpty) {
-            return units.get(0);
+    public Unit getClosestUnitToUnit(Unit source) {
+        Unit closest;
+
+        if(!units.isEmpty()) {
+            closest = units.get(0);
         }
+        else {
+            closest = null;
+        }
+
+        return closest;
     }
 
     // Get the farthest unit
-    public Unit getFarthestUnit() {
-        if(!units.isEmpty) {
-            return units.get(units.size);
+    public Unit getFarthestUnitFromUnit(Unit source) {
+        Unit farthest;
+
+        if(!units.isEmpty()) {
+            farthest = units.get(units.size() - 1);
         }
+        else {
+            farthest = null;
+        }
+
+        return farthest;
     }
 }

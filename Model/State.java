@@ -1,89 +1,69 @@
 
-
 public class State {
     private double coolDown;
+    private Units friendlyUnits;
+    private Units enemyUnits;
     private double friendlyHitPoints;
     private double enemyHitPoints;
     private TerrainSector friendlyDistanceSums;
-    private TerrainSector friendlyDistanceMaxs;
+    private TerrainSector friendlyDistanceMaxes;
     private TerrainSector enemyDistanceSums;
-    private TerrainSector enemyDistanceMaxs;
+    private TerrainSector enemyDistanceMaxes;
     private TerrainSector terrainInfo;
 
-    public State(double coolDown, double friendlyHitPoints, double enemyHitPoints, TerrainSector friendlyDistanceSums,
-                 TerrainSector friendlyDistanceMaxs, TerrainSector enemyDistanceSums, TerrainSector enemyDistanceMaxs,
+    public State(double coolDown, Units friendlyUnits, Units enemyUnits, TerrainSector friendlyDistanceSums,
+                 TerrainSector friendlyDistanceMaxes, TerrainSector enemyDistanceSums, TerrainSector enemyDistanceMaxes,
                  TerrainSector terrainInfo) {
         this.coolDown = coolDown;
-        this.friendlyHitPoints = friendlyHitPoints;
-        this.enemyHitPoints = enemyHitPoints;
+        this.friendlyUnits = friendlyUnits;
+        this.enemyUnits = enemyUnits;
         this.friendlyDistanceSums = friendlyDistanceSums;
-        this.friendlyDistanceMaxs = friendlyDistanceMaxs;
+        this.friendlyDistanceMaxes = friendlyDistanceMaxes;
         this.enemyDistanceSums = enemyDistanceSums;
-        this.enemyDistanceMaxs = enemyDistanceMaxs;
+        this.enemyDistanceMaxes = enemyDistanceMaxes;
         this.terrainInfo = terrainInfo;
+
+        this.friendlyHitPoints = this.friendlyUnits.getTotalHp();
+        this.enemyHitPoints = this.enemyUnits.getTotalHp();
     }
 
     public double getCoolDown() {
         return coolDown;
     }
 
-    public void setCoolDown(double coolDown) {
-        this.coolDown = coolDown;
+    public Units getFriendlyUnits() {
+        return this.friendlyUnits;
+    }
+
+    public Units getEnemyUnits() {
+        return this.enemyUnits;
     }
 
     public double getFriendlyHitPoints() {
         return friendlyHitPoints;
     }
 
-    public void setFriendlyHitPoints(double friendlyHitPoints) {
-        this.friendlyHitPoints = friendlyHitPoints;
-    }
-
     public double getEnemyHitPoints() {
         return enemyHitPoints;
-    }
-
-    public void setEnemyHitPoints(double enemyHitPoints) {
-        this.enemyHitPoints = enemyHitPoints;
     }
 
     public TerrainSector getFriendlyDistanceSums() {
         return friendlyDistanceSums;
     }
 
-    public void setFriendlyDistanceSums(TerrainSector friendlyDistanceSums) {
-        this.friendlyDistanceSums = friendlyDistanceSums;
-    }
-
-    public TerrainSector getFriendlyDistanceMaxs() {
-        return friendlyDistanceMaxs;
-    }
-
-    public void setFriendlyDistanceMaxs(TerrainSector friendlyDistanceMaxs) {
-        this.friendlyDistanceMaxs = friendlyDistanceMaxs;
+    public TerrainSector getFriendlyDistanceMaxes() {
+        return friendlyDistanceMaxes;
     }
 
     public TerrainSector getEnemyDistanceSums() {
         return enemyDistanceSums;
     }
 
-    public void setEnemyDistanceSums(TerrainSector enemyDistanceSums) {
-        this.enemyDistanceSums = enemyDistanceSums;
-    }
-
-    public TerrainSector getEnemyDistanceMaxs() {
-        return enemyDistanceMaxs;
-    }
-
-    public void setEnemyDistanceMaxs(TerrainSector enemyDistanceMaxs) {
-        this.enemyDistanceMaxs = enemyDistanceMaxs;
+    public TerrainSector getEnemyDistanceMaxes() {
+        return enemyDistanceMaxes;
     }
 
     public TerrainSector getTerrainInfo() {
         return terrainInfo;
-    }
-
-    public void setTerrainInfo(TerrainSector terrainInfo) {
-        this.terrainInfo = terrainInfo;
     }
 }
