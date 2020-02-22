@@ -1,3 +1,5 @@
+package src.main.java;
+
 import bwapi.*;
 
 public class EconomyAgent {
