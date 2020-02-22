@@ -39,7 +39,7 @@ public class StarcraftEnviorment implements Environment {
         String actionName = action.actionName();
 
         //TODO: SEND COMMANDS TO BOT BASED ON THE ACTION.
-        return new EnvironmentOutcome(currentObservation(),action, /*resulting state*/
+        return new EnvironmentOutcome(currentObservation(), action, /*resulting state*/
                 predictState(action),  /*reward*/ 0, false);
     }
 
