@@ -17,6 +17,7 @@ import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.mdp.singleagent.model.SampleModel;
 import burlap.statehashing.HashableStateFactory;
+import burlap.statehashing.ReflectiveHashableStateFactory;
 
 public class StarcraftPlanner {
     private Episode ep = new Episode();
@@ -64,12 +65,9 @@ public class StarcraftPlanner {
         domain.addActionType(new TrainActionType());
         domain.addActionType(new UpgradeActionType());
 
-        SampleModel scsample = new StarcraftSampleModle();
+        domain.setModel(new StarcraftModel());
 
-        //TODO: MAKE A class that implements SampleModel.
-        domain.setModel(scsample);
-
-        HashableStateFactory factory = null;
+        HashableStateFactory factory = new ReflectiveHashableStateFactory();
 
         ValueFunction initalreward = null;
 
