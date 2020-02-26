@@ -8,4 +8,6 @@ public abstract class Action {
     public ActionType getType() {
         return this.type;
     }
+
+    public void doAction(Game game, Units units){}
 }

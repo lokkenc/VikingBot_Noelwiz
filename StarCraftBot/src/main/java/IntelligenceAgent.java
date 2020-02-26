@@ -1,4 +1,4 @@
-package src.main.java;
+
 
 import bwapi.*;
 import bwta.*;
@@ -131,7 +131,7 @@ public class IntelligenceAgent {
                     }
                 }
 
-                if (buildingStillThere == false) {
+                if (!buildingStillThere) {
                     enemyBuildingMemory.remove(pos);
                     break;
                 }
@@ -160,7 +160,7 @@ public class IntelligenceAgent {
      * Finds and adds chokePoints to an arrayList
      * @param p Position to watch
      */
-    public void addWatchedPoint(Position p){
+    public void addWatchedPoint(Position p) {
         List<Chokepoint> unwatched = new ArrayList<Chokepoint>();
         unwatched.addAll(BWTA.getChokepoints());
         if(watched.size() > 0){

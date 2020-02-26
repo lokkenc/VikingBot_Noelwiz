@@ -1,4 +1,4 @@
-package src.main.java;
+
 
 import bwapi.*;
 import bwta.*;
