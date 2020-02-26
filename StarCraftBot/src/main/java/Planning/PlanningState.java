@@ -27,6 +27,9 @@ public class PlanningState implements HashableState, State {
     private GameStatus gameStatus;
     private int[][] trainingCapacity; /*[ workers[used, avail] , ground[used, avail], combat air[used, avail], support air[used, avail]] */
 
+    private ArrayList<String> VariableKeys = new ArrayList<String>();
+
+
     public PlanningState(int numWorkers, int mineralProductionRate, int gasProductionRate, int numBases, int timeSinceLastScout,
                          ArrayList<CombatUnitStatus> combatUnitStatuses, int numEnemyWorkers, int numEnemyBases, Unit mostCommonCombatUnit,
                          Boolean attackingEnemyBase, Race playerRace, Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity) {
@@ -44,16 +47,58 @@ public class PlanningState implements HashableState, State {
         this.enemyRace = enemyRace;
         this.gameStatus = gameStatus;
         this.trainingCapacity = trainingCapacity;
+
+        VariableKeys = new ArrayList<String>();
+        variableKeys().add("numWorkers");
     }
+
+    /**
+     *
+     * @param variableKey a string that's the key to one of the variables. Present
+     *                    in the VariableKeys list.
+     * @return a Object that is contained in that variable
+     */
     public Object get(Object variableKey) {
-        return null;
+        /*public class test{
+             public static void main(String[] args) {
+                Object testobj = new String("words");
+                System.out.println(testobj.toString());
+             }
+        }
+        outputs: "words" so the lines below should be fine*/
+        String key = variableKey.toString();
+        Object result;
+        switch (key) {
+            case "numWorkers":
+                result = numWorkers;
+                break;
+            default:
+                result = null;
+                break;
+        }
+
+        return result;
     }
+
+    /**
+     * Should make a shallow copy of this object.
+     * @return an object that is different than this obejct with the
+     *         same values
+     */
     public PlanningState copy() {
         return this;
     }
+
+    /**
+     * Gets a list of all variable keys
+     * @return a List of variable keys.
+     */
     public List variableKeys() {
-        return null;
+        return VariableKeys;
     }
+
+
+
     public PlanningState s() {
         return this;
     }
