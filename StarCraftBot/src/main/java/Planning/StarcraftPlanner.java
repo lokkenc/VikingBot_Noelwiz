@@ -65,8 +65,7 @@ public class StarcraftPlanner {
         domain.addActionType(new TrainActionType());
         domain.addActionType(new UpgradeActionType());
 
-        //TODO: MAKE A class that implements SampleModel.
-        domain.setModel(null);
+        domain.setModel(new StarcraftModel());
 
         HashableStateFactory factory = new ReflectiveHashableStateFactory();
 
