@@ -25,11 +25,13 @@ public class PlanningState implements HashableState, State {
     private Race playerRace;
     private Race enemyRace;
     private GameStatus gameStatus;
-    private int[][] trainingCapacity; /*[ workers[used, avail] , ground[used, avail], combat air[used, avail], support air[used, avail]] */
+    private int[][] trainingCapacity; /*[ workers[used, avail] , ground[used, avail], combat air[used, avail],
+                                            support air[used, avail]] */
 
-    public PlanningState(int numWorkers, int mineralProductionRate, int gasProductionRate, int numBases, int timeSinceLastScout,
-                         ArrayList<CombatUnitStatus> combatUnitStatuses, int numEnemyWorkers, int numEnemyBases, Unit mostCommonCombatUnit,
-                         Boolean attackingEnemyBase, Race playerRace, Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity) {
+    public PlanningState(int numWorkers, int mineralProductionRate, int gasProductionRate, int numBases,
+                         int timeSinceLastScout, ArrayList<CombatUnitStatus> combatUnitStatuses, int numEnemyWorkers,
+                         int numEnemyBases, Unit mostCommonCombatUnit, Boolean attackingEnemyBase, Race playerRace,
+                         Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity) {
         this.numWorkers = numWorkers;
         this.mineralProductionRate = mineralProductionRate;
         this.gasProductionRate = gasProductionRate;
@@ -45,15 +47,75 @@ public class PlanningState implements HashableState, State {
         this.gameStatus = gameStatus;
         this.trainingCapacity = trainingCapacity;
     }
+
+
     public Object get(Object variableKey) {
-        return null;
+
+        /*
+        //Integer implementation
+        Integer i = (Integer) variableKey;
+        Object var = this.variableKeys().get(i);
+        return var;
+        */
+
+        //String implementation
+        if (variableKey.equals("numWorkers"))
+            return numWorkers;
+        else if (variableKey.equals("mineralProductionRate"))
+            return mineralProductionRate;
+        else if (variableKey.equals("gasProductionRate"))
+            return gasProductionRate;
+        else if (variableKey.equals("numBases"))
+            return numBases;
+        else if (variableKey.equals("timeSinceLastScout"))
+            return timeSinceLastScout;
+        else if (variableKey.equals("combatUnitStatuses"))
+            return combatUnitStatuses;
+        else if (variableKey.equals("numEnemyWorkers"))
+            return numEnemyWorkers;
+        else if (variableKey.equals("numEnemyBases"))
+            return numEnemyBases;
+        else if (variableKey.equals("mostCommonCombatUnit"))
+            return mostCommonCombatUnit;
+        else if (variableKey.equals("attackingEnemyBase"))
+            return attackingEnemyBase;
+        else if (variableKey.equals("playerRace"))
+            return playerRace;
+        else if (variableKey.equals("enemyRace"))
+            return enemyRace;
+        else if (variableKey.equals("gameStatus"))
+            return gameStatus;
+        else if (variableKey.equals("trainingCapacity"))
+            return trainingCapacity;
+        else //error
+            return null;
     }
+
+    public List variableKeys() {
+        ArrayList<Object> variableList = new ArrayList<Object>();
+        variableList.add(numWorkers);
+        variableList.add(mineralProductionRate);
+        variableList.add(gasProductionRate);
+        variableList.add(numBases);
+        variableList.add(timeSinceLastScout);
+        variableList.add(combatUnitStatuses);
+        variableList.add(numEnemyWorkers);
+        variableList.add(numEnemyBases);
+        variableList.add(mostCommonCombatUnit);
+        variableList.add(attackingEnemyBase);
+        variableList.add(playerRace);
+        variableList.add(enemyRace);
+        variableList.add(gameStatus);
+        variableList.add(trainingCapacity);
+        return variableList;
+
+
+    }
+
     public PlanningState copy() {
         return this;
     }
-    public List variableKeys() {
-        return null;
-    }
+
     public PlanningState s() {
         return this;
     }
