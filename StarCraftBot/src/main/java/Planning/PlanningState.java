@@ -49,6 +49,10 @@ public class PlanningState implements HashableState, State {
     }
 
 
+    /**
+     * @param variableKey The key representing the desired variable
+     * @return The Object related to variableKey
+     */
     public Object get(Object variableKey) {
 
         /*
@@ -91,6 +95,9 @@ public class PlanningState implements HashableState, State {
             return null;
     }
 
+    /**
+     * @return A list of variables that make up this state
+     */
     public List variableKeys() {
         ArrayList<Object> variableList = new ArrayList<Object>();
         variableList.add(numWorkers);
@@ -109,8 +116,9 @@ public class PlanningState implements HashableState, State {
         variableList.add(trainingCapacity);
         return variableList;
 
-
     }
+
+    /* ----------- Getters and Setters -------------- */
 
     public PlanningState copy() {
         return this;
