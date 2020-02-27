@@ -22,33 +22,10 @@ import burlap.statehashing.ReflectiveHashableStateFactory;
 public class StarcraftPlanner {
     private Episode ep = new Episode();
 
-    private BeliefSparseSampling beliefPlanner;
     private SparseSampling sparsePlanner;
-    private UCT uctPlanner;
     private Environment game;
-    private GreedyQPolicy uctPolicy;
     private Policy sparcePolicy;
 
-
-    /**
-     * Function to initalize the two planning functions until we decide on one
-     * @param domain the game domain.
-     * @param factory a state factory for all game nodes.
-     * @param inialValue the value function for reaching the inital goal.
-     */
-    private void initalizePlanners(SADomain domain, HashableStateFactory factory, ValueFunction inialValue){
-        float DiscountFactor = 0.5f;
-        uctPlanner = new UCT(domain, DiscountFactor, factory, 5, 10, -1 );
-
-        sparsePlanner = new SparseSampling(domain,DiscountFactor,factory,10,1);
-        sparsePlanner.setValueForLeafNodes(inialValue);
-
-        //beliefPlanner = new BeliefSparseSampling(domain,DiscountFactor,factory,10,-1);
-
-        game = new StarcraftEnviorment();
-        uctPolicy = uctPlanner.planFromState(game.currentObservation());
-        sparcePolicy = new GreedyQPolicy(sparsePlanner);
-    }
 
     /**
      * intialize everything to use the ai planning.
@@ -69,30 +46,38 @@ public class StarcraftPlanner {
 
         HashableStateFactory factory = new ReflectiveHashableStateFactory();
 
+        //TODO: fill in reward function here
         ValueFunction initalreward = null;
 
-        initalizePlanners(domain, factory, initalreward);
+        //TODO: make sure the enviorment is initalized with everything it needs or something
+        game = new StarcraftEnviorment();
 
+        //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
+        float DiscountFactor = 0.5f;
+        sparsePlanner = new SparseSampling(domain,DiscountFactor,factory,10,1);
+        sparsePlanner.setValueForLeafNodes(initalreward);
+
+        //get inital policy for planning
+        sparcePolicy = new GreedyQPolicy(sparsePlanner);
+
+        //NOTE TO FUTURE SELVES: consider adjusting this.
         sparsePlanner.setForgetPreviousPlanResults(true);
     }
 
-    public void UCTPlanStep(){
-        Action todo = uctPolicy.action(game.currentObservation());
-        game.executeAction( todo );
-    }
-
+    /**
+     * Exicutes an action in the enviorment with the spare planner.
+     */
     public void SparsePlanStep(){
-        Action todo = uctPolicy.action( game.currentObservation());
+        Action todo = sparcePolicy.action( game.currentObservation());
         game.executeAction( todo );
     }
 
-
+    /**
+     *
+     * @param vf A value funtion for evaluating
+     */
     public void setGoal(ValueFunction vf){
         sparsePlanner.setValueForLeafNodes(vf);
-        uctPolicy = sparsePlanner.planFromState(game.currentObservation());
-
-        //TODO: figure out how to tell the UCT where to go.
+        sparcePolicy = new GreedyQPolicy(sparsePlanner);
     }
-
-
 }
