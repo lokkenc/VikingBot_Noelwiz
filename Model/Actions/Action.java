@@ -1,13 +1,12 @@
 package Actions;
 
-import Actions.ActionType;
+import bwapi.Game;
+import model.Units;
 
 public abstract class Action {
     private ActionType type;
 
-    public ActionType getType() {
-        return this.type;
-    }
+    public abstract ActionType getType();
 
-    public void doAction(Game game, Units units){}
+    public abstract void doAction(Game game, Units units);
 }

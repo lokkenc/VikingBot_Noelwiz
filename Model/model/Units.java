@@ -1,3 +1,5 @@
+package model;
+
 import bwapi.Unit;
 
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ public class Units {
     public Units(ArrayList<Unit> units) {
         this.units = units;
     }
+
+    public ArrayList<Unit> getUnits() {return this.units;}
 
     public int getNumberOfUnits() {
         return units.size();

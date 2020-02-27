@@ -1,9 +1,14 @@
 package Actions;
 
-import Actions.ActionType;
+import bwapi.Game;
+import bwapi.Position;
+import bwapi.Unit;
+import model.Units;
+
+import java.util.ArrayList;
 
 public class MoveUpLeft extends Action {
-    private ActionType type = MOVEUPLEFT;
+    private ActionType type = ActionType.MOVEUPLEFT;
 
     public ActionType getType() {
         return this.type;
@@ -17,8 +22,9 @@ public class MoveUpLeft extends Action {
     public void doAction(Game game, Units units){
 
         Position movePos;
-        for(Unit unit: units) { // for every unit remove 8 from the units current x and add 8 to the y to move up left
-            movePos = new Position(unit.getX() - 8, unit.getY() + 8)
+        ArrayList<Unit> allUnits = units.getUnits();
+        for(Unit unit: allUnits) { // for every unit remove 8 from the units current x and add 8 to the y to move up left
+            movePos = new Position(unit.getX() - 8, unit.getY() + 8);
             if(unit.hasPath(movePos)) { // check if it can move there
                 unit.move(movePos);
             }

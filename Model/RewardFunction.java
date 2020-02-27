@@ -12,15 +12,20 @@ public class RewardFunction {
                 /*
                  * DEFAULT_REWARD * ((EnemiesDefeated / 10) - (AlliesDefeated / 20) - (AllyToEnemyHpDiff / 30))
                  */
+               /* reward = ((current.getEnemyHitPoints() - next.getEnemyHitPoints()) * UnitTypeDamageOnAttack) -
+                         (current.getFriendlyHitPoints() - next.getFriendlyHitPoints()); */ // maybe this equation?
                 break;
-            case EXPLORE:
-                // Reward exploring the map
+            case MOVEDOWNLEFT:
+            case MOVEDOWNRIGHT:
+            case MOVEUP:
+            case MOVEUPLEFT:
+            case MOVEUPRIGHT:
+            case MOVEDOWN:
+            case MOVERIGHT:
+            case MOVELEFT:
+                // Reward Movement
                 break;
-            case FLEE:
-                // Reward tactical retreats
-                break;
-            case IDLE:
-                // Reward idling
+            case SPREAD:
                 break;
             default:
                 // Default reward?

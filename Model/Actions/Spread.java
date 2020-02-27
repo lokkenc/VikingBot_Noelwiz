@@ -1,10 +1,14 @@
 package Actions;
 
-import Actions.ActionType;
-import java.util.*;
+import bwapi.Game;
+import bwapi.Position;
+import bwapi.Unit;
+import model.Units;
+
+import java.util.ArrayList;
 
 public class Spread extends Action {
-    private ActionType type = SPREAD;
+    private ActionType type = ActionType.SPREAD;
 
     public ActionType getType() {
         return this.type;
@@ -17,8 +21,10 @@ public class Spread extends Action {
      */
     public void doAction(Game game, Units units){
 
-        Position center = findCenter(getPosEndPoints(units));
-        for(Unit unit: units) {
+        ArrayList<Unit> allUnits = units.getUnits();
+        Position center = findCenter(getPosEndPoints(allUnits));
+
+        for(Unit unit: allUnits) {
             int x = unit.getX();
             int y = unit.getY();
             if(x > center.getX()) { // if we are to the right move a bit further to the right
@@ -43,16 +49,16 @@ public class Spread extends Action {
 
     /**
      * This function returns the min and max X and Y values of a group of units
-     * @param units The group of units to search for the min and max values
+     * @param allUnits The group of units to search for the min and max values
      * @return int[] which holds the min/max values of x and y for all units
      */
-    private int[] getPosEndPoints(Units units) {
+    private int[] getPosEndPoints(ArrayList<Unit> allUnits) {
         //Find min and max position values to get a center point
         int[] retArr = new int[4];
         retArr[0] = retArr[2] = Integer.MAX_VALUE;
         retArr[1] = retArr[3] = Integer.MIN_VALUE;
 
-        for(Unit unit: units) { // all the units in our sqaud
+        for(Unit unit: allUnits) { // all the units in our sqaud
             // Check for x min/max
             if(unit.getX() < retArr[0]) {
                 retArr[0] = unit.getX();
@@ -63,7 +69,7 @@ public class Spread extends Action {
             // Check for y min/max
             if(unit.getY() < retArr[2]) {
                 retArr[2] = unit.getY();
-            } else if(Unit.getY() > retArr[3]) {
+            } else if(unit.getY() > retArr[3]) {
                 retArr[3] = unit.getY();
             }
         }
