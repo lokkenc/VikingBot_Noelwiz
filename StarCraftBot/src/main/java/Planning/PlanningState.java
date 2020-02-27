@@ -7,10 +7,6 @@ import bwapi.*;
 import java.util.ArrayList;
 import java.util.List;
 
-enum GameStatus {
-    EARLY, MID, LATE;
-}
-
 public class PlanningState implements HashableState, State {
     private int numWorkers;
     private int mineralProductionRate;
