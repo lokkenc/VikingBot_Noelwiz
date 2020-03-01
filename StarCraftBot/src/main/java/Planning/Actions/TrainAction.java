@@ -17,9 +17,13 @@ public class TrainAction implements Action {
      *          "amount=%i", the amount to train
      */
     public TrainAction(String s){
+
         actionName = BaseActionName.concat(s);
     }
 
+    /**
+     * Create a train action with no arguments. ... consider not allowing.
+     */
     public TrainAction(){
         actionName = BaseActionName;
     }
