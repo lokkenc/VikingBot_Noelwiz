@@ -17,7 +17,6 @@ public class TrainAction implements Action {
      *          "amount=%i", the amount to train
      */
     public TrainAction(String s){
-
         actionName = BaseActionName.concat(s);
     }
 

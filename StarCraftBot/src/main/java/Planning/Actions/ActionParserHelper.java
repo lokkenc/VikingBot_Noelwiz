@@ -7,7 +7,7 @@ public class ActionParserHelper {
     /**
      * Enum for what the action is
      */
-    enum ActionEnum{
+    public enum ActionEnum{
         UPGRADE, TRAIN, SCOUT, EXPAND, BUILD, ATTACK, UNKNOWN
     }
 
