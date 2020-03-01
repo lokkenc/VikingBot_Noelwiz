@@ -50,7 +50,6 @@ public class PlanningState implements HashableState, State {
         this.gameStatus = gameStatus;
         this.trainingCapacity = trainingCapacity;
 
-
         VariableKeys.add("numWorkers");
         VariableKeys.add("mineralProductionRate");
         VariableKeys.add("gasProductionRate");
@@ -158,7 +157,11 @@ public class PlanningState implements HashableState, State {
     /* ----------- Getters and Setters -------------- */
 
     public PlanningState copy() {
-        return this;
+        PlanningState copy = new PlanningState(this.numWorkers, this.mineralProductionRate,this.gasProductionRate,this.numBases,
+                this.timeSinceLastScout, this.combatUnitStatuses, this.numEnemyWorkers,this.numEnemyBases,
+                this.mostCommonCombatUnit,this.attackingEnemyBase,this.playerRace, this.enemyRace, this.gameStatus,
+                this.trainingCapacity);
+        return copy;
     }
 
 
