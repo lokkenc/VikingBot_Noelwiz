@@ -482,12 +482,21 @@ public class StarcraftModel implements FullModel {
 
     @Override
     public EnvironmentOutcome sample(State state, Action action) {
-        return null;
+        List<TransitionProb> trans = this.transitions(state,action);
+
+        double chance = rng.nextDouble();
+
+        int index = 0;
+        while (chance > 0){
+            chance -= trans.get(index).p;
+        }
+
+        return trans.get(index).eo;
     }
 
     @Override
     public boolean terminal(State state) {
-        return false;
+        return state.get("numEnemyBases") == 0;
     }
 
 
