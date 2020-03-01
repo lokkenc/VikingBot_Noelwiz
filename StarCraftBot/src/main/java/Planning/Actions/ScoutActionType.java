@@ -20,8 +20,8 @@ import java.util.List;
  * then we could specify a unit type.
  */
 public class ScoutActionType implements ActionType {
-    private final static String name = "Scout_type";
-    private final static String action_name = "Scout_Action";
+    private final static String name = "Scouttype";
+    private final static String action_name = "ScoutAction";
     private static SimpleAction ScoutAction = new SimpleAction(action_name);
 
     public String typeName() {
