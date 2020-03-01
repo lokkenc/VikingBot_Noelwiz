@@ -4,7 +4,7 @@ import burlap.mdp.core.action.Action;
 
 public class TrainAction implements Action {
     private String actionName;
-    private static final String BaseActionName = "BuildAction";
+    private static final String BaseActionName = "TrainAction";
 
     //TODO: ALLOW for options to train worker, or a specific unit by name
     //possibly could replace using the names with a unit catigoriazation we make
