@@ -21,8 +21,8 @@ import java.util.List;
  * Future Considerations:
  */
 public class ExpandActionType implements ActionType {
-    private final static String name = "Expand_Type";
-    private final static String action_name = "Expand_Action";
+    private final static String name = "ExpandType";
+    private final static String action_name = "ExpandAction";
     private static SimpleAction ExpandAction = new SimpleAction(action_name);
 
     public String typeName() {
