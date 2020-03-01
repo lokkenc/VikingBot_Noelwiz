@@ -1,5 +1,8 @@
 package Planning;
 
+import Knowledge.GeneralGameKnowledge;
+import Knowledge.GeneralRaceProductionKnowledge;
+import Knowledge.ProtossGeneralKnowledge;
 import Planning.Actions.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
@@ -55,9 +58,11 @@ public class StarcraftModel implements FullModel {
         ActionParserHelper.ActionEnum actiontype = ActionParserHelper.GetActionType(action);
         switch (actiontype){
             case SCOUT:
-                //TODO: consider giving the model accsess to the game for better time estimation
-                //to ask what time it is?
-                int newtimesincelastscout = (int) state.get("timeSinceLastScout");
+                //maybe consider changing this to be a negitive number or something
+                //to represent that the scout is on the way. idk. 0 is probably fine,
+                //just tell the helper functions for the possibility of a new enemy base,
+                //and new enemy workers.
+                int newtimesincelastscout = 0;
 
                 newtimesincelastscout += Math.round(rng.nextFloat() * 30 * 1000);
                 baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
@@ -209,11 +214,13 @@ public class StarcraftModel implements FullModel {
         }
 
         //distro of likelyhood of a new enemy base
+        AllProbabilities.addAll(newEnemyBaseTransitions(state, action, AllProbabilities));
 
+        //TODO:
         //distribution of enemy workers likely to currently be owned
 
-
         //posibility of units finishing training
+        AllProbabilities.addAll(trainingCompleteProbabilities(state, action, AllProbabilities));
 
         /* * * end account for general changes * * */
 
@@ -223,11 +230,12 @@ public class StarcraftModel implements FullModel {
 
     /**
      * Helper function to provide possible states if attacked.
-     * @param Currentstate
-     * @param action
-
-     * @param allProbabilities
-     * @return
+     * @param Currentstate the current actual state
+     * @param action the action to be taken
+     * @param allProbabilities all possible resulting states and their probabilities so far.
+     *                         WILL BE MODIFIED IN THE FUNCTION: inorder to adjust the probailities to
+     *                         make sure they still add up to 1.
+     * @return any new possibilities to add to the list of all probabilities outside the function.
      */
     private List<TransitionProb> attackedTransitions(State Currentstate, Action action, List<TransitionProb> allProbabilities) {
         double attackprob = 0.05;
@@ -255,11 +263,111 @@ public class StarcraftModel implements FullModel {
     }
 
 
+    /**
+     * Helper function to provide possible states if the enemy built a new base.
+     * @param Currentstate the current actual state
+     * @param action the action to be taken
+     * @param allProbabilities all possible resulting states and their probabilities so far.
+     *                         WILL BE MODIFIED IN THE FUNCTION: inorder to adjust the probailities to
+     *                         make sure they still add up to 1.
+     * @return any new possibilities to add to the list of all probabilities outside the function.
+     */
+    private List<TransitionProb> newEnemyBaseTransitions(State Currentstate, Action action, List<TransitionProb> allProbabilities) {
+        //TODO: consider giving the model accsess to the game for better time estimation
+        //to ask what time it is? or something. this function want's to know
+        //how long since it last checked the enemy base.
+        int timeSinceLastScout = (int) Currentstate.get("timeSinceLastScout");
+        GeneralRaceProductionKnowledge enemyknowledge;
+        switch ((Race) Currentstate.get("enemyRace")){
+            case Protoss:
+                enemyknowledge = new ProtossGeneralKnowledge();
+                break;
+            case Terran:
+                //TODO: MAKE ONE OF THESE FOR TERRAN
+                enemyknowledge = new ProtossGeneralKnowledge();
+                break;
+            case Zerg:
+                //TODO: MAKE ONE OF THESE FOR ZERG
+                enemyknowledge = new ProtossGeneralKnowledge();
+                break;
+            //case Unknown:
+            //case Random:
+            default:
+                //TODO: MAKE ONE OF THESE FOR AVERAGES, or something.
+                enemyknowledge = new ProtossGeneralKnowledge();
+        }
+
+        if (ActionParserHelper.ActionEnum.SCOUT == ActionParserHelper.GetActionType(action)
+                || timeSinceLastScout < (30 /* fps */ * 30 /* seconds */) ){
+            return null;
+        } else {
+            TransitionProb currentprob;
+            State alternateState;
+
+            List<TransitionProb> newProbabilities = new ArrayList<TransitionProb>();
+
+            //figure out probability of a new base
+            int numenemyworkers = (int) allProbabilities.get(0).eo.op.get("numEnemyWorkers");
+            int numenemybases = (int) allProbabilities.get(0).eo.op.get("numEnemyBases");
+            int workersperbase = (int) Math.floor(numenemyworkers / numenemybases);
+            int[] argument = new int[numenemybases];
+            for(int j = 0; j < numenemybases; j++){
+                argument[j] = workersperbase;
+            }
+            int enemyMineralAccumulation = Math.round(enemyknowledge.AverageMineralProductionRate(argument));
+
+            int canAffordNewBase = 0;
+            //base cost
+            int affordthreshhold = 400;
+            //cost for making workers continuesly.
+            affordthreshhold += 50 * (timeSinceLastScout/30*20);
+            //pop increase
+            affordthreshhold += (timeSinceLastScout/30*20)/10 * 100;
+            //discount it by 40% because this probably isn't a realistic bounding
+            affordthreshhold = (int) Math.round(affordthreshhold * 0.6);
+            if(enemyMineralAccumulation > affordthreshhold){
+                canAffordNewBase = 1;
+            }
 
 
+            double newBase = numenemybases/3 * canAffordNewBase;
+            double noNewBase = 1 - newBase;
 
 
+            if(newBase >= 0 ) {
+                //enumerate possiblities
+                for (int i = 0; i < allProbabilities.size(); i++) {
+                    currentprob = allProbabilities.get(i);
+                    currentprob.p = currentprob.p * noNewBase;
 
+                    alternateState = new PlanningState((int) currentprob.eo.op.get("numWorkers"), (int) currentprob.eo.op.get("mineralProductionRate"),
+                            (int) currentprob.eo.op.get("gasProductionRate"), (int) currentprob.eo.op.get("numBases"), (int) currentprob.eo.op.get("timeSinceLastScout"),
+                            (ArrayList<CombatUnitStatus>) currentprob.eo.op.get("combatUnitStatuses"), (int) currentprob.eo.op.get("numEnemyWorkers"),
+                            (int) currentprob.eo.op.get("numEnemyBases"), (Unit) currentprob.eo.op.get("mostCommonCombatUnit"),
+                            !(boolean) currentprob.eo.op.get("attackingEnemyBase"), (Race) currentprob.eo.op.get("playerRace"), (Race) currentprob.eo.op.get("enemyRace"), (GameStatus) currentprob.eo.op.get("gameStatus"),
+                            (int[][]) currentprob.eo.op.get("trainingCapacity"));
+
+                    newProbabilities.add(new TransitionProb(newBase * currentprob.p, new EnvironmentOutcome(Currentstate, action, alternateState, rewardFunction.reward(Currentstate, action, alternateState), false)));
+                }
+            }
+
+            return newProbabilities;
+        }
+    }
+
+
+    /**
+     * A helper function to fill in the possible states that represent units finishing their training.
+     *
+     * The chance of  a unit finishing is treated like a uniform random variable.
+     *
+     * @param Currentstate the current actual state
+     * @param action the action to be taken
+     * @param allProbabilities all possible resulting states and their probabilities so far.
+     *                         WILL BE MODIFIED IN THE FUNCTION: inorder to adjust the probailities to
+     *                         make sure they still add up to 1.
+     * @return any new possibilities to add to the list of all probabilities outside the function.
+     */
     private  List<TransitionProb> trainingCompleteProbabilities(State Currentstate, Action action, List<TransitionProb> allProbabilities){
         List<TransitionProb> probabilities = new ArrayList<TransitionProb>();
         State alternateState;
@@ -309,6 +417,13 @@ public class StarcraftModel implements FullModel {
     }
 
 
+    /**
+     * A helper function for the trainingCompleteProbabilities helper function. Enumerates the possible
+     * trainingCapacityies of the state given
+     * @param ourrace the player's race
+     * @param possibleState the current state to enumerate the possible capacities for.
+     * @return
+     */
     //TODO: this is missing more than a few possibilites, from different combinations of units finishing
     //training, and not finishing training.
     private List<CapacityProbibilityPair> PosibleCapacities(Race ourrace, State possibleState){
@@ -317,7 +432,6 @@ public class StarcraftModel implements FullModel {
         //TODO: someone who's smart with probability should adjust this chance here, and for protoss below
         double finishprob = AverageUnitTrainingTime/1800;
         double notfinishprob = 1 - finishprob;
-        double probabilityNotAccountedFor = finishprob;
         double currentSituationProbab;
         int[][] capacity = (int[][]) possibleState.get("gameStatus");
 
@@ -338,7 +452,6 @@ public class StarcraftModel implements FullModel {
                     capacity[3][1] += 1;
 
                     currentSituationProbab = Math.pow(finishprob, unit+1);
-                    probabilityNotAccountedFor -= currentSituationProbab;
                     //TODO: figure out how to make the probability correct
                     //this adds the probability that all the units finished training so far.
                     possiblecapacities.add( new CapacityProbibilityPair(capacity, currentSituationProbab) );
@@ -357,7 +470,6 @@ public class StarcraftModel implements FullModel {
 
                         power++;
                         currentSituationProbab = Math.pow(finishprob, power);
-                        probabilityNotAccountedFor -= currentSituationProbab;
                         possiblecapacities.add( new CapacityProbibilityPair(capacity, currentSituationProbab) );
                     }
                 }
