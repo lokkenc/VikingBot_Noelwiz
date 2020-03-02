@@ -22,7 +22,7 @@ public class Spread extends Action {
     public void doAction(Game game, Units units){
 
         ArrayList<Unit> allUnits = units.getUnits();
-        Position center = findCenter(getPosEndPoints(allUnits));
+        Unit center = units.getCentralUnit();
 
         for(Unit unit: allUnits) {
             int x = unit.getX();
@@ -45,45 +45,5 @@ public class Spread extends Action {
             unit.move(new Position(x, y));
         }
 
-    }
-
-    /**
-     * This function returns the min and max X and Y values of a group of units
-     * @param allUnits The group of units to search for the min and max values
-     * @return int[] which holds the min/max values of x and y for all units
-     */
-    private int[] getPosEndPoints(ArrayList<Unit> allUnits) {
-        //Find min and max position values to get a center point
-        int[] retArr = new int[4];
-        retArr[0] = retArr[2] = Integer.MAX_VALUE;
-        retArr[1] = retArr[3] = Integer.MIN_VALUE;
-
-        for(Unit unit: allUnits) { // all the units in our sqaud
-            // Check for x min/max
-            if(unit.getX() < retArr[0]) {
-                retArr[0] = unit.getX();
-            } else if(unit.getX() > retArr[1]) {
-                retArr[1] = unit.getX();
-            }
-
-            // Check for y min/max
-            if(unit.getY() < retArr[2]) {
-                retArr[2] = unit.getY();
-            } else if(unit.getY() > retArr[3]) {
-                retArr[3] = unit.getY();
-            }
-        }
-        return retArr;
-    }
-
-    /**
-     * This function finds the position at the center of all of the units
-     * @param minMax integer array that holds the min/max values of x and y for all units
-     * @return Position which is the center point of all the units
-     */
-    private Position findCenter(int[] minMax) {
-        int xCoord= minMax[1] - ((minMax[1] - minMax[0]) / 2);
-        int yCoord = minMax[3] - ((minMax[3] - minMax[2]) / 2);
-        return new Position(xCoord, yCoord);
     }
 }
