@@ -5,6 +5,15 @@ import burlap.mdp.core.action.SimpleAction;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ActionParserHelperTest {
+    /*
+    @org.junit.jupiter.api.Test
+    void getActionTypeShouldBeUnkown() {
+        assertEquals(ActionParserHelper.ActionEnum.UNKNOWN,
+                ActionParserHelper.GetActionType(new SimpleAction("unknownname")),
+                "ActionParser  unknownTest 1: a random string should be unknown");
+    }
+    */
+
 
     @org.junit.jupiter.api.Test
     void getActionTypeShouldBeUnkown() {
