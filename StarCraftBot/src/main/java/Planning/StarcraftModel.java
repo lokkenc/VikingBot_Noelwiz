@@ -104,6 +104,7 @@ public class StarcraftModel implements FullModel {
                 mineralproduction = (int) state.get("mineralProductionRate");
 
                 //TODO: also consider the reduction in resource production temporarily
+                //reduce the output of mineral or gas production by the amount one unit normally produces.
                 if(ourrace == Race.Zerg){
                     baseNextState = new PlanningState( numworkers-1, mineralproduction-57,
                             (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
@@ -183,7 +184,7 @@ public class StarcraftModel implements FullModel {
                 }
                 break;
 
-            //TODO: probably take a more detailed look at these
+            //TODO after demo: probably take a more detailed look at these when we improve the bot
             case UPGRADE:
                 baseNextState = state.copy();
                 break;
@@ -214,8 +215,11 @@ public class StarcraftModel implements FullModel {
         //distro of likelyhood of a new enemy base
         AllProbabilities.addAll(newEnemyBaseTransitions(state, action, AllProbabilities));
 
-        //TODO:
-        //distribution of enemy workers likely to currently be owned
+        //TODO: distribution of enemy workers likely to currently be owned
+        /* Should be similar to the above enemy base transitions, where we calculate
+         * if they can build a base, accept this enumartes the possible number of workers they
+         * could have built in theory.
+         */
 
         //posibility of units finishing training
         AllProbabilities.addAll(trainingCompleteProbabilities(state, action, AllProbabilities));
@@ -261,6 +265,8 @@ public class StarcraftModel implements FullModel {
     }
 
 
+    //improvements: account for other regular spending, like combat units, upgrades ect
+    //also making the probabilities non-uniform.
     /**
      * Helper function to provide possible states if the enemy built a new base.
      * @param Currentstate the current actual state
@@ -271,7 +277,7 @@ public class StarcraftModel implements FullModel {
      * @return any new possibilities to add to the list of all probabilities outside the function.
      */
     private List<TransitionProb> newEnemyBaseTransitions(State Currentstate, Action action, List<TransitionProb> allProbabilities) {
-        //TODO: consider giving the model accsess to the game for better time estimation
+        //consider giving the model accsess to the game for better time estimation
         //to ask what time it is? or something. this function want's to know
         //how long since it last checked the enemy base.
         int timeSinceLastScout = (int) Currentstate.get("timeSinceLastScout");
@@ -281,11 +287,9 @@ public class StarcraftModel implements FullModel {
                 enemyknowledge = new ProtossGeneralKnowledge();
                 break;
             case Terran:
-                //TODO: MAKE ONE OF THESE FOR TERRAN
                 enemyknowledge = new TerrenGeneralKnowledge();
                 break;
             case Zerg:
-                //TODO: MAKE ONE OF THESE FOR ZERG
                 enemyknowledge = new ZergGeneralKnowledge();
                 break;
             //case Unknown:
@@ -395,6 +399,8 @@ public class StarcraftModel implements FullModel {
                         (int[][])currentprob.eo.op.get("trainingCapacity"));
 
                 //TODO: FIX THIS
+                //tomorrow me: I'm not sure what's wrong, it's probably a problem in the functions below
+                //but I could be wrong. Either way, I'm leaving this as is for now to get it submitted.
                 probabilities.add(new TransitionProb(currentCapProbPair.prob * currentprob.p, new EnvironmentOutcome(Currentstate, action,alternateState, rewardFunction.reward(Currentstate,action,alternateState),false)));
             }
 
@@ -459,6 +465,9 @@ public class StarcraftModel implements FullModel {
         } else {
             int power = 1;
             //TODO: THIS!
+            //why this isn't done: there's a lot of possible combinations
+            //of one like zelots finishing, but workers not ect, and I don't
+            //know how to enumerate all of those, and give their relative probabilities.
             for(int catagory = 0; catagory<capacity.length; catagory++){
                 if(capacity[catagory][0] > 0){
                     for(int tainingcapacityslot = 0; tainingcapacityslot< capacity[catagory][0];tainingcapacityslot++){
