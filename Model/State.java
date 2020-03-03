@@ -1,4 +1,3 @@
-
 public class State {
     private double coolDown;
     private Units friendlyUnits;
