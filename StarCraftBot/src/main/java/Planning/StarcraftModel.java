@@ -2,6 +2,8 @@ package Planning;
 
 import Knowledge.GeneralRaceProductionKnowledge;
 import Knowledge.ProtossGeneralKnowledge;
+import Knowledge.TerrenGeneralKnowledge;
+import Knowledge.ZergGeneralKnowledge;
 import Planning.Actions.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
@@ -280,11 +282,11 @@ public class StarcraftModel implements FullModel {
                 break;
             case Terran:
                 //TODO: MAKE ONE OF THESE FOR TERRAN
-                enemyknowledge = new ProtossGeneralKnowledge();
+                enemyknowledge = new TerrenGeneralKnowledge();
                 break;
             case Zerg:
                 //TODO: MAKE ONE OF THESE FOR ZERG
-                enemyknowledge = new ProtossGeneralKnowledge();
+                enemyknowledge = new ZergGeneralKnowledge();
                 break;
             //case Unknown:
             //case Random:
