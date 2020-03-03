@@ -1,7 +1,10 @@
-
+package src.main.java;
 
 import bwapi.*;
 import bwta.*;
+import src.main.java.IntelligenceAgent;
+import src.main.java.CombatAgent;
+import src.main.java.EconomyAgent;
 
 public class StrategyAgent extends DefaultBWListener{
 
