@@ -25,7 +25,7 @@ public class MoveUp extends Action {
         Position movePos;
         ArrayList<Unit> allUnits = units.getUnits();
         for (Unit unit : allUnits) { // for every unit add 8 to the units current y to move up
-            movePos = new Position(unit.getX(), unit.getY() + 8);
+            movePos = new Position(unit.getX(), unit.getY() - 8);
             if (unit.hasPath(movePos)) { // check if it can move there
                 unit.move(movePos);
             }

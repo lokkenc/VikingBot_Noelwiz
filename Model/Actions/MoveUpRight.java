@@ -24,7 +24,7 @@ public class MoveUpRight extends Action {
         Position movePos;
         ArrayList<Unit> allUnits = units.getUnits();
         for (Unit unit : allUnits) { // for every unit add 8 to the units current x and y to move up right
-            movePos = new Position(unit.getX() + 8, unit.getY() + 8);
+            movePos = new Position(unit.getX() + 8, unit.getY() - 8);
             if (unit.hasPath(movePos)) { // check if it can move there
                 unit.move(movePos);
             }

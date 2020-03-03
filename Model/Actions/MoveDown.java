@@ -24,7 +24,7 @@ public class MoveDown extends Action {
         Position movePos;
         ArrayList<Unit> allUnits = units.getUnits();
         for (Unit unit : allUnits) { // for every unit subtract 8 from the units current y to move down
-            movePos = new Position(unit.getX(), unit.getY() - 8);
+            movePos = new Position(unit.getX(), unit.getY() + 8);
             if (unit.hasPath(movePos)) { // check if it can move there
                 unit.move(movePos);
             }
