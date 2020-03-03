@@ -5,15 +5,6 @@ import burlap.mdp.core.action.SimpleAction;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ActionParserHelperTest {
-    /*
-    @org.junit.jupiter.api.Test
-    void getActionTypeShouldBeUnkown() {
-        assertEquals(ActionParserHelper.ActionEnum.UNKNOWN,
-                ActionParserHelper.GetActionType(new SimpleAction("unknownname")),
-                "ActionParser  unknownTest 1: a random string should be unknown");
-    }
-    */
-
 
     @org.junit.jupiter.api.Test
     void getActionTypeShouldBeUnkown() {
@@ -42,7 +33,7 @@ class ActionParserHelperTest {
     @org.junit.jupiter.api.Test
     void getActionTypeBuildAction() {
         assertEquals(ActionParserHelper.ActionEnum.BUILD,
-                ActionParserHelper.GetActionType(new BuildAction("what=Population")),
+                ActionParserHelper.GetActionType(new BuildAction("_what=Population")),
                 "ActionParser build Test 1: building with arguments should be known");
 
         assertEquals(ActionParserHelper.ActionEnum.BUILD,
@@ -64,6 +55,10 @@ class ActionParserHelperTest {
 
     @org.junit.jupiter.api.Test
     void getActionTypeTrainAction() {
+        assertEquals(ActionParserHelper.ActionEnum.TRAIN,
+                ActionParserHelper.GetActionType(new TrainAction("_what=Worker")),
+                "ActionParser build Test 1: building with arguments should be known");
+
         assertEquals(ActionParserHelper.ActionEnum.TRAIN,
                 ActionParserHelper.GetActionType(new TrainAction("what=Worker")),
                 "ActionParser build Test 1: building with arguments should be known");
@@ -92,8 +87,13 @@ class ActionParserHelperTest {
 
     @org.junit.jupiter.api.Test
     void getActionAttackAction() {
+        //TODO: FIX THIS TEST. something with the constructor appears to be not asigning action name at the end
         assertEquals(ActionParserHelper.ActionEnum.ATTACK,
                 ActionParserHelper.GetActionType(new AttackAction("what=harass")),
+                "ActionParser attack Test 1: attack with arguments should be known");
+
+        assertEquals(ActionParserHelper.ActionEnum.ATTACK,
+                ActionParserHelper.GetActionType(new AttackAction("what=army")),
                 "ActionParser attack Test 1: attack with arguments should be known");
 
         //may or maynot work.

@@ -1,6 +1,5 @@
 package Planning;
 
-import Knowledge.GeneralGameKnowledge;
 import Knowledge.GeneralRaceProductionKnowledge;
 import Knowledge.ProtossGeneralKnowledge;
 import Planning.Actions.ActionParserHelper;
@@ -39,9 +38,6 @@ public class StarcraftModel implements FullModel {
     public List<TransitionProb> transitions(State state, Action action) {
         State baseNextState;
         List<TransitionProb> AllProbabilities = new ArrayList<TransitionProb>();
-        //TODO: make the baseNextState a list of states because there could be multiple possible states
-        //example: if we scout while the enemy race is unknown, 1/3 chance for the enemy to be
-        //a given race, maybe 1% we fail to do anything.
 
 
         int[][] capacity = (int[][]) state.get("gameStatus");
@@ -496,7 +492,7 @@ public class StarcraftModel implements FullModel {
 
     @Override
     public boolean terminal(State state) {
-        return state.get("numEnemyBases") == 0;
+        return  (int) state.get("numEnemyBases") == 0;
     }
 
 

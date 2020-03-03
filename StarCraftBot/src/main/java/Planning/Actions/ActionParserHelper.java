@@ -16,10 +16,17 @@ public class ActionParserHelper {
         String[] parts = actionname.split("_");
         ActionEnum result = ActionEnum.UNKNOWN;
 
-        System.out.println(parts[0]);
+        //I think I learned that if there is no _, parts[0] is null
+        String actiontypename;
+        if(parts[0] == null || parts[0].isEmpty()){
+            actiontypename = parts[1];
+        } else {
+            actiontypename = parts[0];
+        }
 
+        System.out.println(actiontypename);
 
-        switch(parts[0]){
+        switch(actiontypename){
             case "AttackAction":
                 result = ActionEnum.ATTACK;
                 break;
