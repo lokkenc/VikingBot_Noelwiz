@@ -1,4 +1,4 @@
-package src.main.java;
+
 
 import bwapi.*;
 import bwta.*;
@@ -8,6 +8,7 @@ import java.util.HashSet;
 public class CombatAgent {
 
     IntelligenceAgent intel = new IntelligenceAgent();
+    Player self;
 
     /**
      * Gives all units of type type the command to attack position targetPos
@@ -41,5 +42,9 @@ public class CombatAgent {
                 }
             }
         }
+    }
+
+    public void attackClosestEnemy (Unit unit) {
+
     }
 }

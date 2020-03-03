@@ -1,3 +1,5 @@
+package model;
+
 import bwapi.Unit;
 
 import java.util.ArrayList;
@@ -13,8 +15,51 @@ public class Units {
         this.units = units;
     }
 
+    public ArrayList<Unit> getUnits() {return this.units;}
+
     public int getNumberOfUnits() {
         return units.size();
+    }
+
+    /**
+     * This function returns a Unit that is closest the center of all units
+     * @return Unit that is located closest to the center
+     */
+    public Unit getCentralUnit() {
+
+        // Basically this just gets the mins and maxes for x and y of all units
+        int[] minMaxX = new int[2];
+        int[] minMaxY = new int[2];
+        minMaxX[0] = minMaxY[0] = Integer.MAX_VALUE;
+        minMaxX[1] = minMaxY[1] = Integer.MIN_VALUE;
+        for(Unit unit: this.units) {
+            if(unit.getX() < minMaxX[0]) {
+                minMaxX[0] = unit.getX();
+            } else if(unit.getX() > minMaxX[1]) {
+                minMaxX[1] = unit.getX();
+            }
+
+            if(unit.getY() < minMaxY[0]) {
+                minMaxY[0] = unit.getY();
+            } else if(unit.getY() > minMaxY[1]) {
+                minMaxY[1] = unit.getY();
+            }
+        }
+
+        // This now uses those mins and maxes to find the center point and then finds the unit closest to that point
+        Unit centralUnit = null;
+        int minDifference = Integer.MAX_VALUE;
+        int[] midpoint = new int[2];
+        midpoint[0] = minMaxX[1] - ((minMaxX[1] - minMaxX[0]) / 2);
+        midpoint[1] = minMaxY[1] - ((minMaxY[1] - minMaxY[0]) / 2);
+        for(Unit unit: this.units) {
+            if(Math.abs((midpoint[0] - unit.getX()) + (midpoint[1] - unit.getY())) < minDifference) {
+                centralUnit = unit;
+                minDifference = Math.abs((midpoint[0] - unit.getX()) + (midpoint[1] - unit.getY()));
+            }
+        }
+
+        return centralUnit;
     }
 
     public double getTotalHp() {
