@@ -13,7 +13,7 @@ public class PlanningState implements HashableState, State {
     private int gasProductionRate;
     private int numBases;
     private int timeSinceLastScout;
-    private ArrayList<CombatUnitStatus> combatUnitStatuses = new ArrayList<CombatUnitStatus>();
+    private ArrayList<CombatUnitStatus> combatUnitStatuses;
     private int numEnemyWorkers;
     private int numEnemyBases;
     private Unit mostCommonCombatUnit;
@@ -83,12 +83,6 @@ public class PlanningState implements HashableState, State {
         Object result;
 
 
-        /*
-        //Integer implementation
-        Integer i = (Integer) variableKey;
-        Object var = this.variableKeys().get(i);
-        return var;
-        */
 
         //String implementation
         switch(key){
@@ -184,6 +178,15 @@ public class PlanningState implements HashableState, State {
 
     public ArrayList<CombatUnitStatus> getCombatUnitStatuses() {
         return combatUnitStatuses;
+    }
+
+    public int getArmySize() {
+        ArrayList<CombatUnitStatus> combatList = (ArrayList<CombatUnitStatus>) get("combatUnitStatuses");
+        int armySum = 0;
+        for (CombatUnitStatus combatUnitStatus: combatList) {
+            armySum += combatUnitStatus.getAmount();
+        }
+        return armySum;
     }
 
     public int getNumEnemyWorkers() {
