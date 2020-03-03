@@ -25,11 +25,16 @@ public class PlanningState implements HashableState, State {
     private Race playerRace;
     private Race enemyRace;
     private GameStatus gameStatus;
-    private int[][] trainingCapacity; /*[ workers[used, avail] , ground[used, avail], combat air[used, avail], support air[used, avail]] */
+    private int[][] trainingCapacity; /*[ workers[used, avail] , ground[used, avail], combat air[used, avail],
+                                            support air[used, avail]] */
 
-    public PlanningState(int numWorkers, int mineralProductionRate, int gasProductionRate, int numBases, int timeSinceLastScout,
-                         ArrayList<CombatUnitStatus> combatUnitStatuses, int numEnemyWorkers, int numEnemyBases, Unit mostCommonCombatUnit,
-                         Boolean attackingEnemyBase, Race playerRace, Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity) {
+    private ArrayList<String> VariableKeys = new ArrayList<String>();
+
+
+    public PlanningState(int numWorkers, int mineralProductionRate, int gasProductionRate, int numBases,
+                         int timeSinceLastScout, ArrayList<CombatUnitStatus> combatUnitStatuses, int numEnemyWorkers,
+                         int numEnemyBases, Unit mostCommonCombatUnit, Boolean attackingEnemyBase, Race playerRace,
+                         Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity) {
         this.numWorkers = numWorkers;
         this.mineralProductionRate = mineralProductionRate;
         this.gasProductionRate = gasProductionRate;
@@ -44,16 +49,122 @@ public class PlanningState implements HashableState, State {
         this.enemyRace = enemyRace;
         this.gameStatus = gameStatus;
         this.trainingCapacity = trainingCapacity;
+
+        VariableKeys.add("numWorkers");
+        VariableKeys.add("mineralProductionRate");
+        VariableKeys.add("gasProductionRate");
+        VariableKeys.add("numBases");
+        VariableKeys.add("timeSinceLastScout");
+        VariableKeys.add("combatUnitStatuses");
+        VariableKeys.add("numEnemyWorkers");
+        VariableKeys.add("numEnemyBases");
+        VariableKeys.add("mostCommonCombatUnit");
+        VariableKeys.add("attackingEnemyBase");
+        VariableKeys.add("playerRace");
+        VariableKeys.add("enemyRace");
+        VariableKeys.add("gameStatus");
+        VariableKeys.add("trainingCapacity");
     }
+
+    /**
+     *
+     * @param variableKey a string that's the key to one of the variables. Present
+     *                    in the VariableKeys list.
+     * @return a Object that is contained in that variable
+     */
+
+
     public Object get(Object variableKey) {
-        return null;
+        /*public class test{
+             public static void main(String[] args) {
+                Object testobj = new String("words");
+                System.out.println(testobj.toString());
+             }
+        }
+        outputs: "words" so the lines below should be fine*/
+        String key = variableKey.toString();
+        Object result;
+
+
+        /*
+        //Integer implementation
+        Integer i = (Integer) variableKey;
+        Object var = this.variableKeys().get(i);
+        return var;
+        */
+
+        //String implementation
+        switch(key){
+            case "numWorkers":
+                result = numWorkers;
+                break;
+            case "mineralProductionRate":
+                result = mineralProductionRate;
+                break;
+            case "gasProductionRate":
+                result = gasProductionRate;
+                break;
+            case "numBases":
+                result = numBases;
+                break;
+            case "timeSinceLastScout":
+                result = timeSinceLastScout;
+                break;
+            case "combatUnitStatuses":
+                result = combatUnitStatuses;
+                break;
+            case "numEnemyWorkers":
+                result = numEnemyWorkers;
+                break;
+            case "numEnemyBases":
+                result = numEnemyBases;
+                break;
+            case "mostCommonCombatUnit":
+                result = mostCommonCombatUnit;
+                break;
+            case "attackingEnemyBase":
+                result = attackingEnemyBase;
+                break;
+            case "playerRace":
+                result = playerRace;
+                break;
+            case "enemyRace":
+                result = enemyRace;
+                break;
+            case "gameStatus":
+                result = gameStatus;
+                break;
+            case "trainingCapacity":
+                result = trainingCapacity;
+                break;
+            default:
+                result = null;
+        }
+
+
+        return result;
     }
-    public PlanningState copy() {
-        return this;
-    }
+
+
+    /**
+     * Should make a shallow copy of this object.
+     * @return A list of variables that make up this state
+     */
     public List variableKeys() {
-        return null;
+        return VariableKeys;
     }
+
+    /* ----------- Getters and Setters -------------- */
+
+    public PlanningState copy() {
+        PlanningState copy = new PlanningState(this.numWorkers, this.mineralProductionRate,this.gasProductionRate,this.numBases,
+                this.timeSinceLastScout, this.combatUnitStatuses, this.numEnemyWorkers,this.numEnemyBases,
+                this.mostCommonCombatUnit,this.attackingEnemyBase,this.playerRace, this.enemyRace, this.gameStatus,
+                this.trainingCapacity);
+        return copy;
+    }
+
+
     public PlanningState s() {
         return this;
     }

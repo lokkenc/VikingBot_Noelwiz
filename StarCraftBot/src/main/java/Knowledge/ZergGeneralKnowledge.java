@@ -1,15 +1,21 @@
 package Knowledge;
 
-import Knowledge.GeneralRaceProductionKnowledge;
+public class ZergGeneralKnowledge implements GeneralRaceProductionKnowledge{
 
-public class ProtossGeneralKnowledge implements GeneralRaceProductionKnowledge {
-    // https://liquipedia.net/starcraft/Mining for numbers
-    // https://tl.net/forum/brood-war/89939-ideal-mining-thoughts
     private static float gatherrate = 1.055f;
+    //TODO: ADJUST THESE VALUES TO MATCH ZERG
     //per minute, so per 30*60 frames        0   3   6   9   12     15    18
     private static float[] ratePerWorkder = {0, 65f,65f,65f,58.5f, 54.6f, 51.7f, 50.1f, 28.6f, 47.6f, 44f};
 
-    //apparently asusmes 9 things of minerals per patch
+
+
+    /***
+     *
+     * @param NumWorkers array of ints, each int is the number of workers at a mineral field, the
+     *                   length is the number of mineral fields
+     * @return the rate of mineral production / {some unit of time}
+     */
+    @Override
     public float AverageMineralProductionRate(int[] NumWorkers) {
         float production = 0;
 
@@ -28,6 +34,7 @@ public class ProtossGeneralKnowledge implements GeneralRaceProductionKnowledge {
      *                   length is the number of mineral fields
      * @return the rate of mineral production / {some unit of time}
      */
+    @Override
     public float AverageGasProductionRate(int[] NumWorkers) {
         return 0;
     }

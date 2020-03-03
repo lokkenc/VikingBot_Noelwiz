@@ -30,13 +30,14 @@ public class AttackAction implements Action {
      *      - "all" = all combat units
      *      - "selected" = the given unit type
      *      - "bot" = delegate that to the ml or something, idk.
-     *   "amount=%s"
+     *   "amount=%s" //probably could be removed
      *      - "all" = attack with all selected units
      *      - "half" = attack with half of the selected units
      *   "what=%s"
      *      - "harass" = target workers
      *      - "base" = target a base/expansion
      *      - "army" = target enemy army
+     *      - "defend" = defend our base
      */
     public AttackAction(UnitType unit, String[] options){
 
@@ -78,6 +79,7 @@ public class AttackAction implements Action {
      *            - "harass" = target workers
      *            - "base" = target a base/expansion
      *            - "army" = target enemy army
+     *            - "defend" = defend our base
      *         "unit=%s"
      *            - one of the unit type names
      *            TODO: CHECK IF THE HASH CODE IS EQUIVELENT TO THE NAME,
@@ -110,7 +112,7 @@ public class AttackAction implements Action {
 
                 }else if (options[i].startsWith("what=")){
                     if( !(options[i].endsWith("army") || options[i].endsWith("base")
-                            || options[i].endsWith("harass")) ){
+                            || options[i].endsWith("harass") || options[i].endsWith("defend"))  ){
                         System.err.println("Error: improper argument for attack's what option.");
                     }
                 }

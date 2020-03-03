@@ -6,8 +6,13 @@ public class BuildAction implements Action {
     private String actionName;
     private static final String BaseActionName = "BuildAction";
 
+    //TODO: enforce creation of new BuildActions with an _ for aguments
     public BuildAction(String s) {
-        actionName = BaseActionName.concat(s);
+        if(s == null || s.isEmpty()){
+            actionName = BaseActionName;
+        } else {
+            actionName = BaseActionName.concat(s);
+        }
     }
 
     public BuildAction(){
