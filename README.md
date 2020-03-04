@@ -1,5 +1,5 @@
 # StarCraft BroodWar AI
-A bot that uses AI Planning for general strategy management and Reinforcement Learning for combat management.
+A bot that uses AI Planning for general strategy management and Reinforcement ML.Learning for combat management.
 
 ## Requirements
  - Java 1.8
