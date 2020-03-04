@@ -1,3 +1,6 @@
+package States;
+
+import model.TerrainSector;
 import model.Units;
 
 public class State {

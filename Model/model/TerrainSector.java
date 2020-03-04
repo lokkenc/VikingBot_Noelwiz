@@ -1,8 +1,10 @@
+package model;
+
 import bwapi.Unit;
 import model.Units;
 
 /*
- * Class: TerrainSector
+ * Class: model.TerrainSector
  * Description: Represents a subsection of the visible map with collections of units in 8 directions.
  */
 public class TerrainSector {
