@@ -3,47 +3,62 @@ package ML.Learning;
 import ML.Actions.Action;
 import ML.QTable;
 import ML.States.State;
-import ML.States.StateAction;
 import ML.States.StateSpaceManager;
-import bwapi.Game;
 import bwapi.UnitType;
+
+import java.util.Map;
 
 public class SARSA {
 
-    double LEARNING_FACTOR = .5;
-    double DISCOUNT_FACTOR = .6;
-    double INITIAL_QVAL = Double.NEGATIVE_INFINITY;
+    private static final double LEARNING_FACTOR = .5;
+    private static final double DISCOUNT_FACTOR = .6;
+    private static final double INITIAL_QVAL = Double.NEGATIVE_INFINITY;
 
-    QTable qTable;
-    StateSpaceManager spManager;
-    UnitType type;
-    GreedyActionChooser greedy;
-    StateAction current;
-    StateAction next;
+    private UnitType type;
+    private QTable qTable;
+    private StateSpaceManager spaceManager;
 
-    public SARSA(UnitType type) {
+    public SARSA(UnitType type, StateSpaceManager spaceManager) {
         this.type = type;
-        spManager = new StateSpaceManager();
-        qTable = new QTable(spManager.getStateSet(), spManager.getActionList());
-        greedy = new GreedyActionChooser(qTable);
+        this.spaceManager = spaceManager;
+        this.qTable = new QTable(this.spaceManager.getStateSet(), this.spaceManager.getActionList());
     }
 
-    public void setCurrentStateAction(State state, Game game) {
-        Action action = greedy.chooseAction(spManager, state);
-        current.setState(state);
-        current.setAction(action);
-        action.doAction(game, state.getUnit());
+    public double computerQValue(State current, Action action, State next, double reward) {
+
+        // Sarsa qvalue function here
+
+        return 0.0;
     }
 
-    public void setNextStateAction(State state, Game game) {
-        Action action = greedy.chooseAction(spManager, state);
-        next.setState(state);
-        next.setAction(action);
+    public void updateQTable(State current, Action action, State next) {
+        // Get the reward and calculate the qvalue given the reward
+        double reward = RewardFunction.getRewardValue(current, action, next);
+        double qvalue = computerQValue(current, action, next, reward);
+
+        // Get the current qvalue and update it with the new qvalue
+        Map<Action, Double> actionDoubleMap = qTable.get(current);
+        actionDoubleMap.put(action, qvalue);
+        qTable.put(current, actionDoubleMap);
     }
 
-    public void UpdateQTable(State state) {
-        Action action = greedy.chooseAction(spManager, state);
+    public void loadQTable() {
 
     }
 
+    public void storeQTable() {
+
+    }
+
+    public UnitType getType() {
+        return type;
+    }
+
+    public QTable getQTable() {
+        return qTable;
+    }
+
+    public StateSpaceManager getSpaceManager() {
+        return spaceManager;
+    }
 }

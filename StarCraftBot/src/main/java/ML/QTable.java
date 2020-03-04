@@ -7,7 +7,6 @@ import ML.States.StateAction;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class QTable extends HashMap<State, Map<Action, Double>> {
     /**
