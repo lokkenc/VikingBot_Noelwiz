@@ -10,11 +10,11 @@ public class RewardFunction {
     /**
      * This function returns the reward to be given based on the action taken and the difference in states
      * @param current The state before the action is taken
-     * @param next The state after the action is taken
      * @param action The action that was performed
+     * @param next The state after the action is taken
      * @return A Double that contains the value of the reward
      */
-    public static double getRewardValue(State current, State next, Action action) {
+    public static double getRewardValue(State current, Action action, State next) {
         if(action.getType() == ActionType.ATTACK) { // if we are attacking then we can check damage done
             // Reward attacking along the lines of
             int currentEnemyTotalHealth = 0;

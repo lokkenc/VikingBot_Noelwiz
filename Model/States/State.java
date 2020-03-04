@@ -1,73 +1,57 @@
 package States;
 
+import Range.Distance;
+import Range.Hp;
+import Range.Units;
 import model.TerrainSector;
-import model.Units;
 
 public class State {
-    private double coolDown;
-    private Units friendlyUnits;
-    private Units enemyUnits;
-    private double friendlyHitPoints;
-    private double enemyHitPoints;
-    private TerrainSector friendlyDistanceSums;
-    private TerrainSector friendlyDistanceMaxes;
-    private TerrainSector enemyDistanceSums;
-    private TerrainSector enemyDistanceMaxes;
-    private TerrainSector terrainInfo;
+    private boolean coolDown;
+    private Distance closestEnemy;
+    private Units numberOfEnemies;
+    private Hp enemyHp;
+    private Hp friendlyHp;
+    private TerrainSector unitDirections;
 
-    public State(double coolDown, Units friendlyUnits, Units enemyUnits, TerrainSector friendlyDistanceSums,
-                 TerrainSector friendlyDistanceMaxes, TerrainSector enemyDistanceSums, TerrainSector enemyDistanceMaxes,
-                 TerrainSector terrainInfo) {
+    public State(boolean coolDown, Distance closestEnemy, Units numberOfEnemies, Hp enemyHp, Hp friendlyHp, TerrainSector unitDirections) {
         this.coolDown = coolDown;
-        this.friendlyUnits = friendlyUnits;
-        this.enemyUnits = enemyUnits;
-        this.friendlyDistanceSums = friendlyDistanceSums;
-        this.friendlyDistanceMaxes = friendlyDistanceMaxes;
-        this.enemyDistanceSums = enemyDistanceSums;
-        this.enemyDistanceMaxes = enemyDistanceMaxes;
-        this.terrainInfo = terrainInfo;
-
-        this.friendlyHitPoints = this.friendlyUnits.getTotalHp();
-        this.enemyHitPoints = this.enemyUnits.getTotalHp();
+        this.closestEnemy = closestEnemy;
+        this.numberOfEnemies = numberOfEnemies;
+        this.enemyHp = enemyHp;
+        this.friendlyHp = friendlyHp;
+        this.unitDirections = unitDirections;
     }
 
-    public double getCoolDown() {
+    public State(boolean coolDown, int closestEnemy, int numberOfEnemies, int enemyHp, int friendlyHp, TerrainSector unitDirections) {
+        this.coolDown = coolDown;
+        this.closestEnemy = new Distance(closestEnemy);
+        this.numberOfEnemies = new Units(numberOfEnemies);
+        this.enemyHp = new Hp(enemyHp);
+        this.friendlyHp = new Hp(friendlyHp);
+        this.unitDirections = unitDirections;
+    }
+
+    public boolean isCoolDown() {
         return coolDown;
     }
 
-    public Units getFriendlyUnits() {
-        return this.friendlyUnits;
+    public Distance getClosestEnemy() {
+        return closestEnemy;
     }
 
-    public Units getEnemyUnits() {
-        return this.enemyUnits;
+    public Units getNumberOfEnemies() {
+        return numberOfEnemies;
     }
 
-    public double getFriendlyHitPoints() {
-        return friendlyHitPoints;
+    public Hp getEnemyHp() {
+        return enemyHp;
     }
 
-    public double getEnemyHitPoints() {
-        return enemyHitPoints;
+    public Hp getFriendlyHp() {
+        return friendlyHp;
     }
 
-    public TerrainSector getFriendlyDistanceSums() {
-        return friendlyDistanceSums;
-    }
-
-    public TerrainSector getFriendlyDistanceMaxes() {
-        return friendlyDistanceMaxes;
-    }
-
-    public TerrainSector getEnemyDistanceSums() {
-        return enemyDistanceSums;
-    }
-
-    public TerrainSector getEnemyDistanceMaxes() {
-        return enemyDistanceMaxes;
-    }
-
-    public TerrainSector getTerrainInfo() {
-        return terrainInfo;
+    public TerrainSector getUnitDirections() {
+        return unitDirections;
     }
 }
