@@ -1,11 +1,8 @@
 package States;
 
-import Actions.Action;
+import Actions.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class StateSpaceManager {
     private List<Action> actionList;
@@ -17,11 +14,8 @@ public class StateSpaceManager {
     }
 
     public List<Action> getValidActions() {
-        List<Action> actions = new ArrayList<Action>();
-
-        // Add all implemented actions here
-
-        return actions;
+        return Arrays.asList(new Attack(), new MoveDown(), new MoveDownLeft(), new MoveDownRight(), new MoveLeft(),
+                new MoveRight(), new MoveUp(), new MoveUpLeft(), new MoveUpRight());
     }
 
     public Set<State> createStates() {
