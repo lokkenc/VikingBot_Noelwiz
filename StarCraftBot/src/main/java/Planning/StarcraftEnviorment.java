@@ -78,7 +78,7 @@ public class StarcraftEnviorment implements Environment {
     }
 
     public double lastReward() {
-        return 0;
+        return PreviousReward;
     }
 
     /**
