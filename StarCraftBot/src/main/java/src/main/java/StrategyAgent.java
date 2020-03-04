@@ -13,8 +13,8 @@ public class StrategyAgent extends DefaultBWListener{
     private Player self;
 
     private IntelligenceAgent intel = new IntelligenceAgent();
-    private CombatAgent combat = new CombatAgent();
-    private EconomyAgent economy = new EconomyAgent();
+    private CombatAgent combat = new CombatAgent(intel);
+    private EconomyAgent economy = new EconomyAgent(intel);
 
     public void run() {
         bwClient = new BWClient(this);

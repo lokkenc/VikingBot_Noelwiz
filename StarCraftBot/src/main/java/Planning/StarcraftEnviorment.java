@@ -1,15 +1,22 @@
 package Planning;
+
+import Planning.Actions.QueueComparator;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
-import burlap.mdp.singleagent.environment.Environment; //burlap.mdp.singleagent.environment
+import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
+import burlap.mdp.singleagent.model.RewardFunction;
 import bwapi.Race;
+import src.main.java.IntelligenceAgent;
 
 import java.util.PriorityQueue;
 
 public class StarcraftEnviorment implements Environment {
     private Race PlayerRace;
     private Race EnemyRace;
+    private RewardFunction rewardFunction;
+    private double PreviousReward = 0;
+    private IntelligenceAgent intelligenceAgent = null;
 
     //TODO: QUEUE FOR ACTIONS. ... maybe.
     //Would add an action to the queue in executeAction,
@@ -17,12 +24,33 @@ public class StarcraftEnviorment implements Environment {
     //once a previous action was finished or something
     private PriorityQueue<Action> ActionQueue;
 
+
+    /**
+     * Constructer for the enviorment. Takes a reward function to
+     * use for calulating rewards.
+     * @param rf
+     */
+    public StarcraftEnviorment(RewardFunction rf){
+        rewardFunction = rf;
+        ActionQueue = new PriorityQueue<Action>(new QueueComparator());
+    }
+
+    /**
+     * Change the reward function used.
+     * @param rf
+     */
+    public void UpdateRewardFunction(RewardFunction rf){
+        rewardFunction = rf;
+    }
+
+
     /**
      * Calls some unknown functions in the IntelligenceAgent to figure
      * out the current state of the game.
      * @return
      */
     public State currentObservation() {
+        int numworkers = intelligenceAgent.getNumWokers();
         return null;
     }
 
@@ -38,9 +66,15 @@ public class StarcraftEnviorment implements Environment {
         //TODO: interperate actions based on their name.
         String actionName = action.actionName();
 
+
         //TODO: SEND COMMANDS TO BOT BASED ON THE ACTION.
-        return new EnvironmentOutcome(currentObservation(), action, /*resulting state*/
-                predictState(action),  /*reward*/ 0, false);
+
+        //observe results
+        State currentstate = currentObservation();
+        State resultingstate = predictState(action);
+        PreviousReward = rewardFunction.reward(currentstate,action,resultingstate);
+        return new EnvironmentOutcome(currentstate, action, /*resulting state*/
+                resultingstate,  /*reward*/ PreviousReward, isTerminalState(resultingstate));
     }
 
     public double lastReward() {
@@ -48,11 +82,21 @@ public class StarcraftEnviorment implements Environment {
     }
 
     /**
+     * Returns whether the environment is in a terminal state that prevents further action by the agent.
+     *
+     * @return true if the current environment is in a terminal state; false otherwise.
+     */
+    @Override
+    public boolean isInTerminalState() {
+        return false;
+    }
+
+    /**
      * Check if we have no town centers, or if the
      * enemy has no town centers, or if the game is done.
      * @return
      */
-    public boolean isInTerminalState() {
+    public boolean isTerminalState(State s) {
         return false;
     }
 

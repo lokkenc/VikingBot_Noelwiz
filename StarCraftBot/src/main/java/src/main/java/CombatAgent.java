@@ -10,6 +10,10 @@ public class CombatAgent {
     IntelligenceAgent intel = new IntelligenceAgent();
     Player self;
 
+    public CombatAgent( IntelligenceAgent itagent){
+        intel = itagent;
+    }
+
     /**
      * Gives all units of type type the command to attack position targetPos
      * @param self Player assigned to the bot

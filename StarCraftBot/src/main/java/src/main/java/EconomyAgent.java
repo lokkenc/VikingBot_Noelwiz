@@ -6,6 +6,11 @@ public class EconomyAgent {
 
     IntelligenceAgent intel = new IntelligenceAgent();
 
+    public EconomyAgent( IntelligenceAgent itagent){
+        intel = itagent;
+    }
+
+
     /**
      * Sends a worker to get the closest mineral to the specified base
      * @param game Game value created on game start

@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class StarcraftModel implements FullModel {
     Random rng = new Random();
-    RewardFunction rewardFunction = null;
+    RewardFunction rewardFunction;
 
     /*calculates the average time to train for randomizing the chance of a
      * unit finishing it's training. the units in the paranthesies are in
@@ -29,6 +29,16 @@ public class StarcraftModel implements FullModel {
      */
     private static final float AverageUnitTrainingTime = 30 * /* conversion from seconds to frames */
     (40 /* zelot*/ + 20 /* probe */ + 28 /*zergling */ + 40 /* overlord */ + 20 /* drone */)/5;
+
+
+    public StarcraftModel(RewardFunction rf){
+        rewardFunction = rf;
+    }
+
+    public void SetRewardFunction(RewardFunction rf){
+        rewardFunction= rf;
+    }
+
 
     /**
      * Possible transitions from the current state
