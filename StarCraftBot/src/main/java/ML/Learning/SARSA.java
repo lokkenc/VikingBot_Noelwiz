@@ -25,10 +25,11 @@ public class SARSA {
     }
 
     public double computerQValue(State current, Action action, State next, double reward) {
+        // SARSA => q-value = q-value + LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * next_q-value) - q-value)
+        double qvalue = qTable.get(current).get(action);
+        double errorvalue = LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * qTable.getMaxValue(next)) - qvalue);
 
-        // Sarsa qvalue function here
-
-        return 0.0;
+        return qvalue + errorvalue;
     }
 
     public void updateQTable(State current, Action action, State next) {
