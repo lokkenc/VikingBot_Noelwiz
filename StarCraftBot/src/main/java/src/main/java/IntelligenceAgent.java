@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public class IntelligenceAgent {
+    private Race myrace;
+    private Race enemyRace;
 
     private int baseLoc = 0;
     private ArrayList<Integer> scouts = new ArrayList<Integer>();
@@ -327,5 +329,24 @@ public class IntelligenceAgent {
         }
 
         return numberOfBuildingUnits;
+    }
+
+    // * * * Information retrieval for AI Planning * * *//
+    public int getNumWokers(){
+        int numworkers = 0;
+
+        switch (myrace) {
+            case Terran:
+                numworkers = unitMemory.get(UnitType.Terran_SCV);
+                break;
+            case Zerg:
+                numworkers = unitMemory.get(UnitType.Zerg_Drone);
+                break;
+            case Protoss:
+                numworkers = unitMemory.get(UnitType.Protoss_Probe);
+                break;
+        }
+
+        return numworkers;
     }
 }
