@@ -61,7 +61,7 @@ public class SARSA implements java.io.Serializable {
     public void storeQTable() {
         try {
             File f = new File("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
-            f.mkdirs();
+            f.getParentFile().mkdirs();
             FileOutputStream fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(qTable);
