@@ -25,6 +25,10 @@ public class State {
         this.unitDirections = null;
     }
 
+    public void setUnit(Unit unit) {
+        this.Unit = unit;
+    }
+
     public boolean isOnCoolDown() {
         return onCoolDown;
     }

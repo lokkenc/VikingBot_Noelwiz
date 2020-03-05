@@ -1,14 +1,41 @@
 package src.main.java;
 
+import ML.Actions.Action;
+import ML.Range.Distance;
+import ML.Range.Hp;
+import ML.States.State;
+import ML.States.StateAction;
 import bwapi.*;
 import bwta.*;
+import ML.Learning.LearningManager;
+import ML.Range.Units;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class CombatAgent {
 
     IntelligenceAgent intel = new IntelligenceAgent();
     Player self;
+    ArrayList<LearningManager> models;
+    HashMap<Unit, StateAction> UnitStateActionPair;
+    private static CombatAgent single_instance = null;
+
+    private CombatAgent(Player player, IntelligenceAgent intel) {
+        this.self = player;
+        this.intel = intel;
+        this.models = new ArrayList<LearningManager>();
+        UnitStateActionPair = new HashMap<Unit, StateAction>();
+    }
+
+    public CombatAgent getCombatAgent(Player player, IntelligenceAgent intelligence) {
+        if(single_instance == null) {
+            this.single_instance = new CombatAgent(player, intelligence);
+        }
+
+        return this.single_instance;
+    }
 
     /**
      * Gives all units of type type the command to attack position targetPos
@@ -43,6 +70,79 @@ public class CombatAgent {
             }
         }
     }
+
+    public void addUnitToModel(Unit unit) {
+        boolean add = false;
+        for(LearningManager lm: models) {
+            if(lm.getUnitType() == unit.getType()) {
+                add = true;
+            }
+        }
+
+        if(!add) {
+            this.models.add(new LearningManager(unit.getType()));
+        }
+    }
+
+    public void controlArmy(Game game, ArrayList<Unit> allUnits) {
+        for(Unit unit: allUnits) {
+            for(LearningManager lm: models) {
+                if(lm.getUnitType() == unit.getType()) {
+                    State currentState = generateState(game, unit);
+                    Action action = lm.getNextAction(currentState);
+                    if(UnitStateActionPair.get(unit) != null) {
+                        State oldState = UnitStateActionPair.get(unit).getState();
+                        Action oldAction = UnitStateActionPair.get(unit).getAction();
+                        UnitStateActionPair.get(unit).setState(currentState);
+                        UnitStateActionPair.get(unit).setAction(action);
+                        lm.updateState(oldState, oldAction, currentState);
+                    } else {
+                        StateAction SA = new StateAction(currentState, action);
+                        UnitStateActionPair.put(unit, SA);
+                    }
+                }
+            }
+        }
+    }
+
+    public State generateState(Game game, Unit unit) {
+        boolean cooldown = false;
+        Distance closestEnemy = null;
+        Units numberOfEnemies = null;
+        Hp enemyHp = null;
+        Hp friendlyHp = null;
+
+        if (unit.isFlying() && unit.getAirWeaponCooldown() > 0) {
+            cooldown = true;
+        } else if (!unit.isFlying() && unit.getGroundWeaponCooldown() > 0) {
+            cooldown = true;
+        }
+
+        Unit closestUnit = null;
+        int closest = Integer.MAX_VALUE;
+        int enemiesInRange = 0;
+        int totalEnemyInRangeHP = 0;
+        for(Unit units: game.enemy().getUnits()) {
+            if(unit.getDistance(units) < closest) {
+                closestUnit = units;
+                closest = unit.getDistance(units);
+            }
+            if(unit.isInWeaponRange(units)) {
+                enemiesInRange++;
+                totalEnemyInRangeHP += units.getHitPoints();
+            }
+        }
+
+        closestEnemy = new Distance(closest);
+        friendlyHp = new Hp(unit.getHitPoints());
+        enemyHp = new Hp(totalEnemyInRangeHP);
+        numberOfEnemies = new Units(enemiesInRange);
+
+        return new State(cooldown, closestEnemy, numberOfEnemies, enemyHp, friendlyHp);
+
+    }
+
+
 
     public void attackClosestEnemy (Unit unit) {
 

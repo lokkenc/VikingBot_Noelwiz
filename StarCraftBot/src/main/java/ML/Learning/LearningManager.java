@@ -1,6 +1,8 @@
 package ML.Learning;
 
+import ML.Actions.Action;
 import bwapi.UnitType;
+import ML.States.*;
 
 public class LearningManager {
 
@@ -23,6 +25,8 @@ public class LearningManager {
     public Action getNextAction(State state) {
         return greedyActionChooser.chooseAction(spaceManager, state);
     }
+
+    public UnitType getUnitType() { return this.type; }
 
     /*
      * Should we leave the state transitioning to the CombatAgent and only interact

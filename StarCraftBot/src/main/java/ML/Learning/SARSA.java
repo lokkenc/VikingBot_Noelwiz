@@ -4,6 +4,7 @@ import ML.Actions.Action;
 import ML.QTable;
 import ML.States.State;
 import ML.States.StateSpaceManager;
+import ML.RewardFunction;
 import bwapi.UnitType;
 
 import java.util.Map;
