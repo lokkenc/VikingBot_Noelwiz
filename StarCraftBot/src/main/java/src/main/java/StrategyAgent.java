@@ -13,7 +13,7 @@ public class StrategyAgent extends DefaultBWListener{
     private CombatAgent combat = new CombatAgent(intel);
     private EconomyAgent economy = new EconomyAgent();
 
-    private int ML_Epoch = 10;
+    private int ML_Epoch = 14;
     private boolean training = true;
     private int frameCount = 0;
 

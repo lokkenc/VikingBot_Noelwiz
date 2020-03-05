@@ -90,6 +90,7 @@ public class CombatAgent {
             for(LearningManager lm: models) {
                 if(lm.getUnitType() == unit.getType()) {
                     State currentState = generateState(game, unit);
+                    currentState.setUnit(unit);
                     Action action = lm.getNextAction(currentState);
                     if(UnitStateActionPair.get(unit) != null) {
                         State oldState = UnitStateActionPair.get(unit).getState();

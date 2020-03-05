@@ -16,18 +16,15 @@ public class Attack extends Action implements java.io.Serializable {
      */
     public void doAction(Game game, Unit unit){
 
-        Unit lowestUnit = null; // set a variable to hold the lowerUnit id and its hp
-        int lowestHP = Integer.MAX_VALUE;
+        Unit closestUnit = null; // set a variable to hold the lowerUnit id and its hp
+        int lowestDistance = Integer.MAX_VALUE;
         for (Unit enemyUnit : game.enemy().getUnits()) { // for every enemy unit
-            if(unit.isInWeaponRange(enemyUnit) && enemyUnit.getHitPoints() < lowestHP) { // if it is in range and has less HP
-                // set it as the new lowest enemyUnit
-                lowestUnit = enemyUnit;
-                lowestHP = enemyUnit.getHitPoints();
+            if(unit.getDistance(enemyUnit) < lowestDistance) {
+                closestUnit = enemyUnit;
+                lowestDistance = unit.getDistance(enemyUnit);
             }
         }
 
-        if(lowestUnit != null) { // if we found something to attack, attack it
-            unit.attack(lowestUnit);
-        }
+        unit.attack(closestUnit);
     }
 }
