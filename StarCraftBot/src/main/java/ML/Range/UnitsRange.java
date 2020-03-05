@@ -21,4 +21,12 @@ public enum UnitsRange {
     public boolean in(double v) {
         return v >= min && v <= max;
     }
+
+    public boolean onEqual(UnitsRange range2) {
+        if(this == range2) {
+            return true;
+        }
+
+        return false;
+    }
 }

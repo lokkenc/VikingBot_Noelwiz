@@ -27,7 +27,7 @@ public class SARSA {
 
     public double computerQValue(State current, Action action, State next, double reward) {
         // SARSA => q-value = q-value + LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * next_q-value) - q-value)
-        double qvalue = qTable.get(current).get(action);
+        double qvalue = qTable.get(current.getKeyVal(current)).get(action);
         double errorvalue = LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * qTable.getMaxValue(next)) - qvalue);
 
         return qvalue + errorvalue;
@@ -39,9 +39,9 @@ public class SARSA {
         double qvalue = computerQValue(current, action, next, reward);
 
         // Get the current qvalue and update it with the new qvalue
-        Map<Action, Double> actionDoubleMap = qTable.get(current);
+        Map<Action, Double> actionDoubleMap = qTable.get(current.getKeyVal(current));
         actionDoubleMap.put(action, qvalue);
-        qTable.put(current, actionDoubleMap);
+        qTable.put(current.getKeyVal(current), actionDoubleMap);
     }
 
     public void loadQTable() {

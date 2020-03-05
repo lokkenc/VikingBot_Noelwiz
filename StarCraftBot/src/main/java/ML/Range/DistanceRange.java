@@ -21,4 +21,12 @@ public enum DistanceRange {
     public boolean in(double v) {
         return v >= min && v <= max;
     }
+
+    public boolean onEqual(DistanceRange range2) {
+        if(this == range2) {
+            return true;
+        }
+
+        return false;
+    }
 }
