@@ -12,6 +12,7 @@ import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.statehashing.HashableStateFactory;
 import burlap.statehashing.ReflectiveHashableStateFactory;
+import src.main.java.IntelligenceAgent;
 
 public class StarcraftPlanner {
     private Episode ep = new Episode();
@@ -19,7 +20,11 @@ public class StarcraftPlanner {
     private SparseSampling sparsePlanner;
     private StarcraftEnviorment game;
     private Policy sparcePolicy;
+    private IntelligenceAgent intelligenceAgent;
 
+    public StarcraftPlanner(IntelligenceAgent intelligenceAgent) {
+        this.intelligenceAgent = intelligenceAgent;
+    }
 
     /**
      * intialize everything to use the ai planning.
@@ -46,7 +51,7 @@ public class StarcraftPlanner {
         ValueFunction valuefunction = null;
 
         //TODO: make sure the enviorment is initalized with everything it needs or something
-        game = new StarcraftEnviorment(initalreward);
+        game = new StarcraftEnviorment(initalreward, intelligenceAgent);
 
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;

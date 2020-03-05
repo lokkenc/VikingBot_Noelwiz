@@ -1,5 +1,8 @@
 package src.main.java;
 
+import Knowledge.ProtossGeneralKnowledge;
+import Knowledge.TerrenGeneralKnowledge;
+import Knowledge.ZergGeneralKnowledge;
 import bwapi.*;
 import bwta.*;
 
@@ -11,12 +14,17 @@ import java.util.List;
 public class IntelligenceAgent {
     private Race myrace;
     private Race enemyRace;
+    Player self;
 
     private int baseLoc = 0;
     private ArrayList<Integer> scouts = new ArrayList<Integer>();
     private HashMap<UnitType, Integer> unitMemory = new HashMap<UnitType, java.lang.Integer>();
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
+
+    public IntelligenceAgent(Player self) {
+        this.self = self;
+    }
 
     /**
      * Clears current unitMemory and uses {@link #updateUnitMemory} to add all trained units to hashmap
@@ -332,7 +340,7 @@ public class IntelligenceAgent {
     }
 
     // * * * Information retrieval for AI Planning * * *//
-    public int getNumWokers(){
+    public int getNumWorkers(){
         int numworkers = 0;
 
         switch (myrace) {
@@ -348,5 +356,119 @@ public class IntelligenceAgent {
         }
 
         return numworkers;
+    }
+
+    private int getNumWorkersGatheringMinerals() {
+        int numWorkers = 0;
+        for (Unit unit : self.getUnits()) {
+            if (unit.isGatheringMinerals()) {
+                numWorkers++;
+            }
+        }
+        return numWorkers;
+    }
+
+    private int getNumWorkersGatheringGas() {
+        int numWorkers = 0;
+        for (Unit unit : self.getUnits()) {
+            if (unit.isGatheringGas()) {
+                numWorkers++;
+            }
+        }
+        return numWorkers;
+    }
+
+    public float getMineralProductionRate() {
+        float productionRate = 0f;
+        int numBases;
+        int[] numWorkers;
+        switch(myrace) {
+            case Terran:
+                numBases = unitMemory.get(UnitType.Terran_Command_Center);
+                numWorkers = new int[numBases];
+                for (int i = 0; i < numBases; i++) {
+                    numWorkers[i] = getNumWorkersGatheringMinerals() / numBases;
+                }
+                TerrenGeneralKnowledge tgk= new TerrenGeneralKnowledge();
+                productionRate= tgk.AverageMineralProductionRate(numWorkers);
+                break;
+            case Zerg:
+                numBases = unitMemory.get(UnitType.Zerg_Hatchery);
+                numWorkers = new int[numBases];
+                for (int i = 0; i < numBases; i++) {
+                    numWorkers[i] = getNumWorkersGatheringMinerals() / numBases;
+                }
+                ZergGeneralKnowledge zgk= new ZergGeneralKnowledge();
+                productionRate= zgk.AverageMineralProductionRate(numWorkers);
+                break;
+            case Protoss:
+                numBases = unitMemory.get(UnitType.Protoss_Nexus);
+                numWorkers = new int[numBases];
+                for (int i = 0; i < numBases; i++) {
+                    numWorkers[i] = getNumWorkersGatheringMinerals() / numBases;
+                }
+                ProtossGeneralKnowledge pgk= new ProtossGeneralKnowledge();
+                productionRate= pgk.AverageMineralProductionRate(numWorkers);
+                break;
+        }
+        return productionRate;
+    }
+
+    public float getGasProductionRate() {
+        float productionRate = 0f;
+        int numBases;
+        int[] numWorkers;
+        switch(myrace) {
+            case Terran:
+                numBases = unitMemory.get(UnitType.Terran_Command_Center);
+                numWorkers = new int[numBases];
+                for (int i = 0; i < numBases; i++) {
+                    numWorkers[i] = getNumWorkersGatheringGas() / numBases;
+                }
+                TerrenGeneralKnowledge tgk= new TerrenGeneralKnowledge();
+                productionRate= tgk.AverageMineralProductionRate(numWorkers);
+                break;
+            case Zerg:
+                numBases = unitMemory.get(UnitType.Zerg_Hatchery);
+                numWorkers = new int[numBases];
+                for (int i = 0; i < numBases; i++) {
+                    numWorkers[i] = getNumWorkersGatheringGas() / numBases;
+                }
+                ZergGeneralKnowledge zgk= new ZergGeneralKnowledge();
+                productionRate= zgk.AverageMineralProductionRate(numWorkers);
+                break;
+            case Protoss:
+                numBases = unitMemory.get(UnitType.Protoss_Nexus);
+                numWorkers = new int[numBases];
+                for (int i = 0; i < numBases; i++) {
+                    numWorkers[i] = getNumWorkersGatheringGas() / numBases;
+                }
+                ProtossGeneralKnowledge pgk= new ProtossGeneralKnowledge();
+                productionRate= pgk.AverageMineralProductionRate(numWorkers);
+                break;
+        }
+        return productionRate;
+    }
+
+    public int getNumBases() {
+        int numBases = 0;
+
+        switch (myrace) {
+            case Terran:
+                numBases = unitMemory.get(UnitType.Terran_Command_Center);
+                break;
+            case Zerg:
+                numBases = unitMemory.get(UnitType.Zerg_Hatchery);
+                break;
+            case Protoss:
+                numBases = unitMemory.get(UnitType.Protoss_Nexus);
+                break;
+        }
+
+        return numBases;
+    }
+
+    public int getTimeSinceLastScout() {
+        return 0;
     }
 }
