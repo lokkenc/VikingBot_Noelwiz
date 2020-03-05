@@ -78,6 +78,8 @@ public class StrategyAgent extends DefaultBWListener{
     @Override
     public void onUnitShow(Unit unit) {
         intel.onUnitShow(unit);
+
+        //could send the scount back once we show the enemy base
     }
 
 
