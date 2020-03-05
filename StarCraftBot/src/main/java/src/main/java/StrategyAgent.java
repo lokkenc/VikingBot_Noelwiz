@@ -2,9 +2,6 @@ package src.main.java;
 
 import bwapi.*;
 import bwta.*;
-import src.main.java.IntelligenceAgent;
-import src.main.java.CombatAgent;
-import src.main.java.EconomyAgent;
 
 public class StrategyAgent extends DefaultBWListener{
 
@@ -37,7 +34,7 @@ public class StrategyAgent extends DefaultBWListener{
 //        BWTA.analyze();
 //        System.out.println("Map data ready");
 
-        combat.addUnitToModel(intel.getUnit(self, UnitType.Protoss_Zealot));
+        combat.addUnitTypeToModel(UnitType.Protoss_Zealot);
         combat.loadModels();
     }
 
@@ -149,7 +146,6 @@ public class StrategyAgent extends DefaultBWListener{
             frameCount++;
             if(frameCount % ML_Epoch == 0) {
                 frameCount = 0;
-                combat.addUnitToModel(intel.getUnit(self, UnitType.Protoss_Zealot));
                 combat.controlArmy(game, intel.getUnitsListOfType(self, UnitType.Protoss_Zealot));
             }
         }

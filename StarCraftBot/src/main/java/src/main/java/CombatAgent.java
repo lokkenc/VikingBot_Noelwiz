@@ -72,16 +72,16 @@ public class CombatAgent {
         }
     }
 
-    public void addUnitToModel(Unit unit) {
-        boolean add = false;
+    public void addUnitTypeToModel(UnitType type) {
+        boolean add = true;
         for(LearningManager lm: models) {
-            if(lm.getUnitType() == unit.getType()) {
-                add = true;
+            if(lm.getUnitType() == type) {
+                add = false;
             }
         }
 
-        if(!add) {
-            this.models.add(new LearningManager(unit.getType()));
+        if(add) {
+            this.models.add(new LearningManager(type));
         }
     }
 
