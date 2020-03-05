@@ -3,7 +3,7 @@ package ML.Actions;
 import bwapi.Game;
 import bwapi.Unit;
 
-public abstract class Action {
+public abstract class Action implements java.io.Serializable {
     private ActionType type;
 
     public abstract ActionType getType();

@@ -28,8 +28,8 @@ public class LearningManager implements java.io.Serializable {
         }
     }
 
-    public void storeQTalbe() {
-        sarsa.storeQTalbe();
+    public void storeQTable() {
+        sarsa.storeQTable();
     }
 
     public void updateState(State current, Action action, State next) {

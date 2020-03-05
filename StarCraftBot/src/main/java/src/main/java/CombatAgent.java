@@ -34,7 +34,7 @@ public class CombatAgent {
 
     public void storeModels() {
         for(LearningManager model : models) {
-            model.storeQTalbe();
+            model.storeQTable();
         }
     }
 
