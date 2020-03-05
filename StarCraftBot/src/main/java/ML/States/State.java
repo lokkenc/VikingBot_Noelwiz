@@ -65,41 +65,41 @@ public class State {
         }
 
         if(state.getNumberOfEnemies().getRange() == SMALL) {
-            keyVal+=1;
-        } else if(state.getNumberOfEnemies().getRange() == MEDIUM) {
-            keyVal+=2;
-        } else if(state.getNumberOfEnemies().getRange() == LARGE) {
             keyVal+=3;
+        } else if(state.getNumberOfEnemies().getRange() == MEDIUM) {
+            keyVal+=4;
+        } else if(state.getNumberOfEnemies().getRange() == LARGE) {
+            keyVal+=5;
         }
 
         if(state.getFriendlyHp().getRange() == HpRange.LOW) {
-            keyVal+=1;
+            keyVal+=6;
         } else if(state.getFriendlyHp().getRange() == HpRange.MEDIUM_LOW) {
-            keyVal+=2;
+            keyVal+=7;
         } else if(state.getFriendlyHp().getRange() == HpRange.MEDIUM_HIGH) {
-            keyVal+=3;
+            keyVal+=8;
         } else {
-            keyVal+=4;
+            keyVal+=9;
         }
 
         if(state.getEnemyHp().getRange() == HpRange.LOW) {
-            keyVal+=1;
+            keyVal+=10;
         } else if(state.getEnemyHp().getRange() == HpRange.MEDIUM_LOW) {
-            keyVal+=2;
+            keyVal+=11;
         } else if(state.getEnemyHp().getRange() == HpRange.MEDIUM_HIGH) {
-            keyVal+=3;
+            keyVal+=12;
         } else {
-            keyVal+=4;
+            keyVal+=13;
         }
 
         if(state.getClosestEnemy().getRange() == DistanceRange.CLOSE) {
-            keyVal+=1;
+            keyVal+=14;
         } else if(state.getClosestEnemy().getRange() == DistanceRange.MEDIUM_CLOSE) {
-            keyVal+=2;
+            keyVal+=15;
         } else if(state.getClosestEnemy().getRange() == DistanceRange.MEDIUM_FAR) {
-            keyVal+=3;
+            keyVal+=16;
         } else {
-            keyVal+=4;
+            keyVal+=17;
         }
         return keyVal;
     }
