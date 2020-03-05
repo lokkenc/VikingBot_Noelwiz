@@ -16,25 +16,14 @@ import java.util.HashSet;
 
 public class CombatAgent {
 
-    IntelligenceAgent intel = new IntelligenceAgent();
-    Player self;
+    IntelligenceAgent intel;
     ArrayList<LearningManager> models;
     HashMap<Unit, StateAction> UnitStateActionPair;
-    private static CombatAgent single_instance = null;
 
-    private CombatAgent(Player player, IntelligenceAgent intel) {
-        this.self = player;
+    public CombatAgent(IntelligenceAgent intel) {
         this.intel = intel;
         this.models = new ArrayList<LearningManager>();
         UnitStateActionPair = new HashMap<Unit, StateAction>();
-    }
-
-    public CombatAgent getCombatAgent(Player player, IntelligenceAgent intelligence) {
-        if(single_instance == null) {
-            this.single_instance = new CombatAgent(player, intelligence);
-        }
-
-        return this.single_instance;
     }
 
     /**
