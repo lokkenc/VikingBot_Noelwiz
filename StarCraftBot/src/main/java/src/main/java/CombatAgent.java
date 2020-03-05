@@ -100,6 +100,7 @@ public class CombatAgent {
                         StateAction SA = new StateAction(currentState, action);
                         UnitStateActionPair.put(unit, SA);
                     }
+                    action.doAction(game, unit);
                 }
             }
         }
