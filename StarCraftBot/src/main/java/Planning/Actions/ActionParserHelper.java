@@ -24,7 +24,7 @@ public class ActionParserHelper {
             actiontypename = parts[0];
         }
 
-        System.out.println(actiontypename);
+        //System.out.println(actiontypename);
 
         switch(actiontypename){
             case "AttackAction":

@@ -6,7 +6,7 @@ import bwapi.UnitType;
 import java.util.Arrays;
 
 public class AttackAction implements Action {
-    private String actionName;
+    String actionName;
     private static final String BaseActionName = "AttackAction";
 
     public AttackAction(){
@@ -56,7 +56,7 @@ public class AttackAction implements Action {
         String[] options = str.split("_");
 
         if (options.length > 1) {
-            options = Arrays.copyOfRange(options,1,options.length);
+            options = Arrays.copyOfRange(options,0,options.length);
 
             new AttackAction(options);
         } else{
@@ -93,8 +93,8 @@ public class AttackAction implements Action {
 
         StringBuilder namebuilder = new StringBuilder(BaseActionName);
 
-        for(int i = 1; i < options.length; i ++){
-            if(!options[i].isEmpty()){
+        for(int i = 0; i < options.length; i ++){
+            if(options[i] != null && !options[i].isEmpty()){
 
                 //confirm that the options are filled out properly.
                 //Todo: consider taking this out if it effects prformance too much
