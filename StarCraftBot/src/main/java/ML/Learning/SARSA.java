@@ -7,9 +7,11 @@ import ML.States.StateSpaceManager;
 import ML.RewardFunction;
 import bwapi.UnitType;
 
+import java.io.*;
 import java.util.Map;
 
-public class SARSA {
+public class SARSA implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
     private static final double LEARNING_FACTOR = .5;
     private static final double DISCOUNT_FACTOR = .6;
@@ -45,11 +47,25 @@ public class SARSA {
     }
 
     public void loadQTable() {
-
+        try {
+            FileOutputStream fos = new FileOutputStream("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(qTable);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void storeQTable() {
-
+        try {
+            FileInputStream fis = new FileInputStream("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            qTable = (QTable) ois.readObject();
+            ois.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public UnitType getType() {

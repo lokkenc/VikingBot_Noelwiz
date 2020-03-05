@@ -3,7 +3,8 @@ package ML.Actions;
 import bwapi.Game;
 import bwapi.Unit;
 
-public class Attack extends Action {
+public class Attack extends Action implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private ActionType type = ActionType.ATTACK;
 
     public ActionType getType() { return this.type; }

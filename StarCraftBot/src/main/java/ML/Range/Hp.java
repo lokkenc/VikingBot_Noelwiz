@@ -1,6 +1,7 @@
 package ML.Range;
 
-public class Hp {
+public class Hp implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private HpRange range;
     private int value;
 

@@ -26,6 +26,18 @@ public class CombatAgent {
         UnitStateActionPair = new HashMap<Unit, StateAction>();
     }
 
+    public void loadModels() {
+        for(LearningManager model : models) {
+            model.loadQTable();
+        }
+    }
+
+    public void storeModels() {
+        for(LearningManager model : models) {
+            model.storeQTalbe();
+        }
+    }
+
     /**
      * Gives all units of type type the command to attack position targetPos
      * @param self Player assigned to the bot

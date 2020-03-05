@@ -4,7 +4,10 @@ import ML.Actions.Action;
 import bwapi.UnitType;
 import ML.States.*;
 
-public class LearningManager {
+import java.io.File;
+
+public class LearningManager implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
     private UnitType type;
     private StateSpaceManager spaceManager;
@@ -16,6 +19,17 @@ public class LearningManager {
         spaceManager = new StateSpaceManager();
         sarsa = new SARSA(type, spaceManager);
         greedyActionChooser = new GreedyActionChooser(sarsa.getQTable());
+    }
+
+    public void loadQTable() {
+        File f = new File("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
+        if (f.exists()) {
+            sarsa.loadQTable();
+        }
+    }
+
+    public void storeQTalbe() {
+        sarsa.storeQTalbe();
     }
 
     public void updateState(State current, Action action, State next) {

@@ -4,7 +4,8 @@ import bwapi.Game;
 import bwapi.Position;
 import bwapi.Unit;
 
-public class MoveLeft extends Action {
+public class MoveLeft extends Action implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private ActionType type = ActionType.MOVELEFT;
 
     public ActionType getType() {

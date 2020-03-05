@@ -14,6 +14,7 @@ import java.util.Map;
 import static ML.Range.UnitsRange.*;
 
 public class QTable extends HashMap<Integer, Map<Action, Double>> {
+    private static final long serialVersionUID = 1L;
     /**
      * This constructor takes a Collection of ML.States and a Collection of ML.Actions and adds them to the ML.States.State -> (Action, Double) HashMap.
      * @param states All possible states that will be included in the HashMap.

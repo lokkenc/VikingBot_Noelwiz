@@ -25,6 +25,7 @@ public class StrategyAgent extends DefaultBWListener{
         bwClient.startGame();
     }
 
+    @Override
     public void onStart() {
         game = bwClient.getGame();
         self = game.self();
@@ -35,8 +36,12 @@ public class StrategyAgent extends DefaultBWListener{
 //        BWTA.readMap(game);
 //        BWTA.analyze();
 //        System.out.println("Map data ready");
+
+        combat.addUnitToModel(intel.getUnit(self, UnitType.Protoss_Zealot));
+        combat.loadModels();
     }
 
+    @Override
     public void onFrame() {
         //game.setTextSize(10);
         game.drawTextScreen(10, 10, "Playing as " + self.getName() + " - " + self.getRace());
@@ -148,6 +153,11 @@ public class StrategyAgent extends DefaultBWListener{
                 combat.controlArmy(game, intel.getUnitsListOfType(self, UnitType.Protoss_Zealot));
             }
         }
+    }
+
+    @Override
+    public void onEnd(boolean isWinner) {
+        combat.storeModels();
     }
 
     public static void main(String[] args) {

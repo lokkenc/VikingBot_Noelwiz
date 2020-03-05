@@ -6,7 +6,8 @@ import ML.model.TerrainSector;
 
 import static ML.Range.UnitsRange.*;
 
-public class State {
+public class State implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private boolean onCoolDown;
     private Distance closestEnemy;
     private Units numberOfEnemies;
