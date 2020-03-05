@@ -48,22 +48,25 @@ public class SARSA implements java.io.Serializable {
 
     public void loadQTable() {
         try {
-            FileOutputStream fos = new FileOutputStream("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(qTable);
-            fos.close();
-        } catch (IOException e) {
+            File f = new File("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
+            FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            qTable = (QTable) ois.readObject();
+            ois.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void storeQTable() {
         try {
-            FileInputStream fis = new FileInputStream("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            qTable = (QTable) ois.readObject();
-            ois.close();
-        } catch (Exception e) {
+            File f = new File("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
+            f.mkdirs();
+            FileOutputStream fos = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(qTable);
+            fos.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
