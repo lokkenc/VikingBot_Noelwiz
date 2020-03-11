@@ -17,11 +17,6 @@ public class StarcraftEnviorment implements Environment {
     private RewardFunction rewardFunction;
     private double PreviousReward = 0;
     private IntelligenceAgent intelligenceAgent = null;
-
-    //TODO: QUEUE FOR ACTIONS. ... maybe.
-    //Would add an action to the queue in executeAction,
-    //then the bot would use the queue to decide what to do
-    //once a previous action was finished or something
     private PriorityQueue<Action> ActionQueue;
 
 
@@ -56,9 +51,6 @@ public class StarcraftEnviorment implements Environment {
 
     /**
      * Intercepts the action given by executeAction(Action) and sends it to the bot to be done.
-     *
-     * TODO: probably will then delay outcome until some time, and then send
-     * back enviorment reward
      * @param action
      * @return
      */
@@ -88,7 +80,7 @@ public class StarcraftEnviorment implements Environment {
      */
     @Override
     public boolean isInTerminalState() {
-        return false;
+        return isTerminalState(currentObservation());
     }
 
     /**
@@ -97,7 +89,11 @@ public class StarcraftEnviorment implements Environment {
      * @return
      */
     public boolean isTerminalState(State s) {
-        return false;
+        boolean terminal = false;
+        if((int) s.get("numBases") < 1 || (int) s.get("numEnemyBases") < 1){
+            terminal = true;
+        }
+        return terminal;
     }
 
 
