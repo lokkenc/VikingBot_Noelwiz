@@ -100,7 +100,7 @@ class ActionParserHelperTest {
 
         //may or maynot work.
         assertEquals(ActionParserHelper.ActionEnum.ATTACK,
-                ActionParserHelper.GetActionType(new AttackAction("what=Worker_amount=ALL")),
+                ActionParserHelper.GetActionType(new AttackAction("what=Worker_amount=all")),
                 "ActionParser attack Test 2: a AttackAction action with multiple args should be recognized");
 
         String[] options = new String[2];
