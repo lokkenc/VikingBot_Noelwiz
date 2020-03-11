@@ -70,6 +70,7 @@ public class TrainAction implements Action {
 
             this.actionName = name.toString();
         }
+
     }
 
     /**
