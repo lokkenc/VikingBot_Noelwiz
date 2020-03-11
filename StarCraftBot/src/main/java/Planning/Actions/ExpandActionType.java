@@ -51,7 +51,7 @@ public class ExpandActionType implements ActionType {
      *         predict minerals, and decide weather it's reasonably possible to
      *         expand somehow.
      *         NOTE: this can't be done using current game info because it's used
-     *         for future planning.
+     *         for future planning. this information would have to be stored in the state itself.
      */
     public List<Action> allApplicableActions(State state) {
         ArrayList<Action> list = new ArrayList<Action>(1);
