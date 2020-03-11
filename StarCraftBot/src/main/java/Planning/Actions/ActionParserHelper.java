@@ -12,6 +12,7 @@ public class ActionParserHelper {
     }
 
     public static ActionEnum GetActionType(Action theAction){
+        assert theAction != null : "null actions not allowed";
         String actionname = theAction.actionName();
         String[] parts = actionname.split("_");
         ActionEnum result = ActionEnum.UNKNOWN;
@@ -19,12 +20,13 @@ public class ActionParserHelper {
         //I think I learned that if there is no _, parts[0] is null
         String actiontypename;
         if(parts[0] == null || parts[0].isEmpty()){
-            actiontypename = parts[1];
+            System.err.println("error: no string in action name");
+            actiontypename= "bad_argument";
         } else {
             actiontypename = parts[0];
         }
 
-        System.out.println(actiontypename);
+        //System.out.println(actiontypename);
 
         switch(actiontypename){
             case "AttackAction":
