@@ -3,15 +3,15 @@ package Planning;
 import bwapi.*;
 
 public class CombatUnitStatus {
-    private Unit combatUnit;
+    private UnitType combatUnit;
     private int amount;
 
-    public CombatUnitStatus(Unit unit, int amountOwned){
+    public CombatUnitStatus(UnitType unit, int amountOwned){
         this.combatUnit = unit;
         this.amount = amountOwned;
     }
 
-    public void setCombatUnit(Unit combatUnit) {
+    public void setCombatUnit(UnitType combatUnit) {
         this.combatUnit = combatUnit;
     }
 
@@ -19,7 +19,7 @@ public class CombatUnitStatus {
         this.amount = amount;
     }
 
-    public Unit getCombatUnit() {
+    public UnitType getCombatUnit() {
         return combatUnit;
     }
 

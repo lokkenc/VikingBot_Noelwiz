@@ -33,7 +33,7 @@ public class AttackActionType implements ActionType {
                 for(int unitStatusi = 0; unitStatusi < combatStatus.size(); unitStatusi++){
                     CombatUnitStatus currentUnit = combatStatus.get(unitStatusi);
                     if(currentUnit.getAmount() > 0){
-                        optionset = new String[]{whatOptStr, "unit=".concat(currentUnit.getCombatUnit().getType().name()) };
+                        optionset = new String[]{whatOptStr, "unit=".concat(currentUnit.getCombatUnit().name()) };
                         attackActions.add(new AttackAction(optionset));
                     }
                 }
