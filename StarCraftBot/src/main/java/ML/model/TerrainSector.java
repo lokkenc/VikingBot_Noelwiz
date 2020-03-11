@@ -1,4 +1,4 @@
-package ML.model;
+package src.main.java.ML.model;
 
 import bwapi.Unit;
 

@@ -1,10 +1,12 @@
-package ML.Actions;
+package src.main.java.ML.Actions;
 
 import bwapi.Game;
 import bwapi.Position;
 import bwapi.Unit;
 
-public class MoveUpRight extends Action implements java.io.Serializable {
+import java.io.Serializable;
+
+public class MoveUpRight extends Action implements Serializable {
     private static final long serialVersionUID = 1L;
     private ActionType type = ActionType.MOVEUPRIGHT;
 

@@ -1,4 +1,4 @@
-package ML.Range;
+package src.main.java.ML.Range;
 
 public enum UnitsRange {
     SMALL(0, 5), MEDIUM(6, 25), LARGE(26, 200);

@@ -1,4 +1,4 @@
-package ML.Range;
+package src.main.java.ML.Range;
 
 public enum HpRange {
     LOW(0.0, 0.25), MEDIUM_LOW(0.26, 0.50), MEDIUM_HIGH(0.51, 0.75), HIGH(0.75, 100.0);

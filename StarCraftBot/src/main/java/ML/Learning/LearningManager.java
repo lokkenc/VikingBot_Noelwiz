@@ -1,13 +1,14 @@
-package ML.Learning;
+package src.main.java.ML.Learning;
 
-import ML.Actions.Action;
+import src.main.java.ML.Actions.Action;
 import bwapi.UnitType;
-import ML.States.*;
+import src.main.java.ML.States.*;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class LearningManager implements java.io.Serializable {
-    private static final long serialVersionUID = 1L;
+public class LearningManager implements Serializable {
+    private static final long serialVersionUID = 7537131060045100702L;
 
     private UnitType type;
     private StateSpaceManager spaceManager;

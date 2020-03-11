@@ -1,6 +1,8 @@
-package ML.Range;
+package src.main.java.ML.Range;
 
-public class Units implements java.io.Serializable {
+import java.io.Serializable;
+
+public class Units implements Serializable {
     private static final long serialVersionUID = 1L;
     private UnitsRange range;
     private int value;

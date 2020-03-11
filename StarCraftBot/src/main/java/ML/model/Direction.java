@@ -1,4 +1,4 @@
-package ML.model;
+package src.main.java.ML.model;
 
 public enum Direction {
     TOP_LEFT, TOP, TOP_RIGHT,

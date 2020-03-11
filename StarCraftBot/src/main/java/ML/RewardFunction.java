@@ -1,8 +1,8 @@
-package ML;
+package src.main.java.ML;
 
-import ML.Actions.Action;
-import ML.Actions.ActionType;
-import ML.States.State;
+import src.main.java.ML.Actions.Action;
+import src.main.java.ML.Actions.ActionType;
+import src.main.java.ML.States.State;
 
 public class RewardFunction {
 

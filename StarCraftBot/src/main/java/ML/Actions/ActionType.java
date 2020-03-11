@@ -1,4 +1,4 @@
-package ML.Actions;
+package src.main.java.ML.Actions;
 
 public enum ActionType {
     MOVEUPLEFT, MOVEUPRIGHT, MOVEDOWNLEFT, MOVEDOWNRIGHT, MOVEUP, MOVEDOWN, MOVERIGHT, MOVELEFT, ATTACK

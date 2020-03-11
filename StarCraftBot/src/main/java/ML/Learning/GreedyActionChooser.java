@@ -1,9 +1,9 @@
-package ML.Learning;
+package src.main.java.ML.Learning;
 
-import ML.Actions.Action;
-import ML.QTable;
-import ML.States.State;
-import ML.States.StateSpaceManager;
+import src.main.java.ML.Actions.Action;
+import src.main.java.ML.QTable;
+import src.main.java.ML.States.State;
+import src.main.java.ML.States.StateSpaceManager;
 
 import java.util.Random;
 

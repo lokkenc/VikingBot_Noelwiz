@@ -1,14 +1,14 @@
 package src.main.java;
 
-import ML.Actions.Action;
-import ML.Range.Distance;
-import ML.Range.Hp;
-import ML.States.State;
-import ML.States.StateAction;
+import src.main.java.ML.Actions.Action;
+import src.main.java.ML.Range.Distance;
+import src.main.java.ML.Range.Hp;
+import src.main.java.ML.States.State;
+import src.main.java.ML.States.StateAction;
 import bwapi.*;
 import bwta.*;
-import ML.Learning.LearningManager;
-import ML.Range.Units;
+import src.main.java.ML.Learning.LearningManager;
+import src.main.java.ML.Range.Units;
 
 import java.util.ArrayList;
 import java.util.HashMap;

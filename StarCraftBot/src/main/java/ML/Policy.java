@@ -1,6 +1,6 @@
-package ML;
+package src.main.java.ML;
 
-import ML.States.StateAction;
+import src.main.java.ML.States.StateAction;
 
 import java.util.LinkedList;
 

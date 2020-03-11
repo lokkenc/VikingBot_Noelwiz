@@ -1,16 +1,17 @@
-package ML.Learning;
+package src.main.java.ML.Learning;
 
-import ML.Actions.Action;
-import ML.QTable;
-import ML.States.State;
-import ML.States.StateSpaceManager;
-import ML.RewardFunction;
+import src.main.java.ML.Actions.Action;
+import src.main.java.ML.QTable;
+import src.main.java.ML.States.State;
+import src.main.java.ML.States.StateSpaceManager;
+import src.main.java.ML.RewardFunction;
 import bwapi.UnitType;
 
 import java.io.*;
 import java.util.Map;
+import java.io.Serializable;
 
-public class SARSA implements java.io.Serializable {
+public class SARSA implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static final double LEARNING_FACTOR = .5;

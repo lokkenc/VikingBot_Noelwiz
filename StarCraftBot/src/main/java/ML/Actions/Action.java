@@ -1,9 +1,12 @@
-package ML.Actions;
+package src.main.java.ML.Actions;
 
 import bwapi.Game;
 import bwapi.Unit;
 
-public abstract class Action implements java.io.Serializable {
+import java.io.Serializable;
+
+public abstract class Action implements Serializable {
+    private static final long serialVersionUID = 1L;
     private ActionType type;
 
     public abstract ActionType getType();

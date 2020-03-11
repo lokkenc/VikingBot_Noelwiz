@@ -1,6 +1,6 @@
-package ML.States;
+package src.main.java.ML.States;
 
-import ML.Actions.Action;
+import src.main.java.ML.Actions.Action;
 
 public class StateAction {
     private State state;

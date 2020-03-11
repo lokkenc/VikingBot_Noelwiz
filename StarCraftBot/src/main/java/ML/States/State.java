@@ -1,13 +1,15 @@
-package ML.States;
+package src.main.java.ML.States;
 
-import ML.Range.*;
+import src.main.java.ML.Range.*;
 import bwapi.Unit;
-import ML.model.TerrainSector;
+import src.main.java.ML.model.TerrainSector;
 
-import static ML.Range.UnitsRange.*;
+import java.io.Serializable;
 
-public class State implements java.io.Serializable {
-    private static final long serialVersionUID = 1L;
+import static src.main.java.ML.Range.UnitsRange.*;
+
+public class State implements Serializable {
+    private static final long serialVersionUID = 7588180712283449263L;
     private boolean onCoolDown;
     private Distance closestEnemy;
     private Units numberOfEnemies;

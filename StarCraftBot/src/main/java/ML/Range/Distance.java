@@ -1,6 +1,8 @@
-package ML.Range;
+package src.main.java.ML.Range;
 
-public class Distance implements java.io.Serializable {
+import java.io.Serializable;
+
+public class Distance implements Serializable {
     private static final long serialVersionUID = 1L;
     private DistanceRange range;
     private int value;

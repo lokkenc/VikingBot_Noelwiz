@@ -1,20 +1,15 @@
-package ML;
+package src.main.java.ML;
 
-import ML.Actions.Action;
-import ML.Range.DistanceRange;
-import ML.Range.HpRange;
-import ML.Range.UnitsRange;
-import ML.States.State;
-import ML.States.StateAction;
+import src.main.java.ML.Actions.Action;
+import src.main.java.ML.States.State;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ML.Range.UnitsRange.*;
-
-public class QTable extends HashMap<Integer, Map<Action, Double>> {
-    private static final long serialVersionUID = 1L;
+public class QTable extends HashMap<Integer, Map<Action, Double>> implements Serializable {
+    private static final long serialVersionUID = 3826717973754083254L;
     /**
      * This constructor takes a Collection of ML.States and a Collection of ML.Actions and adds them to the ML.States.State -> (Action, Double) HashMap.
      * @param states All possible states that will be included in the HashMap.
