@@ -69,9 +69,6 @@ class ActionParserHelperTest {
                 ActionParserHelper.GetActionType(new TrainAction("")),
                 "ActionParser build Test 2: an empty string build should still be a build");
 
-        assertEquals(ActionParserHelper.ActionEnum.TRAIN,
-                ActionParserHelper.GetActionType(new TrainAction(null)),
-                "ActionParser build Test 2: null argument build action is valid probably.");
 
         assertNotEquals(ActionParserHelper.ActionEnum.TRAIN,
                 ActionParserHelper.GetActionType(new SimpleAction("trainaction_what=something")),
@@ -86,8 +83,10 @@ class ActionParserHelperTest {
     @org.junit.jupiter.api.Test
     void getActionAttackAction() {
         //TODO: FIX THIS TEST. something with the constructor appears to be not asigning action name at the end
+
+        AttackAction action = new AttackAction("what=harass");
         assertEquals(ActionParserHelper.ActionEnum.ATTACK,
-                ActionParserHelper.GetActionType(new AttackAction("what=harass")),
+                ActionParserHelper.GetActionType(action),
                 "ActionParser attack Test 1: attack with arguments should be known");
 
         assertEquals(ActionParserHelper.ActionEnum.ATTACK,

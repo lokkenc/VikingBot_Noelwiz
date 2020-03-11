@@ -46,7 +46,7 @@ public class AttackActionType implements ActionType {
 
         //when there is an indication of us being attacked added to the states, add that here
         if(true){
-            attackActions.add( new AttackAction( new String[]{"what=defend", "unit=all"} ) );
+            attackActions.add( new AttackAction( "what=defend_unit=all" ) );
         }
 
         return attackActions;

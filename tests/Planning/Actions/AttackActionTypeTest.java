@@ -19,7 +19,8 @@ class AttackActionTypeTest {
     @Test
     void associatedAction() {
         AttackAction atk = new AttackAction("");
-        assertEquals(atk.actionName(), new AttackActionType().associatedAction(""), "attack action should create consistant actions");
+        assertEquals(atk.actionName(), new AttackActionType().associatedAction("").actionName(),
+                "attack action should create consistant actions");
     }
 
     @Test

@@ -12,8 +12,8 @@ public class ActionParserHelper {
     }
 
     public static ActionEnum GetActionType(Action theAction){
-        String actionname = theAction.actionName();
         assert theAction != null : "null actions not allowed";
+        String actionname = theAction.actionName();
         String[] parts = actionname.split("_");
         ActionEnum result = ActionEnum.UNKNOWN;
 
