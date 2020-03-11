@@ -78,7 +78,7 @@ class AttackActionTest {
         assertEquals("AttackAction_unit=zergling",
                 new AttackAction("what=nonsense_unit=zergling").actionName(),
                 "what=nonsense is invalid, should default to not including this");
-                 
+
          */
     }
 }
