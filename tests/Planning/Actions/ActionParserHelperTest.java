@@ -35,19 +35,15 @@ class ActionParserHelperTest {
     @org.junit.jupiter.api.Test
     void getActionTypeBuildAction() {
         assertEquals(ActionParserHelper.ActionEnum.BUILD,
-                ActionParserHelper.GetActionType(new BuildAction("_what=Population")),
+                ActionParserHelper.GetActionType(new BuildAction("_pop")),
                 "ActionParser build Test 1: building with arguments should be known");
 
         assertEquals(ActionParserHelper.ActionEnum.BUILD,
-                ActionParserHelper.GetActionType(new BuildAction("")),
-                "ActionParser build Test 2: an empty string build should still be a build");
-
-        assertEquals(ActionParserHelper.ActionEnum.BUILD,
-                ActionParserHelper.GetActionType(new BuildAction(null)),
-                "ActionParser build Test 2: null argument build action is valid probably.");
+                ActionParserHelper.GetActionType(new BuildAction()),
+                "ActionParser build Test 2: defualt build action should be recognized");
 
         assertNotEquals(ActionParserHelper.ActionEnum.BUILD,
-                ActionParserHelper.GetActionType(new SimpleAction("buildaction_what=something")),
+                ActionParserHelper.GetActionType(new SimpleAction("buildaction_pop")),
                 "ActionParser build Test 3: should not ignore case");
 
         assertNotEquals(ActionParserHelper.ActionEnum.BUILD,
