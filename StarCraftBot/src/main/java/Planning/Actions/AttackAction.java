@@ -26,18 +26,14 @@ public class AttackAction implements Action {
      *
      * @param unit a unit type to attack with, probable from the state.
      * @param options
-     *   "group=%s"
-     *      - "all" = all combat units
-     *      - "selected" = the given unit type
-     *      - "bot" = delegate that to the ml or something, idk.
-     *   "amount=%s" //probably could be removed
-     *      - "all" = attack with all selected units
-     *      - "half" = attack with half of the selected units
      *   "what=%s"
      *      - "harass" = target workers
      *      - "base" = target a base/expansion
      *      - "army" = target enemy army
      *      - "defend" = defend our base
+     *   "unit=%s"
+     *      - one of the unit type names
+     *      - "all"
      */
     public AttackAction(UnitType unit, String[] options){
 
@@ -68,13 +64,6 @@ public class AttackAction implements Action {
      * parse a list of option strings to add to the action name
      * and make sure they conform to the expected options.
      * @param options
-     *         "group=%s"
-     *            - "all" = all combat units
-     *            - "selected" = the given unit type
-     *            - "bot" = delegate that to the ml or something, idk.
-     *         "amount=%s"
-     *            - "all" = attack with all selected units
-     *            - "half" = attack with half of the selected units
      *         "what=%s"
      *            - "harass" = target workers
      *            - "base" = target a base/expansion
@@ -82,10 +71,7 @@ public class AttackAction implements Action {
      *            - "defend" = defend our base
      *         "unit=%s"
      *            - one of the unit type names
-     *            TODO: CHECK IF THE HASH CODE IS EQUIVELENT TO THE NAME,
-     *            AND IF SO, SWAP IT IN WHERE RELEVENT
-     *            UnitType h = UnitType.valueOf(unit.name());
-     *            UnitType i = UnitType.values()[unit.hashCode()];
+     *            - name of one of our generalized units
      * @return
      */
     private static StringBuilder addOptions(String[] options){
@@ -97,18 +83,8 @@ public class AttackAction implements Action {
             if(options[i] != null && !options[i].isEmpty()){
 
                 //confirm that the options are filled out properly.
-                //Todo: consider taking this out if it effects prformance too much
-                if(options[i].startsWith("group=")){
-                    if( !(options[i].endsWith("all") || options[i].endsWith("selected")
-                            || options[i].endsWith("bot")) ){
-                        System.err.println("Error: improper argument for attack's group option.");
-                    }
-
-                }else if (options[i].startsWith("amount=")){
-
-                    if( !(options[i].endsWith("all") || options[i].endsWith("half"))){
-                        System.err.println("Error: improper argument for attack's amount option.");
-                    }
+               if (options[i].startsWith("unit=")){
+                    //TODO: FIll to confirm we were given a real unit. see below for example
 
                 }else if (options[i].startsWith("what=")){
                     if( !(options[i].endsWith("army") || options[i].endsWith("base")
@@ -143,5 +119,13 @@ public class AttackAction implements Action {
         }
 
         return newaction;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AttackAction that = (AttackAction) o;
+        return this.actionName.equals(that.actionName());
     }
 }
