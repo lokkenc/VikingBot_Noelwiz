@@ -6,6 +6,11 @@ public class CombatUnitStatus {
     private Unit combatUnit;
     private int amount;
 
+    public CombatUnitStatus(Unit unit, int amountOwned){
+        this.combatUnit = unit;
+        this.amount = amountOwned;
+    }
+
     public void setCombatUnit(Unit combatUnit) {
         this.combatUnit = combatUnit;
     }
