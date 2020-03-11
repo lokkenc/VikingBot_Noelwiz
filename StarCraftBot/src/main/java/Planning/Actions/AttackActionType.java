@@ -32,7 +32,7 @@ public class AttackActionType implements ActionType {
 
                 for(int unitStatusi = 0; unitStatusi < combatStatus.size(); unitStatusi++){
                     CombatUnitStatus currentUnit = combatStatus.get(unitStatusi);
-                    if(currentUnit.getAmount() > 0){
+                    if(currentUnit.getAmount() > 0 && currentUnit.getCombatUnit().canAttack() && !currentUnit.getCombatUnit().isWorker()){
                         optionset = new String[]{whatOptStr, "unit=".concat(currentUnit.getCombatUnit().name()) };
                         attackActions.add(new AttackAction(optionset));
                     }
@@ -52,14 +52,17 @@ public class AttackActionType implements ActionType {
         return attackActions;
     }
 
-    boolean HaveCombatUnits(ArrayList<CombatUnitStatus> botUnits){
+    static boolean HaveCombatUnits(ArrayList<CombatUnitStatus> botUnits){
         boolean hasCombat = false;
+
         for(int i = 0; i < botUnits.size() && !hasCombat; i++){
             CombatUnitStatus current = botUnits.get(i);
-            if(current.getCombatUnit().canAttack() && current.getAmount() > 0){
+            if( (current.getCombatUnit().canAttack()) && (current.getAmount() > 0)
+            && !current.getCombatUnit().isWorker()){
                 hasCombat = true;
             }
         }
+
         return hasCombat;
     }
 }
