@@ -9,7 +9,7 @@ public class StrategyAgent extends DefaultBWListener{
     private Game game;
     private Player self;
 
-    private IntelligenceAgent intel = new IntelligenceAgent(self);
+    private IntelligenceAgent intel = new IntelligenceAgent(self, game);
     private CombatAgent combat = new CombatAgent(intel);
     private EconomyAgent economy = new EconomyAgent(intel);
 

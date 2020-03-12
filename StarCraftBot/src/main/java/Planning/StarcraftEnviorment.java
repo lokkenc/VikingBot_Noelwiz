@@ -7,8 +7,12 @@ import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import burlap.mdp.singleagent.model.RewardFunction;
 import bwapi.Race;
+import bwapi.Unit;
+import bwapi.UnitType;
 import src.main.java.IntelligenceAgent;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class StarcraftEnviorment implements Environment {
@@ -46,12 +50,27 @@ public class StarcraftEnviorment implements Environment {
      * @return
      */
     public State currentObservation() {
-        int numworkers = intelligenceAgent.getNumWorkers();
+        State retState;
+        int numWorkers = intelligenceAgent.getNumWorkers();
         int mineralProductionRate = Math.round(intelligenceAgent.getMineralProductionRate());
         int gasProductionRate = Math.round(intelligenceAgent.getGasProductionRate());
         int numBases = intelligenceAgent.getNumBases();
         int timeSinceLastScout = intelligenceAgent.getTimeSinceLastScout();
-        return null;
+        ArrayList<CombatUnitStatus> combatUnitStatuses = intelligenceAgent.getCombatUnitStatuses();
+        int numEnemyWorkers = intelligenceAgent.getNumEnemyWorkers();
+        int numEnemyBases = intelligenceAgent.getNumEnemyBases();
+        UnitType mostCommonCombatUnit = intelligenceAgent.getMostCommonCombatUnit();
+        Boolean attackingEnemyBase = intelligenceAgent.attackingEnemyBase();
+        Boolean beingAttacked = intelligenceAgent.beingAttacked();
+        Race playerRace = intelligenceAgent.getPlayerRace();
+        Race enemyRace = intelligenceAgent.getEnemyRace();
+        GameStatus gameStatus = intelligenceAgent.getGameStatus();
+        int[][] trainingCapacity = intelligenceAgent.getTrainingCapacity();
+
+        retState = new PlanningState(numWorkers, mineralProductionRate, gasProductionRate, numBases, timeSinceLastScout,
+                combatUnitStatuses, numEnemyWorkers, numEnemyBases, mostCommonCombatUnit, attackingEnemyBase,
+                beingAttacked, playerRace, enemyRace, gameStatus, trainingCapacity);
+        return retState;
     }
 
     /**

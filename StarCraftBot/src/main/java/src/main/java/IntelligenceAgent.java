@@ -3,6 +3,8 @@ package src.main.java;
 import Knowledge.ProtossGeneralKnowledge;
 import Knowledge.TerrenGeneralKnowledge;
 import Knowledge.ZergGeneralKnowledge;
+import Planning.CombatUnitStatus;
+import Planning.GameStatus;
 import bwapi.*;
 import bwta.*;
 
@@ -11,10 +13,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import static Planning.GameStatus.*;
+
 public class IntelligenceAgent {
     private Race myrace;
     private Race enemyRace;
     private Player self;
+    private Game game;
 
     private int baseLoc = 0;
     private ArrayList<Integer> scouts = new ArrayList<Integer>();
@@ -22,9 +27,13 @@ public class IntelligenceAgent {
     private HashMap<UnitType, Integer> enemyUnitMemory = new HashMap<UnitType, java.lang.Integer>();
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
+    private int scoutTimer;
 
-    public IntelligenceAgent(Player self) {
+    public IntelligenceAgent(Player self, Game game) {
         this.self = self;
+        this.game = game;
+        myrace = self.getRace();
+        enemyRace = game.enemy().getRace();
     }
 
     /**
@@ -375,7 +384,7 @@ public class IntelligenceAgent {
      * Get the number of workers for the AI planner
      * @return int, # workers the player owns.
      */
-    public int getNumWokers(){
+    public int getNumWorkers(){
         int numworkers = 0;
 
         switch (myrace) {
@@ -503,7 +512,180 @@ public class IntelligenceAgent {
         return numBases;
     }
 
-    public int getTimeSinceLastScout() {
-        return 0;
+    public void setScoutTimer() {
+        scoutTimer = game.getFrameCount();
     }
+
+    public int getTimeSinceLastScout() {
+        return game.getFrameCount() - scoutTimer;
+    }
+
+    public ArrayList<CombatUnitStatus> getCombatUnitStatuses() {
+        ArrayList<CombatUnitStatus> list = new ArrayList<CombatUnitStatus>();
+        for (UnitType unit: unitMemory.keySet()) {
+            if (unit.canAttack() && !(unit.isWorker())) {
+                CombatUnitStatus status = new CombatUnitStatus(unit, unitMemory.get(unit));
+                list.add(status);
+            }
+        }
+        return list;
+    }
+
+    public int getNumEnemyWorkers() {
+        int numworkers = 0;
+
+        switch (enemyRace) {
+            case Terran:
+                numworkers = enemyUnitMemory.get(UnitType.Terran_SCV);
+                break;
+            case Zerg:
+                numworkers = enemyUnitMemory.get(UnitType.Zerg_Drone);
+                break;
+            case Protoss:
+                numworkers = enemyUnitMemory.get(UnitType.Protoss_Probe);
+                break;
+        }
+
+        return numworkers;
+    }
+
+    public int getNumEnemyBases() {
+        int numBases = 0;
+
+        switch (enemyRace) {
+            case Terran:
+                numBases = unitMemory.get(UnitType.Terran_Command_Center);
+                break;
+            case Zerg:
+                numBases = unitMemory.get(UnitType.Zerg_Hatchery);
+                break;
+            case Protoss:
+                numBases = unitMemory.get(UnitType.Protoss_Nexus);
+                break;
+        }
+
+        return numBases;
+    }
+
+    public UnitType getMostCommonCombatUnit() {
+        UnitType mostCommonType = null;
+        int amount = 0;
+        for (UnitType unit: unitMemory.keySet()) {
+            if (unit.canAttack() && !(unit.isWorker())) {
+                if (unitMemory.get(unit) > amount) {
+                    mostCommonType = unit;
+                    amount = unitMemory.get(unit);
+                }
+            }
+        }
+        return mostCommonType;
+    }
+
+    public Boolean attackingEnemyBase() {
+        ArrayList<Unit> enemyBases = new ArrayList<>();
+        UnitType baseType;
+        switch (enemyRace) {
+            case Terran:
+                baseType = UnitType.Terran_Command_Center;
+                break;
+            case Zerg:
+                baseType = UnitType.Zerg_Hatchery;
+                break;
+            default:
+                baseType = UnitType.Protoss_Nexus;
+                break;
+        }
+        //Getting list of enemy bases
+        for (Unit unit: game.enemy().getUnits()) {
+            if (unit.getType() == baseType) {
+                enemyBases.add(unit);
+            }
+        }
+        //For each enemy base, check if we have units that are attacking it
+        for (Unit enemyBase: enemyBases) {
+            for (Unit unit: self.getUnits()) {
+                if (unit.isAttacking() && unit.getRegion() == enemyBase.getRegion()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Boolean beingAttacked() {
+        ArrayList<Unit> bases = new ArrayList<>();
+        UnitType baseType;
+        switch (enemyRace) {
+            case Terran:
+                baseType = UnitType.Terran_Command_Center;
+                break;
+            case Zerg:
+                baseType = UnitType.Zerg_Hatchery;
+                break;
+            default:
+                baseType = UnitType.Protoss_Nexus;
+                break;
+        }
+        //Get list of our bases
+        for (Unit unit: self.getUnits()) {
+            if (unit.getType() == baseType) {
+                bases.add(unit);
+            }
+        }
+        //For each base, check if we are being attacked there
+        for (Unit base: bases) {
+            for (Unit unit: game.enemy().getUnits()) {
+                if (unit.isAttacking() && unit.getRegion() == base.getRegion()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Race getPlayerRace() {
+        return myrace;
+    }
+
+    public Race getEnemyRace() {
+        return game.enemy().getRace();
+    }
+
+    public GameStatus getGameStatus() {
+        GameStatus gameStatus;
+        int earlyGameThreshold = 12600;
+        int midGameThreshold = 25200;
+        if (game.getFrameCount() < earlyGameThreshold) {
+            gameStatus = EARLY;
+        } else if (game.getFrameCount() < midGameThreshold) {
+            gameStatus = MID;
+        } else {
+            gameStatus = LATE;
+        }
+        return gameStatus;
+    }
+
+    public int[][] getTrainingCapacity() {
+        int trainingCapacity[][] = {{0,3}, {0,3}, {0,3}, {0,3}};
+        return trainingCapacity;
+    }
+
+    /* * *Supporting Methods for getTrainingCapacity() * * */
+
+
+    /* private int[] getWorkerCapacity() {
+
+    }
+
+    private int[] getGroundUnitCapacity() {
+
+    }
+
+    private int[] getCombatAirCapacity() {
+
+    }
+
+    private int[] getSupportAirCapacity() {
+
+    } */
 }

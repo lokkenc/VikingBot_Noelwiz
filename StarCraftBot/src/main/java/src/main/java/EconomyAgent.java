@@ -4,7 +4,7 @@ import bwapi.*;
 
 public class EconomyAgent {
 
-    IntelligenceAgent intel = new IntelligenceAgent();
+    IntelligenceAgent intel;
 
     public EconomyAgent( IntelligenceAgent itagent){
         intel = itagent;

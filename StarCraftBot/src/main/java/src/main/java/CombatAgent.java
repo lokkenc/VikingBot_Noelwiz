@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 public class CombatAgent {
 
-    IntelligenceAgent intel = new IntelligenceAgent();
+    IntelligenceAgent intel;
     Player self;
 
     public CombatAgent( IntelligenceAgent itagent){
