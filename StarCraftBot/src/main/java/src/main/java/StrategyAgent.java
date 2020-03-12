@@ -1,14 +1,10 @@
 package src.main.java;
 
-<<<<<<< HEAD
 import Planning.StarcraftEnvironment;
-import Planning.StarcraftPlanner;
-=======
 import Planning.Actions.ActionParserHelper;
 import Planning.SharedPriorityQueue;
 import Planning.StarcraftPlanner;
 import burlap.mdp.core.action.Action;
->>>>>>> 60b4294f5198934dba881d6e4f2f200fd73de0f4
 import bwapi.*;
 import bwta.BWTA;
 

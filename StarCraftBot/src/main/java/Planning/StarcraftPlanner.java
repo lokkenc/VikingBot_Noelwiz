@@ -3,6 +3,7 @@ package Planning;
 import Planning.Actions.*;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
+import burlap.behavior.singleagent.Episode;
 import burlap.behavior.singleagent.planning.stochastic.sparsesampling.SparseSampling;
 import burlap.behavior.valuefunction.ValueFunction;
 import burlap.mdp.core.action.Action;
@@ -13,7 +14,7 @@ import burlap.statehashing.ReflectiveHashableStateFactory;
 import src.main.java.IntelligenceAgent;
 
 public class StarcraftPlanner {
-    //private Episode ep = new Episode();
+    private Episode ep = new Episode();
 
     private SparseSampling sparsePlanner;
     private StarcraftEnvironment game;
@@ -55,7 +56,7 @@ public class StarcraftPlanner {
 
         //TODO: make sure the enviorment is initalized with everything it needs or something
 
-        game = new StarcraftEnviorment(initalreward, intelligenceAgent, model);
+        game = new StarcraftEnvironment(initalreward, intelligenceAgent, model);
 
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;

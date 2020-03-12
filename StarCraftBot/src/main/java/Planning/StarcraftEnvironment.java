@@ -27,6 +27,7 @@ public class StarcraftEnvironment implements Environment {
     private IntelligenceAgent intelligenceAgent = null;
     private EconomyAgent economyAgent;
     private PriorityQueue<Action> ActionQueue;
+    private StarcraftModel model;
 
 
     /**
@@ -34,11 +35,14 @@ public class StarcraftEnvironment implements Environment {
      * use for calulating rewards.
      * @param rf
      */
-    public StarcraftEnvironment(RewardFunction rf, IntelligenceAgent intelligenceAgent){
+    public StarcraftEnvironment(RewardFunction rf, IntelligenceAgent intelligenceAgent, StarcraftModel model){
         this.intelligenceAgent = intelligenceAgent;
         economyAgent = new EconomyAgent(intelligenceAgent);
+        this.model = model;
         rewardFunction = rf;
         ActionQueue = new PriorityQueue<Action>(new QueueComparator());
+        PlayerRace = intelligenceAgent.getPlayerRace();
+        EnemyRace = intelligenceAgent.getEnemyRace();
     }
 
     /**
@@ -175,6 +179,6 @@ public class StarcraftEnvironment implements Environment {
      * @param action the action taken by the ai
      * */
     private State predictState(Action action){
-        return null;
+        return currentObservation();
     }
 }
