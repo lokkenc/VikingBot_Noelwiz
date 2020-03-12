@@ -30,7 +30,7 @@ public class SARSA implements Serializable {
 
     public double computerQValue(State current, Action action, State next, double reward) {
         // SARSA => q-value = q-value + LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * next_q-value) - q-value)
-        double qvalue = qTable.get(current.getKeyVal(current)).get(action);
+        double qvalue = qTable.get(current).get(action);
         double errorvalue = LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * qTable.getMaxValue(next)) - qvalue);
 
         return qvalue + errorvalue;
@@ -42,18 +42,15 @@ public class SARSA implements Serializable {
         double qvalue = computerQValue(current, action, next, reward);
 
         // Get the current qvalue and update it with the new qvalue
-        Map<Action, Double> actionDoubleMap = qTable.get(current.getKeyVal(current));
+        Map<Action, Double> actionDoubleMap = qTable.get(current);
         actionDoubleMap.put(action, qvalue);
-        qTable.put(current.getKeyVal(current), actionDoubleMap);
+        qTable.put(current, actionDoubleMap);
     }
 
     public void loadQTable() {
         FileInputStream fis = null;
         try {
-            File f = new File("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
-            if(!f.canRead()) {
-                f.setReadable(true);
-            }
+            File f = new File("TrainingFiles/Tables/" + type.toString() + "Table.ser");
             fis = new FileInputStream(f);
             ObjectInputStream ois = new ObjectInputStream(fis);
             qTable = (QTable) ois.readObject();
@@ -73,11 +70,8 @@ public class SARSA implements Serializable {
     public void storeQTable() {
         FileOutputStream fos = null;
         try {
-            File f = new File("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
+            File f = new File("TrainingFiles/Tables/" + type.toString() + "Table.ser");
             f.getParentFile().mkdirs();
-            if(!f.canWrite()) {
-                f.setWritable(true);
-            }
             fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(qTable);

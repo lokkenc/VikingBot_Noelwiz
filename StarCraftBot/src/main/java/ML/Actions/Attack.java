@@ -4,6 +4,7 @@ import bwapi.Game;
 import bwapi.Unit;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Attack extends Action implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -28,5 +29,18 @@ public class Attack extends Action implements Serializable {
         }
 
         unit.attack(closestUnit);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Attack attack = (Attack) o;
+        return type == attack.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type);
     }
 }

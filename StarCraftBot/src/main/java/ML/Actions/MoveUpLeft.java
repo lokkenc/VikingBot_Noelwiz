@@ -5,6 +5,7 @@ import bwapi.Position;
 import bwapi.Unit;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class MoveUpLeft extends Action implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -26,5 +27,18 @@ public class MoveUpLeft extends Action implements Serializable {
         if(unit.hasPath(movePos)) { // check if it can move there
             unit.move(movePos);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MoveUpLeft that = (MoveUpLeft) o;
+        return type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type);
     }
 }

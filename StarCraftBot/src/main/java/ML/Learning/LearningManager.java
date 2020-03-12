@@ -23,7 +23,7 @@ public class LearningManager implements Serializable {
     }
 
     public void loadQTable() {
-        File f = new File("src/main/TrainingFiles/Tables/" + type.toString() + "Table.ser");
+        File f = new File("TrainingFiles/Tables/" + type.toString() + "Table.ser");
         if (f.exists()) {
             sarsa.loadQTable();
         }

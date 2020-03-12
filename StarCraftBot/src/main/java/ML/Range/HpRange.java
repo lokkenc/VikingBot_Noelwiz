@@ -1,7 +1,7 @@
 package src.main.java.ML.Range;
 
 public enum HpRange {
-    LOW(0.0, 0.25), MEDIUM_LOW(0.26, 0.50), MEDIUM_HIGH(0.51, 0.75), HIGH(0.75, 100.0);
+    LOW(0.0, 25.0), MEDIUM_LOW(25.01, 50.0), MEDIUM_HIGH(50.01, 75.0), HIGH(75.01, 100.0);
     double min;
     double max;
 
@@ -20,13 +20,5 @@ public enum HpRange {
 
     public boolean in(double v) {
         return v >= min && v <= max;
-    }
-
-    public boolean onEqual(HpRange range2) {
-        if(this == range2) {
-            return true;
-        }
-
-        return false;
     }
 }

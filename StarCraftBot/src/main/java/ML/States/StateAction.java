@@ -26,4 +26,12 @@ public class StateAction {
     public void setAction(Action action) {
         this.action = action;
     }
+
+    @Override
+    public String toString() {
+        return "StateAction{" +
+                "state=" + state +
+                ", action=" + action +
+                '}';
+    }
 }

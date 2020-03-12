@@ -1,7 +1,7 @@
 package src.main.java.ML.Range;
 
 public enum DistanceRange {
-    CLOSE(0.0, 0.25), MEDIUM_CLOSE(0.26, 0.75), MEDIUM_FAR(0.76, 100.0), FAR(100.0, 120.0);
+    CLOSE(0.0, 100.0), MEDIUM_CLOSE(100.01, 150.0), MEDIUM_FAR(150.01, 200.0), FAR(200.01, Double.POSITIVE_INFINITY);
     double min;
     double max;
 
@@ -20,13 +20,5 @@ public enum DistanceRange {
 
     public boolean in(double v) {
         return v >= min && v <= max;
-    }
-
-    public boolean onEqual(DistanceRange range2) {
-        if(this == range2) {
-            return true;
-        }
-
-        return false;
     }
 }

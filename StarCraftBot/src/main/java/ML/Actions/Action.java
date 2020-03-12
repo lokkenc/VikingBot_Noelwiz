@@ -12,4 +12,15 @@ public abstract class Action implements Serializable {
     public abstract ActionType getType();
 
     public abstract void doAction(Game game, Unit unit);
+
+    public abstract boolean equals(Object o);
+
+    public abstract int hashCode();
+
+    @Override
+    public String toString() {
+        return "Action{" +
+                "type=" + type +
+                '}';
+    }
 }

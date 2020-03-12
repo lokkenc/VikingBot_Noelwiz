@@ -28,12 +28,14 @@ public class CombatAgent {
 
     public void loadModels() {
         for(LearningManager model : models) {
+            System.out.println("Loading Q-Table for: " + model.getUnitType());
             model.loadQTable();
         }
     }
 
     public void storeModels() {
         for(LearningManager model : models) {
+            System.out.println("Storing Q-Table for: " + model.getUnitType());
             model.storeQTable();
         }
     }
@@ -90,7 +92,6 @@ public class CombatAgent {
             for(LearningManager lm: models) {
                 if(lm.getUnitType() == unit.getType()) {
                     State currentState = generateState(game, unit);
-                    currentState.setUnit(unit);
                     Action action = lm.getNextAction(currentState);
                     if(UnitStateActionPair.get(unit) != null) {
                         State oldState = UnitStateActionPair.get(unit).getState();
@@ -112,6 +113,7 @@ public class CombatAgent {
         boolean cooldown = false;
         Distance closestEnemy = null;
         Units numberOfEnemies = null;
+        Units numberOfFriendlies = null;
         Hp enemyHp = null;
         Hp friendlyHp = null;
 
@@ -121,13 +123,11 @@ public class CombatAgent {
             cooldown = true;
         }
 
-        Unit closestUnit = null;
         int closest = Integer.MAX_VALUE;
         int enemiesInRange = 0;
         int totalEnemyInRangeHP = 0;
         for(Unit units: game.enemy().getUnits()) {
             if(unit.getDistance(units) < closest) {
-                closestUnit = units;
                 closest = unit.getDistance(units);
             }
             if(unit.isInWeaponRange(units)) {
@@ -136,12 +136,30 @@ public class CombatAgent {
             }
         }
 
-        closestEnemy = new Distance(closest);
-        friendlyHp = new Hp(unit.getHitPoints());
-        enemyHp = new Hp(totalEnemyInRangeHP);
-        numberOfEnemies = new Units(enemiesInRange);
+        int friendliesInRange = 0;
+        int totalFriendlyInRangeHp = 0;
+        for(Unit units: game.self().getUnits()) {
+            if(unit.isInWeaponRange(units)) {
+                friendliesInRange++;
+                totalFriendlyInRangeHp += units.getHitPoints();
+            }
+        }
 
-        return new State(cooldown, closestEnemy, numberOfEnemies, enemyHp, friendlyHp);
+        closestEnemy = new Distance(closest);
+        if(friendliesInRange > 0) {
+            friendlyHp = new Hp(totalFriendlyInRangeHp / friendliesInRange);
+        } else {
+            friendlyHp = new Hp(totalEnemyInRangeHP);
+        }
+        if(enemiesInRange > 0) {
+            enemyHp = new Hp(totalEnemyInRangeHP / enemiesInRange);
+        } else {
+            enemyHp = new Hp(totalEnemyInRangeHP);
+        }
+        numberOfEnemies = new Units(enemiesInRange);
+        numberOfFriendlies = new Units(friendliesInRange);
+
+        return new State(cooldown, closestEnemy, numberOfEnemies, numberOfFriendlies, enemyHp, friendlyHp);
 
     }
 

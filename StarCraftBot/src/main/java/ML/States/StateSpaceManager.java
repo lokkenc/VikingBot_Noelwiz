@@ -26,10 +26,12 @@ public class StateSpaceManager {
         // Create all the states here
         for(int i = 0; i < 2; i++) {
             for(DistanceRange dRange: DistanceRange.values()) {
-                for(UnitsRange uRange: UnitsRange.values()) {
-                    for(HpRange ehpRange: HpRange.values()) {
-                        for(HpRange fhpRange: HpRange.values()) {
-                            states.add(new State(onCoolDown, new Distance(dRange), new Units(uRange), new Hp(ehpRange), new Hp(fhpRange)));
+                for(UnitsRange ueRange: UnitsRange.values()) {
+                    for(UnitsRange ufRange: UnitsRange.values()) {
+                        for (HpRange ehpRange : HpRange.values()) {
+                            for (HpRange fhpRange : HpRange.values()) {
+                                states.add(new State(onCoolDown, new Distance(dRange), new Units(ueRange), new Units(ufRange), new Hp(ehpRange), new Hp(fhpRange)));
+                            }
                         }
                     }
                 }
