@@ -25,7 +25,8 @@ public class StarcraftEnviorment implements Environment {
      * use for calulating rewards.
      * @param rf
      */
-    public StarcraftEnviorment(RewardFunction rf){
+    public StarcraftEnviorment(RewardFunction rf, IntelligenceAgent intelligenceAgent){
+        this.intelligenceAgent = intelligenceAgent;
         rewardFunction = rf;
         ActionQueue = new PriorityQueue<Action>(new QueueComparator());
     }
@@ -45,7 +46,11 @@ public class StarcraftEnviorment implements Environment {
      * @return
      */
     public State currentObservation() {
-        int numworkers = intelligenceAgent.getNumWokers();
+        int numworkers = intelligenceAgent.getNumWorkers();
+        int mineralProductionRate = Math.round(intelligenceAgent.getMineralProductionRate());
+        int gasProductionRate = Math.round(intelligenceAgent.getGasProductionRate());
+        int numBases = intelligenceAgent.getNumBases();
+        int timeSinceLastScout = intelligenceAgent.getTimeSinceLastScout();
         return null;
     }
 
