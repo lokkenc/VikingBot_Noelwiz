@@ -79,8 +79,10 @@ public class StarcraftPlanner {
      * Exicutes an action in the enviorment with the spare planner.
      */
     public void SparsePlanStep(){
-        Action todo = sparcePolicy.action( game.currentObservation());
-        Actions.EnQueue(todo);
+        if (roomInQueue()) {
+            Action todo = sparcePolicy.action(game.currentObservation());
+            Actions.EnQueue(todo);
+        }
     }
 
     /**
@@ -97,5 +99,11 @@ public class StarcraftPlanner {
 
     public void ExecuteAction(){
         game.executeAction(Actions.DeQueue());
+    }
+
+    public Boolean roomInQueue() {
+        if (Actions.size() > 10)
+            return false;
+        return true;
     }
 }

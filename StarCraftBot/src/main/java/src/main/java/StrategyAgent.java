@@ -8,15 +8,17 @@ import burlap.mdp.core.action.Action;
 import bwapi.*;
 import bwta.BWTA;
 
+import java.util.List;
+
 public class StrategyAgent extends DefaultBWListener{
 
     private BWClient bwClient;
     private Game game;
     private Player self;
 
-    private IntelligenceAgent intel = new IntelligenceAgent(self, game);
-    private CombatAgent combat = new CombatAgent(intel);
-    private EconomyAgent economy = new EconomyAgent(intel);
+    private IntelligenceAgent intel;
+    private CombatAgent combat;
+    private EconomyAgent economy;
 
     private StarcraftPlanner planner;
     private SharedPriorityQueue todo;
@@ -31,6 +33,9 @@ public class StrategyAgent extends DefaultBWListener{
     public void onStart() {
         game = bwClient.getGame();
         self = game.self();
+        intel =  new IntelligenceAgent(self, game);
+        combat = new CombatAgent(intel);
+        economy = new EconomyAgent(intel);
 
         //Use BWTA to analyze map
         //This may take a few minutes if the map is processed first time!
@@ -38,6 +43,7 @@ public class StrategyAgent extends DefaultBWListener{
         BWTA.readMap(game);
         BWTA.analyze();
         System.out.println("Map data ready");
+        intel.tabulateUnits(self);
 
 
         //initalize ai planningplanner
@@ -116,6 +122,7 @@ public class StrategyAgent extends DefaultBWListener{
     private boolean canExecute(Action a){
         boolean result = false;
 
+
         switch (ActionParserHelper.GetActionType(a)){
             case UPGRADE:
                 //TODO: check cost of upgrade + implement
@@ -126,7 +133,7 @@ public class StrategyAgent extends DefaultBWListener{
                 break;
             case TRAIN:
                 //TODO: check cost of unit in action
-                if(self.minerals() > 200){
+                if(self.minerals() >= 50){
                     result = true;
                 }
                 break;
@@ -157,6 +164,8 @@ public class StrategyAgent extends DefaultBWListener{
         }
 
 
-        return result;
+        if (planner.roomInQueue())
+            return result;
+        return false;
     }
 }

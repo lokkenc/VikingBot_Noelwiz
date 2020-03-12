@@ -120,6 +120,7 @@ public class PlanningState implements HashableState, State {
                 break;
             case "beingAttacked":
                 result = beingAttacked;
+                break;
             case "playerRace":
                 result = playerRace;
                 break;

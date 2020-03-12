@@ -53,7 +53,7 @@ public class StarcraftModel implements FullModel {
         List<TransitionProb> AllProbabilities = new ArrayList<TransitionProb>();
 
 
-        int[][] capacity = (int[][]) state.get("gameStatus");
+        int[][] capacity = (int[][]) state.get("trainingCapacity");
         Race ourrace = (Race) state.get("playerRace");
 
 
@@ -148,7 +148,7 @@ public class StarcraftModel implements FullModel {
                         (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
                         (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                         (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
-                        attackingenemybase, (boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
+                        attackingenemybase, (boolean) state.get("beingAttacked"),(Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                         capacity);
                 break;
 
@@ -292,6 +292,7 @@ public class StarcraftModel implements FullModel {
         //consider giving the model accsess to the game for better time estimation
         //to ask what time it is? or something. this function want's to know
         //how long since it last checked the enemy base.
+        List<TransitionProb> newProbabilities = new ArrayList<TransitionProb>();
         int timeSinceLastScout = (int) Currentstate.get("timeSinceLastScout");
         GeneralRaceProductionKnowledge enemyknowledge;
         switch ((Race) Currentstate.get("enemyRace")){
@@ -313,12 +314,11 @@ public class StarcraftModel implements FullModel {
 
         if (ActionParserHelper.ActionEnum.SCOUT == ActionParserHelper.GetActionType(action)
                 || timeSinceLastScout < (30 /* fps */ * 30 /* seconds */) ){
-            return null;
+            return newProbabilities;
         } else {
             TransitionProb currentprob;
             State alternateState;
 
-            List<TransitionProb> newProbabilities = new ArrayList<TransitionProb>();
 
             //figure out probability of a new base
             int numenemyworkers = (int) allProbabilities.get(0).eo.op.get("numEnemyWorkers");
@@ -451,7 +451,7 @@ public class StarcraftModel implements FullModel {
         double finishprob = AverageUnitTrainingTime/1800;
         double notfinishprob = 1 - finishprob;
         double currentSituationProbab;
-        int[][] capacity = (int[][]) possibleState.get("gameStatus");
+        int[][] capacity = (int[][]) possibleState.get("trainingCapacity");
 
         List<CapacityProbibilityPair> possiblecapacities = new ArrayList<CapacityProbibilityPair>();
 

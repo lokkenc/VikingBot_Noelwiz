@@ -32,8 +32,10 @@ public class IntelligenceAgent {
     public IntelligenceAgent(Player self, Game game) {
         this.self = self;
         this.game = game;
-        myrace = self.getRace();
-        enemyRace = game.enemy().getRace();
+        //myrace = self.getRace();
+        //enemyRace = game.enemy().getRace();
+        myrace = Race.Protoss;
+        enemyRace = Race.Terran;
     }
 
     public Player getSelf() {
@@ -71,6 +73,7 @@ public class IntelligenceAgent {
             unitMemory.put(type, amount);
         }
     }
+
 
     /**
      * Checks if player has units of type type
@@ -543,13 +546,16 @@ public class IntelligenceAgent {
 
         switch (enemyRace) {
             case Terran:
-                numworkers = enemyUnitMemory.get(UnitType.Terran_SCV);
+                if (enemyUnitMemory.containsKey(UnitType.Terran_SCV))
+                    numworkers = enemyUnitMemory.get(UnitType.Terran_SCV);
                 break;
             case Zerg:
-                numworkers = enemyUnitMemory.get(UnitType.Zerg_Drone);
+                if (enemyUnitMemory.containsKey(UnitType.Zerg_Drone))
+                    numworkers = enemyUnitMemory.get(UnitType.Zerg_Drone);
                 break;
             case Protoss:
-                numworkers = enemyUnitMemory.get(UnitType.Protoss_Probe);
+                if (enemyUnitMemory.containsKey(UnitType.Protoss_Probe))
+                    numworkers = enemyUnitMemory.get(UnitType.Protoss_Probe);
                 break;
         }
 
@@ -557,17 +563,20 @@ public class IntelligenceAgent {
     }
 
     public int getNumEnemyBases() {
-        int numBases = 0;
+        int numBases = 1;
 
         switch (enemyRace) {
             case Terran:
-                numBases = unitMemory.get(UnitType.Terran_Command_Center);
+                if (enemyUnitMemory.containsKey(UnitType.Terran_Command_Center))
+                    numBases = unitMemory.get(UnitType.Terran_Command_Center);
                 break;
             case Zerg:
-                numBases = unitMemory.get(UnitType.Zerg_Hatchery);
+                if (enemyUnitMemory.containsKey(UnitType.Zerg_Hatchery))
+                    numBases = unitMemory.get(UnitType.Zerg_Hatchery);
                 break;
             case Protoss:
-                numBases = unitMemory.get(UnitType.Protoss_Nexus);
+                if (enemyUnitMemory.containsKey(UnitType.Protoss_Nexus))
+                    numBases = unitMemory.get(UnitType.Protoss_Nexus);
                 break;
         }
 
@@ -655,7 +664,7 @@ public class IntelligenceAgent {
     }
 
     public Race getEnemyRace() {
-        return game.enemy().getRace();
+        return enemyRace;
     }
 
     public GameStatus getGameStatus() {
