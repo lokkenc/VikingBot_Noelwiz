@@ -21,8 +21,8 @@ public class RewardFunction {
 //            } else {
 //                return current.getFriendlyHp().getValue() - next.getFriendlyHp().getValue();
 //            }
-            double allyHpDiff = (current.getNumberOfFriendlies().getValue() - next.getNumberOfFriendlies().getValue());
-            double enemyHpDiff = (current.getNumberOfEnemies().getValue() - next.getNumberOfEnemies().getValue());
+            double allyHpDiff = (current.getFriendlyHp().getValue() - next.getFriendlyHp().getValue());
+            double enemyHpDiff = (current.getEnemyHp().getValue() - next.getEnemyHp().getValue());
 
             return enemyHpDiff - allyHpDiff;
         } else {
