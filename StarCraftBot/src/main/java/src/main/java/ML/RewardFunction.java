@@ -26,7 +26,7 @@ public class RewardFunction {
 
             return enemyHpDiff - allyHpDiff;
         } else {
-            return current.getFriendlyHp().getValue() - next.getFriendlyHp().getValue();
+            return current.getFriendlyHp().getValue() - next.getFriendlyHp().getValue() - 50;
         }
     }
 }
