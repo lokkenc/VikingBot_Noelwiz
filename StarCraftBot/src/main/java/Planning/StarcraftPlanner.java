@@ -3,7 +3,6 @@ package Planning;
 import Planning.Actions.*;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
-import burlap.behavior.singleagent.Episode;
 import burlap.behavior.singleagent.planning.stochastic.sparsesampling.SparseSampling;
 import burlap.behavior.valuefunction.ValueFunction;
 import burlap.mdp.core.action.Action;
@@ -14,7 +13,7 @@ import burlap.statehashing.ReflectiveHashableStateFactory;
 import src.main.java.IntelligenceAgent;
 
 public class StarcraftPlanner {
-    private Episode ep = new Episode();
+    //private Episode ep = new Episode();
 
     private SparseSampling sparsePlanner;
     private StarcraftEnviorment game;
@@ -45,15 +44,17 @@ public class StarcraftPlanner {
 
         RewardFunction initalreward = new PlanningRewardFunction(GameStatus.EARLY);
 
-        domain.setModel(new StarcraftModel(initalreward));
+
+        StarcraftModel model = new StarcraftModel(initalreward);
+        domain.setModel(model);
 
         HashableStateFactory factory = new ReflectiveHashableStateFactory();
 
         //TODO: fill in this. a QFunction implementation
-        ValueFunction valuefunction = null;
+        ValueFunction valuefunction = new DummyQValue();
 
         //TODO: make sure the enviorment is initalized with everything it needs or something
-        game = new StarcraftEnviorment(initalreward, intelligenceAgent);
+        game = new StarcraftEnviorment(initalreward, intelligenceAgent, model);
 
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;

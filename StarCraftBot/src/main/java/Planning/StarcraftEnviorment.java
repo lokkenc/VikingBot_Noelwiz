@@ -17,6 +17,7 @@ public class StarcraftEnviorment implements Environment {
     private RewardFunction rewardFunction;
     private double PreviousReward = 0;
     private IntelligenceAgent intelligenceAgent;
+    private StarcraftModel model;
 
 
     /**
@@ -24,7 +25,7 @@ public class StarcraftEnviorment implements Environment {
      * use for calulating rewards.
      * @param rf
      */
-    public StarcraftEnviorment(RewardFunction rf, IntelligenceAgent intelligenceAgent){
+    public StarcraftEnviorment(RewardFunction rf, IntelligenceAgent intelligenceAgent, StarcraftModel model){
         this.intelligenceAgent = intelligenceAgent;
         rewardFunction = rf;
 
@@ -134,6 +135,7 @@ public class StarcraftEnviorment implements Environment {
      * @param action the action taken by the ai
      * */
     private State predictState(Action action){
-        return null;
+
+        return currentObservation();
     }
 }
