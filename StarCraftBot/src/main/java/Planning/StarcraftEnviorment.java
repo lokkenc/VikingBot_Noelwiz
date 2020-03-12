@@ -1,27 +1,23 @@
 package Planning;
 
-import Planning.Actions.QueueComparator;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import burlap.mdp.singleagent.model.RewardFunction;
 import bwapi.Race;
-import bwapi.Unit;
 import bwapi.UnitType;
 import src.main.java.IntelligenceAgent;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 public class StarcraftEnviorment implements Environment {
     private Race PlayerRace;
     private Race EnemyRace;
     private RewardFunction rewardFunction;
     private double PreviousReward = 0;
-    private IntelligenceAgent intelligenceAgent = null;
-    private PriorityQueue<Action> ActionQueue;
+    private IntelligenceAgent intelligenceAgent;
+    private StarcraftModel model;
 
 
     /**
@@ -29,10 +25,13 @@ public class StarcraftEnviorment implements Environment {
      * use for calulating rewards.
      * @param rf
      */
-    public StarcraftEnviorment(RewardFunction rf, IntelligenceAgent intelligenceAgent){
+    public StarcraftEnviorment(RewardFunction rf, IntelligenceAgent intelligenceAgent, StarcraftModel model){
         this.intelligenceAgent = intelligenceAgent;
         rewardFunction = rf;
-        ActionQueue = new PriorityQueue<Action>(new QueueComparator());
+
+
+        PlayerRace = intelligenceAgent.getPlayerRace();
+        EnemyRace = intelligenceAgent.getEnemyRace();
     }
 
     /**
@@ -98,16 +97,6 @@ public class StarcraftEnviorment implements Environment {
     }
 
     /**
-     * Returns whether the environment is in a terminal state that prevents further action by the agent.
-     *
-     * @return true if the current environment is in a terminal state; false otherwise.
-     */
-    @Override
-    public boolean isInTerminalState() {
-        return isTerminalState(currentObservation());
-    }
-
-    /**
      * Check if we have no town centers, or if the
      * enemy has no town centers, or if the game is done.
      * @return
@@ -118,6 +107,18 @@ public class StarcraftEnviorment implements Environment {
             terminal = true;
         }
         return terminal;
+    }
+
+
+
+    /**
+     * Returns whether the environment is in a terminal state that prevents further action by the agent.
+     *
+     * @return true if the current environment is in a terminal state; false otherwise.
+     */
+    @Override
+    public boolean isInTerminalState() {
+        return isTerminalState(currentObservation());
     }
 
 
@@ -134,6 +135,7 @@ public class StarcraftEnviorment implements Environment {
      * @param action the action taken by the ai
      * */
     private State predictState(Action action){
-        return null;
+
+        return currentObservation();
     }
 }
