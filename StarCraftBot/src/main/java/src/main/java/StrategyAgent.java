@@ -1,5 +1,7 @@
 package src.main.java;
 
+import Planning.StarcraftEnvironment;
+import Planning.StarcraftPlanner;
 import bwapi.*;
 import bwta.BWTA;
 
@@ -28,6 +30,7 @@ public class StrategyAgent extends DefaultBWListener{
         BWTA.readMap(game);
         BWTA.analyze();
         System.out.println("Map data ready");
+
     }
 
     public void onFrame() {

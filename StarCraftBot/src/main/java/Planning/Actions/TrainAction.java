@@ -9,6 +9,8 @@ public class TrainAction implements Action {
     private String actionName;
     private static final String BaseActionName = "TrainAction";
     private static final String[] possibleUnits = new String[]{"worker","combatUnit"};
+    private String unitToTrain = "";
+    private int amount = 0;
 
     @Override
     public boolean equals(Object o) {
@@ -49,6 +51,7 @@ public class TrainAction implements Action {
                 if(currentOptionComponents[0].equals("what") && currentOptionComponents.length == 2){
                     for (int j = 0; j < possibleUnits.length; j++) {
                         if(currentOptionComponents[1].equals(possibleUnits[j])){
+                            unitToTrain = possibleUnits[j];
                             validOption = true;
                         }
                     }
@@ -57,7 +60,10 @@ public class TrainAction implements Action {
                 } else if(currentOptionComponents[0].equals("amount") && currentOptionComponents.length == 2 ){
                     Scanner numScann = new Scanner(currentOptionComponents[1]);
                     if(numScann.hasNextInt()){
-                        validOption = numScann.nextInt() > 0;
+                        int num = numScann.nextInt();
+                        validOption = num > 0;
+                        if (validOption)
+                            amount = num;
                     }
                 }
 
@@ -88,5 +94,12 @@ public class TrainAction implements Action {
     @Override
     public Action copy() {
         return new TrainAction(actionName.substring(BaseActionName.length()));
+    }
+
+    public String getUnitToTrain() {
+        return unitToTrain;
+    }
+    public int getAmount() {
+        return amount;
     }
 }

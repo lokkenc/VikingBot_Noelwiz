@@ -18,7 +18,7 @@ public class StarcraftPlanner {
     private Episode ep = new Episode();
 
     private SparseSampling sparsePlanner;
-    private StarcraftEnviorment game;
+    private StarcraftEnvironment game;
     private Policy sparcePolicy;
     private IntelligenceAgent intelligenceAgent;
 
@@ -51,7 +51,7 @@ public class StarcraftPlanner {
         ValueFunction valuefunction = null;
 
         //TODO: make sure the enviorment is initalized with everything it needs or something
-        game = new StarcraftEnviorment(initalreward, intelligenceAgent);
+        game = new StarcraftEnvironment(initalreward, intelligenceAgent);
 
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;

@@ -36,6 +36,13 @@ public class IntelligenceAgent {
         enemyRace = game.enemy().getRace();
     }
 
+    public Player getSelf() {
+        return self;
+    }
+    public Game getGame() {
+        return game;
+    }
+
     /**
      * Clears current unitMemory and uses {@link #updateUnitMemory} to add all trained units to hashmap
      * @param self Player assigned to the bot
@@ -257,7 +264,7 @@ public class IntelligenceAgent {
      * @param type UnitType to get the list of
      * @return Returns a list of all units of type type
      */
-    public List<Unit> getUnitsListOfType(Player self, UnitType type){
+    public List<Unit> getUnitsListOfType(UnitType type){
         List<Unit> unitsList = new ArrayList<Unit>(4);
 
         for (Unit unit : self.getUnits()) {

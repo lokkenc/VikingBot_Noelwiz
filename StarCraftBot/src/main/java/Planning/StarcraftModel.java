@@ -13,6 +13,7 @@ import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.mdp.singleagent.model.TransitionProb;
 import bwapi.Race;
 import bwapi.Unit;
+import bwapi.UnitType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +77,8 @@ public class StarcraftModel implements FullModel {
                 baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
                         (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                         (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
-                        (int)state.get("numEnemyBases"), (Unit)state.get("mostCommonCombatUnit"),
-                        (boolean) state.get("attackingEnemyBase"),(Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
+                        (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                        (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
                         capacity);
 
                 break;
@@ -96,15 +97,15 @@ public class StarcraftModel implements FullModel {
                     baseNextState = new PlanningState( numworkers-1, mineralproduction-57,
                             (int) state.get("gasProductionRate"), numBases, (int) state.get("timeSinceLastScout"),
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
-                            (int)state.get("numEnemyBases"), (Unit)state.get("mostCommonCombatUnit"),
-                            (boolean) state.get("attackingEnemyBase"),ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
+                            (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                            (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
                             capacity);
                 } else {
                     baseNextState = new PlanningState( numworkers, mineralproduction,
                             (int) state.get("gasProductionRate"), numBases, (int) state.get("timeSinceLastScout"),
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
-                            (int)state.get("numEnemyBases"), (Unit)state.get("mostCommonCombatUnit"),
-                            (boolean) state.get("attackingEnemyBase"),(Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
+                            (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                            (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                             capacity);
                 }
                 break;
@@ -119,15 +120,15 @@ public class StarcraftModel implements FullModel {
                     baseNextState = new PlanningState( numworkers-1, mineralproduction-57,
                             (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
-                            (int)state.get("numEnemyBases"), (Unit)state.get("mostCommonCombatUnit"),
-                            (boolean) state.get("attackingEnemyBase"),ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
+                            (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                            (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
                             capacity);
                 } else {
                     baseNextState = new PlanningState( numworkers, mineralproduction,
                             (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
-                            (int)state.get("numEnemyBases"), (Unit)state.get("mostCommonCombatUnit"),
-                            (boolean) state.get("attackingEnemyBase"),(Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
+                            (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                            (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                             capacity);
                 }
                 break;
@@ -146,8 +147,8 @@ public class StarcraftModel implements FullModel {
                 baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
                         (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
                         (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
-                        (int)state.get("numEnemyBases"), (Unit)state.get("mostCommonCombatUnit"),
-                        attackingenemybase,(Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
+                        (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                        attackingenemybase, (boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                         capacity);
                 break;
 
@@ -171,8 +172,8 @@ public class StarcraftModel implements FullModel {
                     baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
                             (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
-                            (int)state.get("numEnemyBases"), (Unit)state.get("mostCommonCombatUnit"),
-                            (boolean) state.get("attackingEnemyBase"),ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
+                            (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                            (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
                             capacity);
                 } else {
                     //if we can train combat units, and rng thiks we're training combat units
@@ -188,8 +189,8 @@ public class StarcraftModel implements FullModel {
                     baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
                             (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
-                            (int)state.get("numEnemyBases"), (Unit)state.get("mostCommonCombatUnit"),
-                            (boolean) state.get("attackingEnemyBase"),(Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
+                            (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                            (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                             capacity);
                 }
                 break;
@@ -264,8 +265,9 @@ public class StarcraftModel implements FullModel {
             alternateState = new PlanningState( (int) currentprob.eo.op.get("numWorkers"), (int) currentprob.eo.op.get("mineralProductionRate"),
                     (int) currentprob.eo.op.get("gasProductionRate"), (int) currentprob.eo.op.get("numBases"), (int) currentprob.eo.op.get("timeSinceLastScout"),
                     (ArrayList<CombatUnitStatus>)currentprob.eo.op.get("combatUnitStatuses"), (int) currentprob.eo.op.get("numEnemyWorkers"),
-                    (int)currentprob.eo.op.get("numEnemyBases"), (Unit)currentprob.eo.op.get("mostCommonCombatUnit"),
-                    !(boolean) currentprob.eo.op.get("attackingEnemyBase"),(Race) currentprob.eo.op.get("playerRace"),(Race) currentprob.eo.op.get("enemyRace"),(GameStatus)currentprob.eo.op.get("gameStatus"),
+                    (int)currentprob.eo.op.get("numEnemyBases"), (UnitType)currentprob.eo.op.get("mostCommonCombatUnit"),
+                    !(boolean) currentprob.eo.op.get("attackingEnemyBase"),(boolean) currentprob.eo.op.get("beingAttacked"),
+                    (Race) currentprob.eo.op.get("playerRace"),(Race) currentprob.eo.op.get("enemyRace"),(GameStatus)currentprob.eo.op.get("gameStatus"),
                     (int[][])currentprob.eo.op.get("trainingCapacity"));
 
             newProbabilities.add(new TransitionProb(attackprob * currentprob.p, new EnvironmentOutcome(Currentstate, action,alternateState, rewardFunction.reward(Currentstate,action,alternateState),false)));
@@ -355,8 +357,9 @@ public class StarcraftModel implements FullModel {
                     alternateState = new PlanningState((int) currentprob.eo.op.get("numWorkers"), (int) currentprob.eo.op.get("mineralProductionRate"),
                             (int) currentprob.eo.op.get("gasProductionRate"), (int) currentprob.eo.op.get("numBases"), (int) currentprob.eo.op.get("timeSinceLastScout"),
                             (ArrayList<CombatUnitStatus>) currentprob.eo.op.get("combatUnitStatuses"), (int) currentprob.eo.op.get("numEnemyWorkers"),
-                            (int) currentprob.eo.op.get("numEnemyBases"), (Unit) currentprob.eo.op.get("mostCommonCombatUnit"),
-                            !(boolean) currentprob.eo.op.get("attackingEnemyBase"), (Race) currentprob.eo.op.get("playerRace"), (Race) currentprob.eo.op.get("enemyRace"), (GameStatus) currentprob.eo.op.get("gameStatus"),
+                            (int) currentprob.eo.op.get("numEnemyBases"), (UnitType) currentprob.eo.op.get("mostCommonCombatUnit"),
+                            !(boolean) currentprob.eo.op.get("attackingEnemyBase"), (boolean) currentprob.eo.op.get("beingAttacked"),
+                            (Race) currentprob.eo.op.get("playerRace"), (Race) currentprob.eo.op.get("enemyRace"), (GameStatus) currentprob.eo.op.get("gameStatus"),
                             (int[][]) currentprob.eo.op.get("trainingCapacity"));
 
                     newProbabilities.add(new TransitionProb(newBase * currentprob.p, new EnvironmentOutcome(Currentstate, action, alternateState, rewardFunction.reward(Currentstate, action, alternateState), false)));
@@ -404,8 +407,9 @@ public class StarcraftModel implements FullModel {
                 alternateState = new PlanningState( (int) currentprob.eo.op.get("numWorkers"), (int) currentprob.eo.op.get("mineralProductionRate"),
                         (int) currentprob.eo.op.get("gasProductionRate"), (int) currentprob.eo.op.get("numBases"), (int) currentprob.eo.op.get("timeSinceLastScout"),
                         (ArrayList<CombatUnitStatus>)currentprob.eo.op.get("combatUnitStatuses"), (int) currentprob.eo.op.get("numEnemyWorkers"),
-                        (int)currentprob.eo.op.get("numEnemyBases"), (Unit)currentprob.eo.op.get("mostCommonCombatUnit"),
-                        (boolean) currentprob.eo.op.get("attackingEnemyBase"),(Race) currentprob.eo.op.get("playerRace"),(Race) currentprob.eo.op.get("enemyRace"),(GameStatus)currentprob.eo.op.get("gameStatus"),
+                        (int)currentprob.eo.op.get("numEnemyBases"), (UnitType)currentprob.eo.op.get("mostCommonCombatUnit"),
+                        (boolean) currentprob.eo.op.get("attackingEnemyBase"), (boolean) currentprob.eo.op.get("beingAttacked"),
+                        (Race) currentprob.eo.op.get("playerRace"),(Race) currentprob.eo.op.get("enemyRace"),(GameStatus)currentprob.eo.op.get("gameStatus"),
                         (int[][])currentprob.eo.op.get("trainingCapacity"));
 
                 //TODO: FIX THIS
