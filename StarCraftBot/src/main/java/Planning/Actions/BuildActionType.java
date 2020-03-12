@@ -26,7 +26,7 @@ public class BuildActionType implements ActionType {
         actions.add(new BuildAction("_research")); //a building for upgrade researching
         actions.add(new BuildAction("_pop")); //building (or unit) that adds population
         actions.add(new BuildAction("_train")); //building to train units eg hive, or warp gate
-        actions.add(new BuildAction());
+        //actions.add(new BuildAction()); //commented out because it will likely not be parsed, nor applicable yet.
         return actions;
     }
 }

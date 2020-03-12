@@ -14,11 +14,12 @@ import java.util.List;
 public class IntelligenceAgent {
     private Race myrace;
     private Race enemyRace;
-    Player self;
+    private Player self;
 
     private int baseLoc = 0;
     private ArrayList<Integer> scouts = new ArrayList<Integer>();
     private HashMap<UnitType, Integer> unitMemory = new HashMap<UnitType, java.lang.Integer>();
+    private HashMap<UnitType, Integer> enemyUnitMemory = new HashMap<UnitType, java.lang.Integer>();
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
 
@@ -148,6 +149,35 @@ public class IntelligenceAgent {
             }
         }
     }
+
+
+    public void onUnitDestroy(Unit unit) {
+        if(unit.isVisible(self) && !unit.getPlayer().equals(self)){
+            updateEnemyUnitMemory(unit.getType(), -1);
+        }
+    }
+
+    public void onUnitShow(Unit unit){
+        if(unit.isVisible(self) && !unit.getPlayer().equals(self)){
+            updateEnemyUnitMemory(unit.getType(), 1);
+        }
+    }
+
+
+    /**
+     * Change count of UnitType by the amount
+     * @param type Unit to check memory for
+     * @param amount Total amount of units
+     */
+    private void updateEnemyUnitMemory (UnitType type, int amount) {
+        if (enemyUnitMemory.containsKey(type)) {
+            enemyUnitMemory.put(type, enemyUnitMemory.get(type) + amount);
+        }
+        else {
+            enemyUnitMemory.put(type, amount);
+        }
+    }
+
 
     /**
      * Sends a scout to attack possible enemy base positions
@@ -340,7 +370,12 @@ public class IntelligenceAgent {
     }
 
     // * * * Information retrieval for AI Planning * * *//
-    public int getNumWorkers(){
+
+    /**
+     * Get the number of workers for the AI planner
+     * @return int, # workers the player owns.
+     */
+    public int getNumWokers(){
         int numworkers = 0;
 
         switch (myrace) {

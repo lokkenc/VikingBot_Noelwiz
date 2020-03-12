@@ -3,15 +3,46 @@ package Planning.Actions;
 import burlap.mdp.core.action.Action;
 
 public class BuildAction implements Action {
-    private String actionName;
+    String actionName;
     private static final String BaseActionName = "BuildAction";
+    private static final String[] buildOptions = new String[]{"research", "pop", "train"};
 
-    //TODO: enforce creation of new BuildActions with an _ for aguments
-    public BuildAction(String s) {
-        if(s == null || s.isEmpty()){
+    /**
+     * parse a list of option strings to add to the action name
+     * and make sure they conform to the expected options.
+     * @param options
+     *         "research"
+     *            - a building that enables research.
+     *         "pop"
+     *            - population, something that increases the population capacity
+     *         "train"
+     *            - a building that trains or enables the training for zerg of units
+     * @return
+     */
+    public BuildAction(String options) {
+        if(options == null || options.isEmpty()){
             actionName = BaseActionName;
         } else {
-            actionName = BaseActionName.concat(s);
+            String[] inputStr = options.split("_");
+            int i = 0;
+            if(inputStr[i] == null || inputStr[i].isEmpty() ||inputStr[i].equals(BaseActionName)){
+                i++;
+            }
+
+            boolean validArg = false;
+            for (int j = 0; j < buildOptions.length; j++){
+                if(inputStr[i].equals(buildOptions[j])){
+                    validArg = true;
+                }
+            }
+
+
+            if(validArg){
+                actionName = BaseActionName.concat("_");
+                actionName = actionName.concat(inputStr[i]);
+            } else {
+                actionName = BaseActionName;
+            }
         }
     }
 
@@ -26,6 +57,6 @@ public class BuildAction implements Action {
 
     @Override
     public Action copy() {
-        return new BuildAction(actionName.substring(BaseActionName.length()));
+        return new BuildAction(actionName.substring(BaseActionName.length()+1));
     }
 }
