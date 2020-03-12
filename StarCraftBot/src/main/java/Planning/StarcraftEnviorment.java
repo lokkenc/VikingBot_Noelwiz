@@ -1,6 +1,5 @@
 package Planning;
 
-import Planning.Actions.QueueComparator;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
@@ -11,15 +10,13 @@ import bwapi.UnitType;
 import src.main.java.IntelligenceAgent;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 public class StarcraftEnviorment implements Environment {
     private Race PlayerRace;
     private Race EnemyRace;
     private RewardFunction rewardFunction;
     private double PreviousReward = 0;
-    private IntelligenceAgent intelligenceAgent = null;
-    private PriorityQueue<Action> ActionQueue;
+    private IntelligenceAgent intelligenceAgent;
 
 
     /**
@@ -30,7 +27,10 @@ public class StarcraftEnviorment implements Environment {
     public StarcraftEnviorment(RewardFunction rf, IntelligenceAgent intelligenceAgent){
         this.intelligenceAgent = intelligenceAgent;
         rewardFunction = rf;
-        ActionQueue = new PriorityQueue<Action>(new QueueComparator());
+
+
+        PlayerRace = intelligenceAgent.getPlayerRace();
+        EnemyRace = intelligenceAgent.getEnemyRace();
     }
 
     /**
