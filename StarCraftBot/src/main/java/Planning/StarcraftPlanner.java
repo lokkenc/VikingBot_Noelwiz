@@ -68,6 +68,7 @@ public class StarcraftPlanner {
 
         //NOTE TO FUTURE SELVES: consider adjusting this.
         sparsePlanner.setForgetPreviousPlanResults(true);
+        sparsePlanner.setComputeExactValueFunction(true);
 
         //enqueue 3 actions
         SparsePlanStep();
@@ -80,7 +81,7 @@ public class StarcraftPlanner {
      */
     public void SparsePlanStep(){
         if (roomInQueue()) {
-            Action todo = sparcePolicy.action(game.currentObservation());
+            Action todo = sparcePolicy.action(game.currentObservation()); //ERROR HERE: INFINITE LOOP OF ACTIONS
             Actions.EnQueue(todo);
         }
     }
