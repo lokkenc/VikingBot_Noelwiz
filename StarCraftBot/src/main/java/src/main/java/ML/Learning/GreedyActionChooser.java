@@ -22,7 +22,7 @@ public class GreedyActionChooser {
         double rand = random.nextDouble();
 
         if(rand < epsilon) {
-            return spMng.getActionList().get(random.nextInt(8));
+            return spMng.getActionList().get(random.nextInt(3));
         } else {
             return qtable.getMaxAction(curState);
         }

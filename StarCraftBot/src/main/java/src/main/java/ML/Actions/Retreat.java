@@ -1,44 +1,42 @@
 package src.main.java.ML.Actions;
 
 import bwapi.Game;
+import bwapi.Position;
 import bwapi.Unit;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Attack extends Action implements Serializable {
+public class Retreat extends Action implements Serializable {
     private static final long serialVersionUID = 1L;
-    private ActionType type = ActionType.ATTACK;
+    private ActionType type = ActionType.RETREAT;
 
     public ActionType getType() { return this.type; }
 
     /**
-     * This function orders the units to attack the enemy with the lowest health in range
+     * This function orders the unit to retreat
      * @param game The game that was initialized at the startup of the program
      * @param unit The unit that makes up the commandable squad
      */
     public void doAction(Game game, Unit unit){
-
-        Unit attackUnit = null; // set a variable to hold the lowerUnit id and its hp
-        int lowestHP = Integer.MAX_VALUE;
+        Unit closestUnit = null; // set a variable to hold the lowerUnit id and its hp
+        int lowestDistance = Integer.MAX_VALUE;
         for (Unit enemyUnit : game.enemy().getUnits()) { // for every enemy unit
-            if(unit.isInWeaponRange(enemyUnit) && enemyUnit.getHitPoints() < lowestHP) {
-                attackUnit = enemyUnit;
-                lowestHP = unit.getHitPoints();
+            if(unit.getDistance(enemyUnit) < lowestDistance) {
+                closestUnit = enemyUnit;
+                lowestDistance = unit.getDistance(enemyUnit);
             }
         }
 
-        if(attackUnit != null) { // if there is a unit in range
-            unit.attack(attackUnit);
-        }
+        unit.move(new Position(-1 * closestUnit.getX(), -1 * closestUnit.getY()));
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Attack attack = (Attack) o;
-        return type == attack.type;
+        Retreat retreat = (Retreat) o;
+        return type == retreat.type;
     }
 
     @Override

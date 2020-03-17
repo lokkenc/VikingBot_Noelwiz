@@ -375,7 +375,7 @@ public class IntelligenceAgent {
      * Get the number of workers for the AI planner
      * @return int, # workers the player owns.
      */
-    public int getNumWokers(){
+    public int getNumWorkers(){
         int numworkers = 0;
 
         switch (myrace) {

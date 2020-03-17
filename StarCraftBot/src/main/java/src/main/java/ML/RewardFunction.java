@@ -2,6 +2,8 @@ package src.main.java.ML;
 
 import src.main.java.ML.Actions.Action;
 import src.main.java.ML.Actions.ActionType;
+import src.main.java.ML.Range.HpRange;
+import src.main.java.ML.Range.UnitsRange;
 import src.main.java.ML.States.State;
 
 public class RewardFunction {
@@ -14,19 +16,27 @@ public class RewardFunction {
      */
     public static double getRewardValue(State current, Action action, State next) {
         if (action.getType() == ActionType.ATTACK) { // if we are attacking then we can check damage done
-            // This is the reward function based on damage done vs damage received.
-//            if (current.getNumberOfEnemies().getValue() >= 1) {
-//                return (current.getUnit().getType().groundWeapon().damageAmount() + current.getUnit().getType().airWeapon().damageAmount())
-//                        - (current.getFriendlyHp().getValue() - next.getFriendlyHp().getValue());
-//            } else {
-//                return current.getFriendlyHp().getValue() - next.getFriendlyHp().getValue();
-//            }
-            double allyHpDiff = (current.getFriendlyHp().getValue() - next.getFriendlyHp().getValue());
-            double enemyHpDiff = (current.getEnemyHp().getValue() - next.getEnemyHp().getValue());
-
-            return enemyHpDiff - allyHpDiff;
+            if(current.getNumberOfEnemies().getValue() == 0) {
+                return -1;
+            } else if(current.getFriendlyHp().getRange() == HpRange.LOW && current.getEnemyHp().getRange() != HpRange.LOW) {
+                return -1;
+            } else {
+                return 1;
+            }
+        } else if (action.getType() == ActionType.MOVETOWARDS) {
+            if (current.getNumberOfEnemies().getValue() > 0) {
+                return -1;
+            } else {
+                return 1;
+            }
         } else {
-            return current.getFriendlyHp().getValue() - next.getFriendlyHp().getValue() - 50;
+            if(current.getFriendlyHp().getRange() != HpRange.LOW && current.getNumberOfFriendlies().getValue() >= current.getNumberOfEnemies().getValue() - 2) {
+                return -1;
+            } else if (current.getNumberOfFriendlies().getValue() >= current.getNumberOfEnemies().getValue() - 2){
+                return -1;
+            } else {
+                return 1;
+            }
         }
     }
 }

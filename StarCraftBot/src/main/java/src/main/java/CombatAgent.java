@@ -125,36 +125,34 @@ public class CombatAgent {
 
         int closest = Integer.MAX_VALUE;
         int enemiesInRange = 0;
-        int totalEnemyInRangeHP = 0;
+        int closestEnemyHp = Integer.MAX_VALUE;
+        Unit closestEnemyUnit = null;
         for(Unit units: game.enemy().getUnits()) {
             if(unit.getDistance(units) < closest) {
                 closest = unit.getDistance(units);
             }
             if(unit.isInWeaponRange(units)) {
                 enemiesInRange++;
-                totalEnemyInRangeHP += units.getHitPoints();
+                if(units.getHitPoints() < closestEnemyHp) {
+                    closestEnemyHp = units.getHitPoints();
+                    closestEnemyUnit = units;
+                }
             }
         }
 
         int friendliesInRange = 0;
-        int totalFriendlyInRangeHp = 0;
         for(Unit units: game.self().getUnits()) {
             if(unit.isInWeaponRange(units)) {
                 friendliesInRange++;
-                totalFriendlyInRangeHp += units.getHitPoints();
             }
         }
 
         closestEnemy = new Distance(closest);
-        if(friendliesInRange > 0) {
-            friendlyHp = new Hp(totalFriendlyInRangeHp / friendliesInRange);
-        } else {
-            friendlyHp = new Hp(totalEnemyInRangeHP);
-        }
+        friendlyHp = new Hp((unit.getHitPoints() / unit.getInitialHitPoints()) * 100);
         if(enemiesInRange > 0) {
-            enemyHp = new Hp(totalEnemyInRangeHP / enemiesInRange);
+            enemyHp = new Hp((closestEnemyUnit.getHitPoints() / closestEnemyUnit.getInitialHitPoints()) * 100);
         } else {
-            enemyHp = new Hp(totalEnemyInRangeHP);
+            enemyHp = new Hp(0);
         }
         numberOfEnemies = new Units(enemiesInRange);
         numberOfFriendlies = new Units(friendliesInRange);

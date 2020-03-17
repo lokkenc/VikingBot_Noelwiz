@@ -1,9 +1,7 @@
 package src.main.java.ML;
 
 import bwapi.*;
-import bwta.*;
 import src.main.java.CombatAgent;
-import src.main.java.EconomyAgent;
 import src.main.java.IntelligenceAgent;
 
 public class Training extends DefaultBWListener{
@@ -12,8 +10,8 @@ public class Training extends DefaultBWListener{
     private Game game;
     private Player self;
 
-    private IntelligenceAgent intel = new IntelligenceAgent();
-    private CombatAgent combat = new CombatAgent(intel);
+    private IntelligenceAgent intel;
+    private CombatAgent combat;
 
     private int ML_Epoch = 14;
     private int frameCount = 0;
@@ -27,7 +25,9 @@ public class Training extends DefaultBWListener{
     public void onStart() {
         game = bwClient.getGame();
         self = game.self();
-
+        intel = new IntelligenceAgent(self);
+        combat = new CombatAgent(intel);
+        
         combat.addUnitTypeToModel(UnitType.Protoss_Zealot);
         combat.loadModels();
     }

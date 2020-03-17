@@ -9,9 +9,9 @@ public class StrategyAgent extends DefaultBWListener{
     private Game game;
     private Player self;
 
-    private IntelligenceAgent intel = new IntelligenceAgent(self);
-    private CombatAgent combat = new CombatAgent(intel);
-    private EconomyAgent economy = new EconomyAgent(intel);
+    private IntelligenceAgent intel;
+    private CombatAgent combat;
+    private EconomyAgent economy;
 
     private int ML_Epoch = 14;
     private boolean training = true;
@@ -26,6 +26,10 @@ public class StrategyAgent extends DefaultBWListener{
     public void onStart() {
         game = bwClient.getGame();
         self = game.self();
+
+        intel = new IntelligenceAgent(self);
+        combat = new CombatAgent(intel);
+        economy = new EconomyAgent(intel);
 
         //Use BWTA to analyze map
         //This may take a few minutes if the map is processed first time!

@@ -15,8 +15,7 @@ public class StateSpaceManager {
     }
 
     public List<Action> getValidActions() {
-        return Arrays.asList(new Attack(), new MoveDown(), new MoveDownLeft(), new MoveDownRight(), new MoveLeft(),
-                new MoveRight(), new MoveUp(), new MoveUpLeft(), new MoveUpRight());
+        return Arrays.asList(new Attack(), new Retreat(), new MoveTowards());
     }
 
     public Set<State> createStates() {
