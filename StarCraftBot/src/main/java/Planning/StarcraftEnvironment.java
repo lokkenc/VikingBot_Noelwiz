@@ -1,23 +1,33 @@
 package Planning;
 
+import Planning.Actions.ActionParserHelper;
+import Planning.Actions.BuildAction;
 import Planning.Actions.QueueComparator;
+import Planning.Actions.TrainAction;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import burlap.mdp.singleagent.model.RewardFunction;
 import bwapi.Race;
+import bwapi.Unit;
+import bwapi.UnitType;
+import src.main.java.EconomyAgent;
 import src.main.java.IntelligenceAgent;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-public class StarcraftEnviorment implements Environment {
+public class StarcraftEnvironment implements Environment {
     private Race PlayerRace;
     private Race EnemyRace;
     private RewardFunction rewardFunction;
     private double PreviousReward = 0;
     private IntelligenceAgent intelligenceAgent = null;
+    private EconomyAgent economyAgent;
     private PriorityQueue<Action> ActionQueue;
+    private StarcraftModel model;
 
 
     /**
@@ -25,10 +35,14 @@ public class StarcraftEnviorment implements Environment {
      * use for calulating rewards.
      * @param rf
      */
-    public StarcraftEnviorment(RewardFunction rf, IntelligenceAgent intelligenceAgent){
+    public StarcraftEnvironment(RewardFunction rf, IntelligenceAgent intelligenceAgent, StarcraftModel model){
         this.intelligenceAgent = intelligenceAgent;
+        economyAgent = new EconomyAgent(intelligenceAgent);
+        this.model = model;
         rewardFunction = rf;
         ActionQueue = new PriorityQueue<Action>(new QueueComparator());
+        PlayerRace = intelligenceAgent.getPlayerRace();
+        EnemyRace = intelligenceAgent.getEnemyRace();
     }
 
     /**
@@ -46,12 +60,27 @@ public class StarcraftEnviorment implements Environment {
      * @return
      */
     public State currentObservation() {
-        int numworkers = intelligenceAgent.getNumWorkers();
+        State retState;
+        int numWorkers = intelligenceAgent.getNumWorkers();
         int mineralProductionRate = Math.round(intelligenceAgent.getMineralProductionRate());
         int gasProductionRate = Math.round(intelligenceAgent.getGasProductionRate());
         int numBases = intelligenceAgent.getNumBases();
         int timeSinceLastScout = intelligenceAgent.getTimeSinceLastScout();
-        return null;
+        ArrayList<CombatUnitStatus> combatUnitStatuses = intelligenceAgent.getCombatUnitStatuses();
+        int numEnemyWorkers = intelligenceAgent.getNumEnemyWorkers();
+        int numEnemyBases = intelligenceAgent.getNumEnemyBases();
+        UnitType mostCommonCombatUnit = intelligenceAgent.getMostCommonCombatUnit();
+        Boolean attackingEnemyBase = intelligenceAgent.attackingEnemyBase();
+        Boolean beingAttacked = intelligenceAgent.beingAttacked();
+        Race playerRace = intelligenceAgent.getPlayerRace();
+        Race enemyRace = intelligenceAgent.getEnemyRace();
+        GameStatus gameStatus = intelligenceAgent.getGameStatus();
+        int[][] trainingCapacity = intelligenceAgent.getTrainingCapacity();
+
+        retState = new PlanningState(numWorkers, mineralProductionRate, gasProductionRate, numBases, timeSinceLastScout,
+                combatUnitStatuses, numEnemyWorkers, numEnemyBases, mostCommonCombatUnit, attackingEnemyBase,
+                beingAttacked, playerRace, enemyRace, gameStatus, trainingCapacity);
+        return retState;
     }
 
     /**
@@ -60,8 +89,43 @@ public class StarcraftEnviorment implements Environment {
      * @return
      */
     public EnvironmentOutcome executeAction(Action action) {
+        ActionParserHelper aph = new ActionParserHelper();
         //TODO: interperate actions based on their name.
         String actionName = action.actionName();
+        switch (aph.GetActionType(action)) {
+            case ATTACK:
+
+                break;
+            case BUILD:
+                BuildAction buildAction = (BuildAction) action;
+                if (buildAction.getUnitToBuild().equalsIgnoreCase("train")) {
+                    economyAgent.createBuildingOfType(UnitType.Protoss_Gateway);
+                } else if (buildAction.getUnitToBuild().equalsIgnoreCase("pop")) {
+                    economyAgent.createBuildingOfType(UnitType.Protoss_Pylon);
+                }
+                break;
+            case EXPAND:
+
+                break;
+            case TRAIN:
+                TrainAction trainAction = (TrainAction) action;
+                if (trainAction.getUnitToTrain().equalsIgnoreCase("worker")) {
+                    economyAgent.trainWorker();
+                }
+                else if (trainAction.getUnitToTrain().equalsIgnoreCase("combatUnit")) {
+                    economyAgent.trainCombatUnit();
+                }
+                break;
+            case SCOUT:
+
+                break;
+            case UPGRADE:
+
+                break;
+            default:
+
+
+        }
 
 
         //TODO: SEND COMMANDS TO BOT BASED ON THE ACTION.
@@ -115,6 +179,6 @@ public class StarcraftEnviorment implements Environment {
      * @param action the action taken by the ai
      * */
     private State predictState(Action action){
-        return null;
+        return currentObservation();
     }
 }

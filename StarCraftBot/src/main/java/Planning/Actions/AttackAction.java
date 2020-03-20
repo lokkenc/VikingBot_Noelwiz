@@ -1,6 +1,7 @@
 package Planning.Actions;
 
 import burlap.mdp.core.action.Action;
+import bwem.Base;
 
 public class AttackAction implements Action {
     String actionName;

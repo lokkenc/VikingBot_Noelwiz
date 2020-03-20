@@ -16,8 +16,9 @@ public class PlanningState implements HashableState, State {
     private ArrayList<CombatUnitStatus> combatUnitStatuses;
     private int numEnemyWorkers;
     private int numEnemyBases;
-    private Unit mostCommonCombatUnit;
+    private UnitType mostCommonCombatUnit;
     private Boolean attackingEnemyBase;
+    private Boolean beingAttacked;
     private Race playerRace;
     private Race enemyRace;
     private GameStatus gameStatus;
@@ -29,8 +30,8 @@ public class PlanningState implements HashableState, State {
 
     public PlanningState(int numWorkers, int mineralProductionRate, int gasProductionRate, int numBases,
                          int timeSinceLastScout, ArrayList<CombatUnitStatus> combatUnitStatuses, int numEnemyWorkers,
-                         int numEnemyBases, Unit mostCommonCombatUnit, Boolean attackingEnemyBase, Race playerRace,
-                         Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity) {
+                         int numEnemyBases, UnitType mostCommonCombatUnit, Boolean attackingEnemyBase, Boolean beingAttacked,
+                         Race playerRace, Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity) {
         this.numWorkers = numWorkers;
         this.mineralProductionRate = mineralProductionRate;
         this.gasProductionRate = gasProductionRate;
@@ -41,6 +42,7 @@ public class PlanningState implements HashableState, State {
         this.numEnemyBases = numEnemyBases;
         this.mostCommonCombatUnit = mostCommonCombatUnit;
         this.attackingEnemyBase = attackingEnemyBase;
+        this.beingAttacked = beingAttacked;
         this.playerRace = playerRace;
         this.enemyRace = enemyRace;
         this.gameStatus = gameStatus;
@@ -56,6 +58,7 @@ public class PlanningState implements HashableState, State {
         VariableKeys.add("numEnemyBases");
         VariableKeys.add("mostCommonCombatUnit");
         VariableKeys.add("attackingEnemyBase");
+        VariableKeys.add("beingAttacked");
         VariableKeys.add("playerRace");
         VariableKeys.add("enemyRace");
         VariableKeys.add("gameStatus");
@@ -115,6 +118,9 @@ public class PlanningState implements HashableState, State {
             case "attackingEnemyBase":
                 result = attackingEnemyBase;
                 break;
+            case "beingAttacked":
+                result = beingAttacked;
+                break;
             case "playerRace":
                 result = playerRace;
                 break;
@@ -149,7 +155,7 @@ public class PlanningState implements HashableState, State {
     public PlanningState copy() {
         PlanningState copy = new PlanningState(this.numWorkers, this.mineralProductionRate,this.gasProductionRate,this.numBases,
                 this.timeSinceLastScout, this.combatUnitStatuses, this.numEnemyWorkers,this.numEnemyBases,
-                this.mostCommonCombatUnit,this.attackingEnemyBase,this.playerRace, this.enemyRace, this.gameStatus,
+                this.mostCommonCombatUnit,this.attackingEnemyBase,this.beingAttacked, this.playerRace, this.enemyRace, this.gameStatus,
                 this.trainingCapacity);
         return copy;
     }
@@ -200,7 +206,7 @@ public class PlanningState implements HashableState, State {
         return numEnemyBases;
     }
 
-    public Unit getMostCommonCombatUnit() {
+    public UnitType getMostCommonCombatUnit() {
         return mostCommonCombatUnit;
     }
 

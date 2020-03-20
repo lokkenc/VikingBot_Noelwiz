@@ -7,7 +7,6 @@ import burlap.behavior.singleagent.Episode;
 import burlap.behavior.singleagent.planning.stochastic.sparsesampling.SparseSampling;
 import burlap.behavior.valuefunction.ValueFunction;
 import burlap.mdp.core.action.Action;
-import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.statehashing.HashableStateFactory;
@@ -23,10 +22,11 @@ public class StarcraftPlanner {
 
     /**
      * intialize everything to use the ai planning.
-     * @param initalstate (for now) a state representing the start of the game
-     *                    so that stuff can be initalized.
+     * @param queue queue shared between the planner and the bot
      */
-    public void Initalize(State initalstate){
+    public void Initalize(SharedPriorityQueue queue){
+        this.Actions = queue;
+
         SADomain domain = new SADomain();
         //add actions to the domain
         domain.addActionType(new AttackActionType());
@@ -56,14 +56,22 @@ public class StarcraftPlanner {
 
         //NOTE TO FUTURE SELVES: consider adjusting this.
         sparsePlanner.setForgetPreviousPlanResults(true);
+        sparsePlanner.setComputeExactValueFunction(true);
+
+        //enqueue 3 actions
+        SparsePlanStep();
+        SparsePlanStep();
+        SparsePlanStep();
     }
 
     /**
      * Exicutes an action in the enviorment with the spare planner.
      */
     public void SparsePlanStep(){
-        Action todo = sparcePolicy.action( game.currentObservation());
-        game.executeAction( todo );
+        if (roomInQueue()) {
+            Action todo = sparcePolicy.action(game.currentObservation()); //ERROR HERE: INFINITE LOOP OF ACTIONS
+            Actions.EnQueue(todo);
+        }
     }
 
     /**
@@ -73,5 +81,16 @@ public class StarcraftPlanner {
     public void setGoal(ValueFunction vf){
         sparsePlanner.setValueForLeafNodes(vf);
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
+    }
+
+
+    public void ExecuteAction(){
+        game.executeAction(Actions.DeQueue());
+    }
+
+    public Boolean roomInQueue() {
+        if (Actions.size() > 10)
+            return false;
+        return true;
     }
 }

@@ -2,12 +2,18 @@ package src.main.java;
 
 import bwapi.*;
 
+import java.util.List;
+
 public class EconomyAgent {
 
-    IntelligenceAgent intel = new IntelligenceAgent();
+    IntelligenceAgent intel;
+    Player self;
+    Game game;
 
     public EconomyAgent( IntelligenceAgent itagent){
         intel = itagent;
+        this.self = intel.getSelf();
+        this.game = intel.getGame();
     }
 
 
@@ -84,11 +90,9 @@ public class EconomyAgent {
 
     /**
      * Builds a building of type in a suitable position
-     * @param game Game value created on game start
-     * @param self Player assigned to the bot
      * @param type Building to be created
      */
-    public void createBuildingOfType(Game game, Player self, UnitType type) {
+    public void createBuildingOfType(UnitType type) {
         Unit worker = intel.getAvailableWorker(self);
 
         assert type.isBuilding() : "Must Build Buildings.";
@@ -119,6 +123,25 @@ public class EconomyAgent {
 
             if (buildTile != null) {
                 worker.build(type, buildTile);
+            }
+        }
+    }
+
+    //Only works for protoss for now
+    public void trainWorker() {
+        for (Unit nexus: intel.getUnitsListOfType(UnitType.Protoss_Nexus)) {
+            List<UnitType> trainingQueue = nexus.getTrainingQueue();
+            if (trainingQueue.size() < 5) {
+                nexus.train(UnitType.Protoss_Probe);
+            }
+        }
+    }
+
+    public void trainCombatUnit() {
+        for (Unit gateway: intel.getUnitsListOfType(UnitType.Protoss_Gateway)) {
+            List<UnitType> trainingQueue = gateway.getTrainingQueue();
+            if (trainingQueue.size() < 5) {
+                gateway.train(UnitType.Protoss_Probe);
             }
         }
     }
