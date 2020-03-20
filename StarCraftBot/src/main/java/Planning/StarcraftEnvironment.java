@@ -11,7 +11,7 @@ import src.main.java.IntelligenceAgent;
 
 import java.util.PriorityQueue;
 
-public class StarcraftEnviorment implements Environment {
+public class StarcraftEnvironment implements Environment {
     private Race PlayerRace;
     private Race EnemyRace;
     private RewardFunction rewardFunction;
@@ -25,7 +25,7 @@ public class StarcraftEnviorment implements Environment {
      * use for calulating rewards.
      * @param rf
      */
-    public StarcraftEnviorment(RewardFunction rf, IntelligenceAgent intelligenceAgent){
+    public StarcraftEnvironment(RewardFunction rf, IntelligenceAgent intelligenceAgent){
         this.intelligenceAgent = intelligenceAgent;
         rewardFunction = rf;
         ActionQueue = new PriorityQueue<Action>(new QueueComparator());

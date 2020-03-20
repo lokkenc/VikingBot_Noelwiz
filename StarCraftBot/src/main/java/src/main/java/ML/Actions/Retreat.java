@@ -28,7 +28,23 @@ public class Retreat extends Action implements Serializable {
             }
         }
 
-        unit.move(new Position(-1 * closestUnit.getX(), -1 * closestUnit.getY()));
+        if(closestUnit != null) {
+            int xTrvl = 0;
+            int yTrvl = 0;
+            if(closestUnit.getX() < unit.getX()) {
+                xTrvl = unit.getX() + 10;
+            } else {
+                xTrvl = unit.getX() - 10;
+            }
+
+            if(closestUnit.getY() < unit.getY()) {
+                yTrvl = unit.getY() + 10;
+            } else {
+                yTrvl = unit.getY() - 10;
+            }
+
+            unit.move(new Position(xTrvl, yTrvl));
+        }
     }
 
     @Override

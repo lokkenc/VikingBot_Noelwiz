@@ -29,7 +29,9 @@ public class MoveTowards extends Action implements Serializable {
             }
         }
 
-        unit.move(new Position(closestUnit.getX(), closestUnit.getY()));
+        if(closestUnit != null) {
+            unit.move(new Position(closestUnit.getX(), closestUnit.getY()));
+        }
     }
 
     @Override

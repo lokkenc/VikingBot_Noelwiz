@@ -30,12 +30,14 @@ public class RewardFunction {
                 return 1;
             }
         } else {
-            if(current.getFriendlyHp().getRange() != HpRange.LOW && current.getNumberOfFriendlies().getValue() >= current.getNumberOfEnemies().getValue() - 2) {
-                return -1;
-            } else if (current.getNumberOfFriendlies().getValue() >= current.getNumberOfEnemies().getValue() - 2){
+            if (current.getNumberOfFriendlies().getValue() + 1 >= current.getNumberOfEnemies().getValue() - 2) {
                 return -1;
             } else {
-                return 1;
+                if(current.getFriendlyHp().getRange() != HpRange.LOW) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             }
         }
     }
