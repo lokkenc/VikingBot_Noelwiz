@@ -25,7 +25,7 @@ public class StarcraftPlanner {
      * intialize everything to use the ai planning.
      * @param initalstate (for now) a state representing the start of the game
      *                    so that stuff can be initalized.
-    */
+     */
     public void Initalize(State initalstate){
         SADomain domain = new SADomain();
         //add actions to the domain
