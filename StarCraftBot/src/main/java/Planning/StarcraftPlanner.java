@@ -59,17 +59,17 @@ public class StarcraftPlanner {
     }
 
     /**
-    * Exicutes an action in the enviorment with the spare planner.
-    */
+     * Exicutes an action in the enviorment with the spare planner.
+     */
     public void SparsePlanStep(){
         Action todo = sparcePolicy.action( game.currentObservation());
         game.executeAction( todo );
     }
 
     /**
-    *
-    * @param vf A value funtion for evaluating
-    */
+     *
+     * @param vf A value funtion for evaluating
+     */
     public void setGoal(ValueFunction vf){
         sparsePlanner.setValueForLeafNodes(vf);
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
