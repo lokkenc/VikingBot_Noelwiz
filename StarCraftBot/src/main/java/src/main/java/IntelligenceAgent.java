@@ -267,8 +267,8 @@ public class IntelligenceAgent {
      * @param type UnitType to get the list of
      * @return Returns a list of all units of type type
      */
-    public ArrayList<Unit> getUnitsListOfType(Player self, UnitType type){
-        ArrayList<Unit> unitsList = new ArrayList<Unit>(4);
+    public List<Unit> getUnitsListOfType(UnitType type){
+        List<Unit> unitsList = new ArrayList<Unit>(4);
 
         for (Unit unit : self.getUnits()) {
             if (unit.getType() == type) {
