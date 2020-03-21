@@ -8,17 +8,24 @@ import burlap.behavior.singleagent.planning.stochastic.sparsesampling.SparseSamp
 import burlap.behavior.valuefunction.ValueFunction;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.singleagent.SADomain;
-import burlap.mdp.singleagent.environment.Environment;
+import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.statehashing.HashableStateFactory;
 import burlap.statehashing.ReflectiveHashableStateFactory;
+import src.main.java.IntelligenceAgent;
 
 public class StarcraftPlanner {
     private Episode ep = new Episode();
 
     private SparseSampling sparsePlanner;
-    private Environment game;
+    private StarcraftEnvironment game;
     private Policy sparcePolicy;
+    private IntelligenceAgent intelligenceAgent;
+    private SharedPriorityQueue Actions;
 
+    public StarcraftPlanner(IntelligenceAgent intelligenceAgent) {
+        this.intelligenceAgent = intelligenceAgent;
+
+    }
 
     /**
      * intialize everything to use the ai planning.
@@ -36,20 +43,25 @@ public class StarcraftPlanner {
         domain.addActionType(new TrainActionType());
         domain.addActionType(new UpgradeActionType());
 
-        domain.setModel(new StarcraftModel());
+        RewardFunction initalreward = new PlanningRewardFunction(GameStatus.EARLY);
+
+
+        StarcraftModel model = new StarcraftModel(initalreward);
+        domain.setModel(model);
 
         HashableStateFactory factory = new ReflectiveHashableStateFactory();
 
-        //TODO: fill in reward function here
-        ValueFunction initalreward = null;
+        //TODO: fill in this. a QFunction implementation
+        ValueFunction valuefunction = new DummyQValue();
 
         //TODO: make sure the enviorment is initalized with everything it needs or something
-        game = new StarcraftEnviorment();
+
+        game = new StarcraftEnvironment(initalreward, intelligenceAgent, model);
 
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;
         sparsePlanner = new SparseSampling(domain,DiscountFactor,factory,10,1);
-        sparsePlanner.setValueForLeafNodes(initalreward);
+        sparsePlanner.setValueForLeafNodes(valuefunction);
 
         //get inital policy for planning
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
@@ -78,9 +90,11 @@ public class StarcraftPlanner {
      *
      * @param vf A value funtion for evaluating
      */
-    public void setGoal(ValueFunction vf){
+    public void setGoal(ValueFunction vf, RewardFunction rf){
         sparsePlanner.setValueForLeafNodes(vf);
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
+
+        game.UpdateRewardFunction(rf);
     }
 
 
