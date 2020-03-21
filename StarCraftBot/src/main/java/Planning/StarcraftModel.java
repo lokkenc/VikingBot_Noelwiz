@@ -289,7 +289,7 @@ public class StarcraftModel implements FullModel {
      * @return any new possibilities to add to the list of all probabilities outside the function.
      */
     private List<TransitionProb> newEnemyBaseTransitions(State Currentstate, Action action, List<TransitionProb> allProbabilities) {
-        //consider giving the model accsess to the game for better time estimation
+        //consider giving the ML.model accsess to the game for better time estimation
         //to ask what time it is? or something. this function want's to know
         //how long since it last checked the enemy base.
         List<TransitionProb> newProbabilities = new ArrayList<TransitionProb>();

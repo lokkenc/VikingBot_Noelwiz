@@ -1,6 +1,5 @@
 package Planning;
 
-import Planning.Actions.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
@@ -32,22 +31,21 @@ public class PlanningRewardFunction implements RewardFunction {
         int targetArmySize = 50;
         int maxTimeSinceLastScout = 3600;
         double reward = 0.0;
-        ActionParserHelper aph = new ActionParserHelper();
-        switch(aph.GetActionType(a)) {
-            case ATTACK :
+        switch(a.actionName()) {
+            case "AttackAction" :
                 if ((Boolean) sprime.get("attackingEnemyBase") == true) {
                     reward -= 500;
                 } else { //We are attacking intruders
                     reward += 100;
                 }
                 break;
-            case BUILD:
+            case "BuildAction":
                 //Get information of what is being built?
 
                 //PLACEHOLDER REWARD
                 reward += 50;
                 break;
-            case EXPAND:
+            case "ExpandAction":
                 if ((int) s.get("numBases") < 2) {
                     //Give reward if preconditions for expanding are met
                     if ((int) s.get("numWorkers") >= targetNumWorkers && (int) s.get("mineralProductionRate") >= targetMineralProduction
@@ -60,7 +58,7 @@ public class PlanningRewardFunction implements RewardFunction {
                 } else {
                     reward -= 500;
                 } break;
-            case SCOUT :
+            case "ScoutAction" :
                 //Checks the last time scouted and gives reward based on that
                 if ((int) s.get("timeSinceLastScout") > maxTimeSinceLastScout) {
                     reward += (int) s.get("timeSinceLastScout") / 100;
@@ -68,7 +66,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     reward -= (int) s.get("timeSinceLastScout") / 100;
                 }
                 break;
-            case TRAIN:
+            case "TrainAction":
                 int[][] trainingCapacity = (int[][]) s.get("trainingCapacity");
                 //Checking worker status
                 if ((int) sprime.get("numWorkers") > (int) s.get("numWorkers")) {
@@ -104,7 +102,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     }
                 }
                 break;
-            case UPGRADE:
+            case "UpgradeAction":
                 reward -= 100;
                 break;
         }
