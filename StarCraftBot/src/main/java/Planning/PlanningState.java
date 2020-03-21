@@ -150,7 +150,7 @@ public class PlanningState implements HashableState, State {
         return VariableKeys;
     }
 
-    /* ----------- Getters and Setters -------------- */
+
 
     public PlanningState copy() {
         PlanningState copy = new PlanningState(this.numWorkers, this.mineralProductionRate,this.gasProductionRate,this.numBases,
@@ -160,6 +160,7 @@ public class PlanningState implements HashableState, State {
         return copy;
     }
 
+    /* ----------- Getters and Setters -------------- */
 
     public PlanningState s() {
         return this;
