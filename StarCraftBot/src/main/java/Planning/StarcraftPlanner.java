@@ -28,7 +28,9 @@ public class StarcraftPlanner {
 
     /**
      * intialize everything to use the ai planning.
-     * @param queue queue shared between the planner and the bot
+     * intialize everything to use the ai planning.
+     * @param initalstate (for now) a state representing the start of the game
+     *                    so that stuff can be initalized.
      */
     public void Initalize(SharedPriorityQueue queue){
         this.Actions = queue;
@@ -56,6 +58,7 @@ public class StarcraftPlanner {
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;
         sparsePlanner = new SparseSampling(domain,DiscountFactor,factory,10,1);
+        sparsePlanner.setValueForLeafNodes(initalreward);
 
         //get inital policy for planning
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
@@ -87,8 +90,8 @@ public class StarcraftPlanner {
      *           the bot's goals.
      */
     public void setGoal(RewardFunction rf){
-        //sparsePlanner.setValueForLeafNodes(vf);
-        sparcePolicy = new GreedyQPolicy(sparsePlanner);
+        sparsePlanner.setValueForLeafNodes(rf);
+
 
         game.UpdateRewardFunction(rf);
     }
