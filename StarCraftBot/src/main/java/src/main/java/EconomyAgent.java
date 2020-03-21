@@ -2,6 +2,8 @@ package src.main.java;
 
 import bwapi.*;
 
+import java.util.List;
+
 public class EconomyAgent {
 
     IntelligenceAgent intel;
@@ -119,6 +121,25 @@ public class EconomyAgent {
 
             if (buildTile != null) {
                 worker.build(type, buildTile);
+            }
+        }
+    }
+
+    //Only works for protoss for now
+    public void trainWorker() {
+        for (Unit nexus: intel.getUnitsListOfType(UnitType.Protoss_Nexus)) {
+            List<UnitType> trainingQueue = nexus.getTrainingQueue();
+            if (trainingQueue.size() < 5) {
+                nexus.train(UnitType.Protoss_Probe);
+            }
+        }
+    }
+
+    public void trainCombatUnit() {
+        for (Unit gateway: intel.getUnitsListOfType(UnitType.Protoss_Gateway)) {
+            List<UnitType> trainingQueue = gateway.getTrainingQueue();
+            if (trainingQueue.size() < 5) {
+                gateway.train(UnitType.Protoss_Probe);
             }
         }
     }

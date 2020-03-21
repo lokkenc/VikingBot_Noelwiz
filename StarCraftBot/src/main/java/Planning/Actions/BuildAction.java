@@ -6,6 +6,7 @@ public class BuildAction implements Action {
     String actionName;
     private static final String BaseActionName = "BuildAction";
     private static final String[] buildOptions = new String[]{"research", "pop", "train"};
+    private String unitToBuild;
 
     /**
      * parse a list of option strings to add to the action name
@@ -32,6 +33,7 @@ public class BuildAction implements Action {
             boolean validArg = false;
             for (int j = 0; j < buildOptions.length; j++){
                 if(inputStr[i].equals(buildOptions[j])){
+                    unitToBuild = buildOptions[j];
                     validArg = true;
                 }
             }
@@ -58,5 +60,9 @@ public class BuildAction implements Action {
     @Override
     public Action copy() {
         return new BuildAction(actionName.substring(BaseActionName.length()+1));
+    }
+
+    public String getUnitToBuild() {
+        return unitToBuild;
     }
 }

@@ -1,7 +1,14 @@
 package src.main.java;
 
+import Planning.StarcraftEnvironment;
+import Planning.Actions.ActionParserHelper;
+import Planning.SharedPriorityQueue;
+import Planning.StarcraftPlanner;
+import burlap.mdp.core.action.Action;
 import bwapi.*;
 import bwta.*;
+
+import java.util.List;
 
 public class StrategyAgent extends DefaultBWListener{
 
@@ -12,6 +19,11 @@ public class StrategyAgent extends DefaultBWListener{
     private IntelligenceAgent intel;
     private CombatAgent combat;
     private EconomyAgent economy;
+
+    private StarcraftPlanner planner;
+    private SharedPriorityQueue todo;
+
+
 
     private int ML_Epoch = 14;
     private boolean training = true;
@@ -26,8 +38,7 @@ public class StrategyAgent extends DefaultBWListener{
     public void onStart() {
         game = bwClient.getGame();
         self = game.self();
-
-        intel = new IntelligenceAgent(self);
+        intel =  new IntelligenceAgent(self, game);
         combat = new CombatAgent(intel);
         economy = new EconomyAgent(intel);
 
@@ -52,6 +63,13 @@ public class StrategyAgent extends DefaultBWListener{
         intel.updateEnemyBuildingMemory(game);
 
 
+        //use the planner
+        //if we can do the action
+        if(canExecute(todo.Peek())){
+            //tell the planner to tell the enviorment to tell the bot
+            //to do the action.
+            planner.ExecuteAction();
+        }
 
 
         /*
@@ -123,5 +141,56 @@ public class StrategyAgent extends DefaultBWListener{
 
     public static void main(String[] args) {
         new StrategyAgent().run();
+    }
+
+
+    private boolean canExecute(Action a){
+        boolean result = false;
+
+
+        switch (ActionParserHelper.GetActionType(a)){
+            case UPGRADE:
+                //TODO: check cost of upgrade + implement
+                if(self.minerals() > 200){
+                    //TODO: CHANGE THIS TO TRUE WHEN implemented
+                    result = false;
+                }
+                break;
+            case TRAIN:
+                //TODO: check cost of unit in action
+                if(self.minerals() >= 50){
+                    result = true;
+                }
+                break;
+            case SCOUT:
+                //TODO: implement scout.
+                result = false;
+                break;
+            case EXPAND:
+                if(self.minerals() > 400){
+                    //TODO: implement expand.
+                    result = false;
+                }
+                break;
+            case BUILD:
+                //TODO: CHECK BUILDING PRICE of the actions desired building.
+                if(self.minerals() > 150){
+                    //TODO: implement expand.
+                    result = true;
+                }
+                break;
+            case ATTACK:
+                //TODO: implement + change this to true
+                result = false;
+                break;
+            case UNKNOWN:
+                result = false;
+                break;
+        }
+
+
+        if (planner.roomInQueue())
+            return result;
+        return false;
     }
 }
