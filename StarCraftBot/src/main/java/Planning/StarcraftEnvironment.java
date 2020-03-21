@@ -9,13 +9,13 @@ import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import burlap.mdp.singleagent.model.RewardFunction;
+import bwapi.Game;
+import bwapi.Player;
 import bwapi.Race;
-import bwapi.Unit;
 import bwapi.UnitType;
 import src.main.java.EconomyAgent;
 import src.main.java.IntelligenceAgent;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
@@ -28,6 +28,8 @@ public class StarcraftEnvironment implements Environment {
     private EconomyAgent economyAgent;
     private PriorityQueue<Action> ActionQueue;
     private StarcraftModel model;
+    private Game game;
+    private Player self;
 
 
     /**
@@ -43,6 +45,8 @@ public class StarcraftEnvironment implements Environment {
         ActionQueue = new PriorityQueue<Action>(new QueueComparator());
         PlayerRace = intelligenceAgent.getPlayerRace();
         EnemyRace = intelligenceAgent.getEnemyRace();
+        game = intelligenceAgent.getGame();
+        self = intelligenceAgent.getSelf();
     }
 
     /**
@@ -99,9 +103,9 @@ public class StarcraftEnvironment implements Environment {
             case BUILD:
                 BuildAction buildAction = (BuildAction) action;
                 if (buildAction.getUnitToBuild().equalsIgnoreCase("train")) {
-                    economyAgent.createBuildingOfType(UnitType.Protoss_Gateway);
+                    economyAgent.createBuildingOfType(game, self, UnitType.Protoss_Gateway);
                 } else if (buildAction.getUnitToBuild().equalsIgnoreCase("pop")) {
-                    economyAgent.createBuildingOfType(UnitType.Protoss_Pylon);
+                    economyAgent.createBuildingOfType(game, self, UnitType.Protoss_Pylon);
                 }
                 break;
             case EXPAND:

@@ -4,6 +4,8 @@ import bwapi.*;
 import src.main.java.CombatAgent;
 import src.main.java.IntelligenceAgent;
 
+import java.util.ArrayList;
+
 public class Training extends DefaultBWListener{
 
     private BWClient bwClient;
@@ -25,7 +27,7 @@ public class Training extends DefaultBWListener{
     public void onStart() {
         game = bwClient.getGame();
         self = game.self();
-        intel = new IntelligenceAgent(self);
+        intel = new IntelligenceAgent(self, game);
         combat = new CombatAgent(intel);
         
         combat.addUnitTypeToModel(UnitType.Protoss_Zealot);
@@ -42,7 +44,7 @@ public class Training extends DefaultBWListener{
         frameCount++;
         if(frameCount % ML_Epoch == 0) {
             frameCount = 0;
-            combat.controlArmy(game, intel.getUnitsListOfType(self, UnitType.Protoss_Zealot));
+            combat.controlArmy(game, new ArrayList<>(intel.getUnitsListOfType(UnitType.Protoss_Zealot)));
         }
     }
 

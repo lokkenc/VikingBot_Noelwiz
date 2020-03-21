@@ -5,7 +5,6 @@ import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.singleagent.Episode;
 import burlap.behavior.singleagent.planning.stochastic.sparsesampling.SparseSampling;
-import burlap.behavior.valuefunction.ValueFunction;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.model.RewardFunction;
@@ -51,24 +50,19 @@ public class StarcraftPlanner {
 
         HashableStateFactory factory = new ReflectiveHashableStateFactory();
 
-        //TODO: fill in this. a QFunction implementation
-        ValueFunction valuefunction = new DummyQValue();
-
-        //TODO: make sure the enviorment is initalized with everything it needs or something
-
+        //Tmake sure the enviorment is initalized with everything it needs or something
         game = new StarcraftEnvironment(initalreward, intelligenceAgent, model);
 
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;
         sparsePlanner = new SparseSampling(domain,DiscountFactor,factory,10,1);
-        sparsePlanner.setValueForLeafNodes(valuefunction);
 
         //get inital policy for planning
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
 
         //NOTE TO FUTURE SELVES: consider adjusting this.
         sparsePlanner.setForgetPreviousPlanResults(true);
-        sparsePlanner.setComputeExactValueFunction(true);
+        //sparsePlanner.setComputeExactValueFunction(true);
 
         //enqueue 3 actions
         SparsePlanStep();
@@ -88,10 +82,12 @@ public class StarcraftPlanner {
 
     /**
      *
-     * @param vf A value funtion for evaluating
+     * @param rf A reward funtion for evaluating the reward gained from reaching
+     *           a node. More reward => bot prioratizing reaching that node => setting
+     *           the bot's goals.
      */
-    public void setGoal(ValueFunction vf){
-        sparsePlanner.setValueForLeafNodes(vf);
+    public void setGoal(RewardFunction rf){
+        //sparsePlanner.setValueForLeafNodes(vf);
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
 
         game.UpdateRewardFunction(rf);
