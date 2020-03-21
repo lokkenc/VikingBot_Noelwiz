@@ -24,7 +24,7 @@ public class LearningManager implements Serializable {
 
     public void loadQTable() {
         File f = new File("TrainingFiles/Tables/" + type.toString() + "Table.ser");
-        if (f.exists()) {
+        if(f.exists()) {
             sarsa.loadQTable();
         }
     }
@@ -41,22 +41,7 @@ public class LearningManager implements Serializable {
         return greedyActionChooser.chooseAction(spaceManager, state);
     }
 
-    public UnitType getUnitType() { return this.type; }
-
-    /*
-     * Should we leave the state transitioning to the Agents.CombatAgent and only interact
-     * with the learning through updateState and getNextAction?
-     */
-//    public void setCurrentStateAction(State state, Game game) {
-//        Action action = greedy.chooseAction(spManager, state);
-//        current.setState(state);
-//        current.setAction(action);
-//        action.doAction(game, state.getUnit());
-//    }
-//
-//    public void setNextStateAction(State state, Game game) {
-//        Action action = greedy.chooseAction(spManager, state);
-//        next.setState(state);
-//        next.setAction(action);
-//    }
+    public UnitType getUnitType() {
+        return this.type;
+    }
 }
