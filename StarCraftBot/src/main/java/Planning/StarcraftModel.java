@@ -12,7 +12,6 @@ import burlap.mdp.singleagent.model.FullModel;
 import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.mdp.singleagent.model.TransitionProb;
 import bwapi.Race;
-import bwapi.Unit;
 import bwapi.UnitType;
 
 import java.util.ArrayList;
@@ -51,6 +50,7 @@ public class StarcraftModel implements FullModel {
     public List<TransitionProb> transitions(State state, Action action) {
         State baseNextState;
         List<TransitionProb> AllProbabilities = new ArrayList<TransitionProb>();
+        EnvironmentOutcome defaultoutcome;
 
 
         int[][] capacity = (int[][]) state.get("trainingCapacity");
@@ -63,6 +63,11 @@ public class StarcraftModel implements FullModel {
         System.out.println("Action taken: "+ arguments[0]);
 
 
+        int newtimesincelastscout = (int) state.get("timeSinceLastScout");
+
+        newtimesincelastscout += Math.round(rng.nextFloat() * 30 * 600);
+
+
         /* * * start account for action specific changes * * */
         ActionParserHelper.ActionEnum actiontype = ActionParserHelper.GetActionType(action);
         switch (actiontype){
@@ -71,9 +76,8 @@ public class StarcraftModel implements FullModel {
                 //to represent that the scout is on the way. idk. 0 is probably fine,
                 //just tell the helper functions for the possibility of a new enemy base,
                 //and new enemy workers.
-                int newtimesincelastscout = 0;
+                newtimesincelastscout = 0;
 
-                newtimesincelastscout += Math.round(rng.nextFloat() * 30 * 1000);
                 baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
                         (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                         (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
@@ -81,6 +85,10 @@ public class StarcraftModel implements FullModel {
                         (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
                         capacity);
 
+
+                //Todo: maybe expand the possibilites here.
+                defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+                AllProbabilities.add(new TransitionProb(1, defaultoutcome));
                 break;
             case EXPAND:
                 int numworkers = (int) state.get("numWorkers");
@@ -95,19 +103,23 @@ public class StarcraftModel implements FullModel {
                     capacity[3][1] += 3;
 
                     baseNextState = new PlanningState( numworkers-1, mineralproduction-57,
-                            (int) state.get("gasProductionRate"), numBases, (int) state.get("timeSinceLastScout"),
+                            (int) state.get("gasProductionRate"), numBases, newtimesincelastscout,
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
                             capacity);
                 } else {
                     baseNextState = new PlanningState( numworkers, mineralproduction,
-                            (int) state.get("gasProductionRate"), numBases, (int) state.get("timeSinceLastScout"),
+                            (int) state.get("gasProductionRate"), numBases, newtimesincelastscout,
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                             capacity);
                 }
+
+
+                defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+                AllProbabilities.add(new TransitionProb(1, defaultoutcome));
                 break;
 
             case BUILD:
@@ -118,19 +130,23 @@ public class StarcraftModel implements FullModel {
                 //reduce the output of mineral or gas production by the amount one unit normally produces.
                 if(ourrace == Race.Zerg){
                     baseNextState = new PlanningState( numworkers-1, mineralproduction-57,
-                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
+                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
                             capacity);
                 } else {
                     baseNextState = new PlanningState( numworkers, mineralproduction,
-                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
+                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                             capacity);
                 }
+
+
+                defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+                AllProbabilities.add(new TransitionProb(1, defaultoutcome));
                 break;
 
             case ATTACK:
@@ -145,11 +161,36 @@ public class StarcraftModel implements FullModel {
                 }
 
                 baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
-                        (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
+                        (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                         (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                         (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                         attackingenemybase, (boolean) state.get("beingAttacked"),(Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                         capacity);
+
+
+                //TODO: add possibility of deleting an enemy base
+                //TODO: add posibilites of unit death
+                //add the change for just attacking.
+                defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+
+                if(attackingenemybase){
+                    AllProbabilities.add(new TransitionProb(0.75, defaultoutcome));
+                } else {
+                    AllProbabilities.add(new TransitionProb(1, defaultoutcome));
+                }
+
+                //posibility of destroying an enemy base
+                if(attackingenemybase){
+                    baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
+                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
+                            (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
+                            ((int)state.get("numEnemyBases")) - 1, (UnitType)state.get("mostCommonCombatUnit"),
+                            attackingenemybase, (boolean) state.get("beingAttacked"),(Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
+                            capacity);
+
+                    defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+                    AllProbabilities.add(new TransitionProb(0.25, defaultoutcome));
+                }
                 break;
 
             //TODO: GET A MORE DETAILED LOOK AT THE TRAINING ARGUMENTS TO ADJUST, especially for protoss
@@ -170,7 +211,7 @@ public class StarcraftModel implements FullModel {
 
 
                     baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
-                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
+                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
@@ -187,27 +228,38 @@ public class StarcraftModel implements FullModel {
                     }
 
                     baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
-                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), (int) state.get("timeSinceLastScout"),
+                            (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
                             capacity);
                 }
+
+
+                defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+                AllProbabilities.add(new TransitionProb(1, defaultoutcome));
                 break;
 
             //TODO after demo: probably take a more detailed look at these when we improve the bot
             case UPGRADE:
                 baseNextState = state.copy();
+
+                defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+                AllProbabilities.add(new TransitionProb(1, defaultoutcome));
+
                 break;
             case UNKNOWN:
                 baseNextState = state.copy();
+
+                defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+                AllProbabilities.add(new TransitionProb(1, defaultoutcome));
+
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + actiontype);
         }
 
-        EnvironmentOutcome defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),false);
-        AllProbabilities.add(new TransitionProb(1, defaultoutcome));
+
         /* * * end account for action specific changes * * */
 
         /* * * start account for general changes * * */
@@ -252,7 +304,8 @@ public class StarcraftModel implements FullModel {
      */
     private List<TransitionProb> attackedTransitions(State Currentstate, Action action, List<TransitionProb> allProbabilities) {
         double attackprob = 0.05;
-        double noattackprob = 1-attackprob;
+        double attackAndLooseBaseprob = 0.01;
+        double noattackprob = 1-attackprob-attackAndLooseBaseprob;
         TransitionProb currentprob;
         State alternateState;
 
@@ -262,6 +315,7 @@ public class StarcraftModel implements FullModel {
             currentprob = allProbabilities.get(i);
             currentprob.p = currentprob.p * noattackprob;
 
+            //attacked
             alternateState = new PlanningState( (int) currentprob.eo.op.get("numWorkers"), (int) currentprob.eo.op.get("mineralProductionRate"),
                     (int) currentprob.eo.op.get("gasProductionRate"), (int) currentprob.eo.op.get("numBases"), (int) currentprob.eo.op.get("timeSinceLastScout"),
                     (ArrayList<CombatUnitStatus>)currentprob.eo.op.get("combatUnitStatuses"), (int) currentprob.eo.op.get("numEnemyWorkers"),
@@ -270,8 +324,21 @@ public class StarcraftModel implements FullModel {
                     (Race) currentprob.eo.op.get("playerRace"),(Race) currentprob.eo.op.get("enemyRace"),(GameStatus)currentprob.eo.op.get("gameStatus"),
                     (int[][])currentprob.eo.op.get("trainingCapacity"));
 
-            newProbabilities.add(new TransitionProb(attackprob * currentprob.p, new EnvironmentOutcome(Currentstate, action,alternateState, rewardFunction.reward(Currentstate,action,alternateState),false)));
+            newProbabilities.add(new TransitionProb(attackprob * currentprob.p, new EnvironmentOutcome(Currentstate, action,alternateState, rewardFunction.reward(Currentstate,action,alternateState),terminal(alternateState))));
+
+            //attacked + loose base.
+            alternateState = new PlanningState( (int) currentprob.eo.op.get("numWorkers"), (int) currentprob.eo.op.get("mineralProductionRate"),
+                    (int) currentprob.eo.op.get("gasProductionRate"), ((int) currentprob.eo.op.get("numBases")) - 1, (int) currentprob.eo.op.get("timeSinceLastScout"),
+                    (ArrayList<CombatUnitStatus>)currentprob.eo.op.get("combatUnitStatuses"), (int) currentprob.eo.op.get("numEnemyWorkers"),
+                    (int)currentprob.eo.op.get("numEnemyBases"), (UnitType)currentprob.eo.op.get("mostCommonCombatUnit"),
+                    !(boolean) currentprob.eo.op.get("attackingEnemyBase"),(boolean) currentprob.eo.op.get("beingAttacked"),
+                    (Race) currentprob.eo.op.get("playerRace"),(Race) currentprob.eo.op.get("enemyRace"),(GameStatus)currentprob.eo.op.get("gameStatus"),
+                    (int[][])currentprob.eo.op.get("trainingCapacity"));
+
+            newProbabilities.add(new TransitionProb(attackAndLooseBaseprob * currentprob.p, new EnvironmentOutcome(Currentstate, action,alternateState, rewardFunction.reward(Currentstate,action,alternateState),terminal(alternateState))));
         }
+
+
 
         return newProbabilities;
     }
@@ -415,7 +482,7 @@ public class StarcraftModel implements FullModel {
                 //TODO: FIX THIS
                 //tomorrow me: I'm not sure what's wrong, it's probably a problem in the functions below
                 //but I could be wrong. Either way, I'm leaving this as is for now to get it submitted.
-                probabilities.add(new TransitionProb(currentCapProbPair.prob * currentprob.p, new EnvironmentOutcome(Currentstate, action,alternateState, rewardFunction.reward(Currentstate,action,alternateState),false)));
+                probabilities.add(new TransitionProb(currentCapProbPair.prob * currentprob.p, new EnvironmentOutcome(Currentstate, action,alternateState, rewardFunction.reward(Currentstate,action,alternateState),terminal(alternateState))));
             }
 
             //should be equal to p * (1 - AverageUnitTrainingTime/1800)
@@ -517,7 +584,7 @@ public class StarcraftModel implements FullModel {
 
     @Override
     public boolean terminal(State state) {
-        return  (int) state.get("numEnemyBases") == 0;
+        return  (int) state.get("numEnemyBases") == 0 || (int) state.get("numBases") == 0;
     }
 
 

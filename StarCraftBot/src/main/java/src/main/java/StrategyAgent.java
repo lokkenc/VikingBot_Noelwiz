@@ -1,14 +1,11 @@
 package src.main.java;
 
-import Planning.StarcraftEnvironment;
 import Planning.Actions.ActionParserHelper;
 import Planning.SharedPriorityQueue;
 import Planning.StarcraftPlanner;
 import burlap.mdp.core.action.Action;
 import bwapi.*;
-import bwta.*;
-
-import java.util.List;
+import bwta.BWTA;
 
 public class StrategyAgent extends DefaultBWListener{
 
@@ -65,7 +62,7 @@ public class StrategyAgent extends DefaultBWListener{
 
         //use the planner
         //if we can do the action
-        if(canExecute(todo.Peek())){
+        if(todo != null && canExecute(todo.Peek())){
             //tell the planner to tell the enviorment to tell the bot
             //to do the action.
             planner.ExecuteAction();
