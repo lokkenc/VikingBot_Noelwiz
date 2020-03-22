@@ -41,6 +41,8 @@ public class SARSA implements Serializable {
         double reward = RewardFunction.getRewardValue(current, action, next);
         double qvalue = computerQValue(current, action, next, reward);
 
+        System.out.println(current.condensedString() + " -> " + next.condensedString() + " => " + reward + ", " + qvalue);
+
         // Get the current qvalue and update it with the new qvalue
         Map<Action, Double> actionDoubleMap = qTable.get(current);
         actionDoubleMap.put(action, qvalue);

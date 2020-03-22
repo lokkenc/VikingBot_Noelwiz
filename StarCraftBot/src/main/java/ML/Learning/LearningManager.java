@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.Serializable;
 
 public class LearningManager implements Serializable {
-    private static final long serialVersionUID = 7537131060045100702L;
+    private static final long serialVersionUID = 1L;
 
     private UnitType type;
     private StateSpaceManager spaceManager;

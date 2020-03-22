@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class QTable extends HashMap<State, Map<Action, Double>> implements Serializable {
-    private static final long serialVersionUID = 3826717973754083254L;
+    private static final long serialVersionUID = 1L;
     /**
      * This constructor takes a Collection of ML.States and a Collection of ML.Actions and adds them to the ML.States.State -> (Action, Double) HashMap.
      * @param states All possible states that will be included in the HashMap.
@@ -70,20 +70,4 @@ public class QTable extends HashMap<State, Map<Action, Double>> implements Seria
 
         return max;
     }
-
-    /**
-     * This function returns a (ML.States.State, Action) policy where each action nets the max value in each state.
-     * @return The (ML.States.State, Action) policy.
-     */
-//    public Policy getPolicy() {
-//        Policy policy = new Policy();
-//
-//        for(State state : this.keySet()) {
-//            Action bestAction = this.getMaxAction(state);
-//            StateAction stateAction = new StateAction(state, bestAction);
-//            policy.add(stateAction);
-//        }
-//
-//        return policy;
-//    }
 }

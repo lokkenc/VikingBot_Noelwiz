@@ -8,7 +8,7 @@ import java.util.Objects;
 import static ML.Range.UnitsRange.*;
 
 public class State implements Serializable {
-    private static final long serialVersionUID = 7588180712283449263L;
+    private static final long serialVersionUID = 1L;
     private boolean onCoolDown;
     private Distance closestEnemy;
     private Units numberOfEnemies;
@@ -132,6 +132,15 @@ public class State implements Serializable {
                 ", numberOfFriendlies=" + numberOfFriendlies +
                 ", enemyHp=" + enemyHp +
                 ", friendlyHp=" + friendlyHp +
+                '}';
+    }
+
+    public String condensedString() {
+        return "State{" +
+                "Enemies (" + numberOfEnemies.getValue() + " units" +
+                ", " + enemyHp.getValue() + " hp)" +
+                ", Friendlies (" + numberOfFriendlies.getValue() + " units" +
+                ", " + friendlyHp.getValue() + " hp)" +
                 '}';
     }
 }
