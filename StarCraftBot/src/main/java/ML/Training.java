@@ -2,6 +2,7 @@ package ML;
 
 import Agents.CombatAgent;
 import Agents.IntelligenceAgent;
+import ML.Data.DataManager;
 import bwapi.*;
 
 import java.util.ArrayList;
@@ -36,8 +37,14 @@ public class Training extends DefaultBWListener{
 
     @Override
     public void onFrame() {
+        DataManager dm = combat.getDataManagers().get(0);
         //game.setTextSize(10);
         game.drawTextScreen(10, 10, "Playing as " + self.getName() + " - " + self.getRace());
+        if(dm != null) {
+            game.drawTextScreen(10, 50, "Type: " + dm.getType());
+            game.drawTextScreen(10, 60, "Data Points: " + dm.getDataPoints().size());
+            game.drawTextScreen(10, 70, "Unique States: " + dm.getStateFrequency().keySet().size());
+        }
         game.drawTextScreen(10, 230, "Resources: " + self.minerals() + " minerals,  " + self.gas() + " gas, " + (self.supplyUsed() / 2) + "/" + (self.supplyTotal() / 2) + " psi");
 
         intel.tabulateUnits(self);

@@ -1,24 +1,32 @@
 package ML.Data;
 
+import ML.Actions.Action;
 import ML.States.State;
+import bwapi.UnitType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-public class DataManager {
+public class DataManager implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private ArrayList<DataPoint> dataPoints;
     private HashMap<State, Integer> stateFrequency;
+    private UnitType type;
 
-    public DataManager() {
+    public DataManager(UnitType type) {
         dataPoints = new ArrayList<>();
         stateFrequency = new HashMap<>();
+        this.type = type;
     }
 
-    public DataManager(Set<State> states) {
+    public DataManager(UnitType type, Set<State> states) {
         dataPoints = new ArrayList<>();
         stateFrequency = new HashMap<>(states.size());
+        this.type = type;
 
         for(State state : states) {
             stateFrequency.put(state, 0);
@@ -29,8 +37,8 @@ public class DataManager {
         dataPoints.add(point);
     }
 
-    public void addDataPoint(State current, double reward, double qvalue, State next) {
-        dataPoints.add(new DataPoint(current, reward, qvalue, next));
+    public void addDataPoint(State current, Action action, State next, double reward, double qvalue) {
+        dataPoints.add(new DataPoint(current, action, next, reward, qvalue));
     }
 
     public void addState(State state) {
@@ -85,5 +93,9 @@ public class DataManager {
 
     public HashMap<State, Integer> getStateFrequency() {
         return stateFrequency;
+    }
+
+    public UnitType getType() {
+        return type;
     }
 }

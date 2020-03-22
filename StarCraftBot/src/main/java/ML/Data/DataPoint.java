@@ -1,24 +1,38 @@
 package ML.Data;
 
+import ML.Actions.Action;
 import ML.States.State;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class DataPoint {
+public class DataPoint implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private State current;
+    private Action action;
+    private State next;
     private double reward;
     private double qvalue;
-    private State next;
 
-    public DataPoint(State current, double reward, double qvalue, State next) {
+    public DataPoint(State current, Action action, State next, double reward, double qvalue) {
         this.current = current;
+        this.action = action;
+        this.next = next;
         this.reward = reward;
         this.qvalue = qvalue;
-        this.next = next;
     }
 
     public State getCurrent() {
         return current;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public State getNext() {
+        return next;
     }
 
     public double getReward() {
@@ -29,10 +43,6 @@ public class DataPoint {
         return qvalue;
     }
 
-    public State getNext() {
-        return next;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,21 +51,23 @@ public class DataPoint {
         return Double.compare(dataPoint.reward, reward) == 0 &&
                 Double.compare(dataPoint.qvalue, qvalue) == 0 &&
                 Objects.equals(current, dataPoint.current) &&
+                Objects.equals(action, dataPoint.action) &&
                 Objects.equals(next, dataPoint.next);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(current, reward, qvalue, next);
+        return Objects.hash(current, action, next, reward, qvalue);
     }
 
     @Override
     public String toString() {
         return "DataPoint{" +
                 "current=" + current +
+                ", action=" + action +
+                ", next=" + next +
                 ", reward=" + reward +
                 ", qvalue=" + qvalue +
-                ", next=" + next +
                 '}';
     }
 }

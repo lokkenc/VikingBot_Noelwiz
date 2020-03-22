@@ -1,6 +1,7 @@
 package Agents;
 
 import ML.Actions.Action;
+import ML.Data.DataManager;
 import ML.Range.Distance;
 import ML.Range.Hp;
 import ML.States.State;
@@ -28,15 +29,17 @@ public class CombatAgent {
 
     public void loadModels() {
         for(LearningManager model : models) {
-            System.out.println("Loading Q-Table for: " + model.getUnitType());
+            System.out.println("Loading Tables for: " + model.getUnitType());
             model.loadQTable();
+            model.loadDataManager();
         }
     }
 
     public void storeModels() {
         for(LearningManager model : models) {
-            System.out.println("Storing Q-Table for: " + model.getUnitType());
+            System.out.println("Storing Tables for: " + model.getUnitType());
             model.storeQTable();
+            model.storeDataManager();
         }
     }
 
@@ -161,7 +164,15 @@ public class CombatAgent {
 
     }
 
+    public ArrayList<DataManager> getDataManagers() {
+        ArrayList<DataManager> managers = new ArrayList<>(models.size());
 
+        for(LearningManager model : models) {
+            managers.add(model.getDataManager());
+        }
+
+        return managers;
+    }
 
     public void attackClosestEnemy (Unit unit) {
 

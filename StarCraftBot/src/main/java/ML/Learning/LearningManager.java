@@ -1,6 +1,7 @@
 package ML.Learning;
 
 import ML.Actions.Action;
+import ML.Data.DataManager;
 import bwapi.UnitType;
 import ML.States.*;
 
@@ -33,6 +34,17 @@ public class LearningManager implements Serializable {
         sarsa.storeQTable();
     }
 
+    public void loadDataManager() {
+        File f = new File("TrainingFiles/Tables/" + type.toString() + "Data.ser");
+        if(f.exists()) {
+            sarsa.loadDataManager();
+        }
+    }
+
+    public void storeDataManager() {
+        sarsa.storeDataManager();
+    }
+
     public void updateState(State current, Action action, State next) {
         sarsa.updateQTable(current, action, next);
     }
@@ -43,5 +55,9 @@ public class LearningManager implements Serializable {
 
     public UnitType getUnitType() {
         return this.type;
+    }
+
+    public DataManager getDataManager() {
+        return sarsa.getDataManager();
     }
 }
