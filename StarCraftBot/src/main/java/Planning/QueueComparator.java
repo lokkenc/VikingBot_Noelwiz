@@ -1,6 +1,7 @@
-package Planning.Actions;
+package Planning;
 
 
+import Planning.Actions.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 
 import java.util.Comparator;
@@ -57,9 +58,27 @@ public class QueueComparator implements Comparator {
         ActionParserHelper.ActionEnum a1type = ActionParserHelper.GetActionType(action1);
         ActionParserHelper.ActionEnum a2type = ActionParserHelper.GetActionType(action2);
 
+        String a1name;
+        String a2name;
+
         if(a1type == a2type){
             //TODO: look at arguments and prioratize based on that.
-            //netdifference = 0;
+            //creep/power providers = highest priority
+            //new buildings = next highest
+            //training buildings = next highest
+
+            a1name = action1.actionName();
+            a2name = action2.actionName();
+
+            if (a1name.equals(a2name)){
+                netdifference = 0; //no op
+            } else if(a1name.endsWith("_pop")){
+                netdifference = 1;
+            } else if(a2name.endsWith("_pop")){
+                netdifference = -1;
+            }
+
+
         }else{
             netdifference = ActionTypeValues(a1type) - ActionTypeValues(a2type);
         }

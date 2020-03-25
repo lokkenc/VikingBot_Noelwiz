@@ -1,6 +1,5 @@
 package Planning;
 
-import Planning.Actions.QueueComparator;
 import burlap.mdp.core.action.Action;
 
 import java.util.PriorityQueue;
