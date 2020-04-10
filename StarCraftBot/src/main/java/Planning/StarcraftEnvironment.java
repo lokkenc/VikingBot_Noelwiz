@@ -1,5 +1,7 @@
 package Planning;
 
+import Agents.EconomyAgent;
+import Agents.IntelligenceAgent;
 import Planning.Actions.ActionParserHelper;
 import Planning.Actions.BuildAction;
 import Planning.Actions.TrainAction;
@@ -12,8 +14,6 @@ import bwapi.Game;
 import bwapi.Player;
 import bwapi.Race;
 import bwapi.UnitType;
-import src.main.java.EconomyAgent;
-import src.main.java.IntelligenceAgent;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
@@ -58,7 +58,7 @@ public class StarcraftEnvironment implements Environment {
 
 
     /**
-     * Calls some unknown functions in the IntelligenceAgent to figure
+     * Calls some unknown functions in the Agents.IntelligenceAgent to figure
      * out the current state of the game.
      * @return
      */

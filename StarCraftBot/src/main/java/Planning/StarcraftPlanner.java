@@ -1,5 +1,6 @@
 package Planning;
 
+import Agents.IntelligenceAgent;
 import Planning.Actions.*;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
@@ -10,7 +11,6 @@ import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.statehashing.HashableStateFactory;
 import burlap.statehashing.ReflectiveHashableStateFactory;
-import src.main.java.IntelligenceAgent;
 
 public class StarcraftPlanner {
     private Episode ep = new Episode();
