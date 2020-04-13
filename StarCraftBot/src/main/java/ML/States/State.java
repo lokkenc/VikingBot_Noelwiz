@@ -7,6 +7,9 @@ import java.util.Objects;
 
 import static ML.Range.UnitsRange.*;
 
+/**
+ * Represents a state with all relevant features relating to micromanaging combat.
+ */
 public class State implements Serializable {
     private static final long serialVersionUID = 1L;
     private boolean onCoolDown;
@@ -16,6 +19,15 @@ public class State implements Serializable {
     private Hp enemyHp;
     private Hp friendlyHp;
 
+    /**
+     * Initializes the state given the current information around a specific unit.
+     * @param onCoolDown is the unit's weapon on cool down?
+     * @param closestEnemy the distance to the closest enemy.
+     * @param numberOfEnemies the total number of enemy units nearby.
+     * @param numberOfFriendlies the total number friendly units nearby.
+     * @param enemyHp the total HP of nearby enemies.
+     * @param friendlyHp the total HP of nearby allies.
+     */
     public State(boolean onCoolDown, Distance closestEnemy, Units numberOfEnemies, Units numberOfFriendlies, Hp enemyHp, Hp friendlyHp) {
         this.onCoolDown = onCoolDown;
         this.closestEnemy = closestEnemy;
@@ -25,77 +37,52 @@ public class State implements Serializable {
         this.friendlyHp = friendlyHp;
     }
 
+    /**
+     *
+     * @return returns if the unit's weapon is on cool down.
+     */
     public boolean isOnCoolDown() {
         return onCoolDown;
     }
 
+    /**
+     *
+     * @return returns the distance to the closest enemy.
+     */
     public Distance getClosestEnemy() {
         return closestEnemy;
     }
 
+    /**
+     *
+     * @return returns the number of enemy units nearby.
+     */
     public Units getNumberOfEnemies() {
         return numberOfEnemies;
     }
 
+    /**
+     *
+     * @return returns the number of friendly units nearby.
+     */
     public Units getNumberOfFriendlies() {
         return numberOfFriendlies;
     }
 
+    /**
+     *
+     * @return returns the total HP of nearby enemy units.
+     */
     public Hp getEnemyHp() {
         return enemyHp;
     }
 
+    /**
+     *
+     * @return returns the total HP of nearby friendly units.
+     */
     public Hp getFriendlyHp() {
         return friendlyHp;
-    }
-
-    public int getKeyVal(State state) {
-        int keyVal = 0;
-
-        if(state.isOnCoolDown()) {
-            keyVal+=1;
-        } else {
-            keyVal+=2;
-        }
-
-        if(state.getNumberOfEnemies().getRange() == SMALL) {
-            keyVal+=3;
-        } else if(state.getNumberOfEnemies().getRange() == MEDIUM) {
-            keyVal+=4;
-        } else if(state.getNumberOfEnemies().getRange() == LARGE) {
-            keyVal+=5;
-        }
-
-        if(state.getFriendlyHp().getRange() == HpRange.LOW) {
-            keyVal+=6;
-        } else if(state.getFriendlyHp().getRange() == HpRange.MEDIUM_LOW) {
-            keyVal+=7;
-        } else if(state.getFriendlyHp().getRange() == HpRange.MEDIUM_HIGH) {
-            keyVal+=8;
-        } else {
-            keyVal+=9;
-        }
-
-        if(state.getEnemyHp().getRange() == HpRange.LOW) {
-            keyVal+=10;
-        } else if(state.getEnemyHp().getRange() == HpRange.MEDIUM_LOW) {
-            keyVal+=11;
-        } else if(state.getEnemyHp().getRange() == HpRange.MEDIUM_HIGH) {
-            keyVal+=12;
-        } else {
-            keyVal+=13;
-        }
-
-        if(state.getClosestEnemy().getRange() == DistanceRange.CLOSE) {
-            keyVal+=14;
-        } else if(state.getClosestEnemy().getRange() == DistanceRange.MEDIUM_CLOSE) {
-            keyVal+=15;
-        } else if(state.getClosestEnemy().getRange() == DistanceRange.MEDIUM_FAR) {
-            keyVal+=16;
-        } else {
-            keyVal+=17;
-        }
-        return keyVal;
     }
 
     @Override
@@ -135,6 +122,10 @@ public class State implements Serializable {
                 '}';
     }
 
+    /**
+     * Creates a condensed version of the toString() method.
+     * @return returns a condensed version of the toString() method.
+     */
     public String condensedString() {
         return "State{" +
                 "Enemies (" + numberOfEnemies.getValue() + " units" +

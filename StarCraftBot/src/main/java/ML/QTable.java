@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Maps (State, Action) pairs to double values representing the q-value for executing the Action in the specific State.
+ */
 public class QTable extends HashMap<State, Map<Action, Double>> implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
@@ -29,6 +32,11 @@ public class QTable extends HashMap<State, Map<Action, Double>> implements Seria
         }
     }
 
+    /**
+     * Gets the (Action, double) pair for a given state.
+     * @param state key to index the QTable.
+     * @return Returns (Action, double) pair for the given state.
+     */
     public Map<Action, Double> get(State state) {
         return super.get(state);
     }
