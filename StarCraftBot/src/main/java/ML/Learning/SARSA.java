@@ -16,9 +16,8 @@ import java.io.Serializable;
 public class SARSA implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final double LEARNING_FACTOR = .5;
+    private static final double LEARNING_RATE = .1;
     private static final double DISCOUNT_FACTOR = .6;
-    private static final double INITIAL_QVAL = Double.NEGATIVE_INFINITY;
 
     private DataManager dataManager;
     private UnitType type;
@@ -35,7 +34,7 @@ public class SARSA implements Serializable {
     public double computerQValue(State current, Action action, State next, double reward) {
         // SARSA => q-value = q-value + LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * next_q-value) - q-value)
         double qvalue = qTable.get(current).get(action);
-        double errorvalue = LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * qTable.getMaxValue(next)) - qvalue);
+        double errorvalue = LEARNING_RATE * (reward + (DISCOUNT_FACTOR * qTable.getMaxValue(next)) - qvalue);
 
         return qvalue + errorvalue;
     }

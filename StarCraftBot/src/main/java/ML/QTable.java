@@ -25,7 +25,7 @@ public class QTable extends HashMap<State, Map<Action, Double>> implements Seria
             Map<Action, Double> actionDoubleMap = new HashMap<Action, Double>();
 
             for(Action action : actions) {
-                actionDoubleMap.put(action, 0.0);
+                actionDoubleMap.put(action, Double.NEGATIVE_INFINITY);
             }
 
             this.put(state, actionDoubleMap);
