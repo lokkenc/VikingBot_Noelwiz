@@ -59,7 +59,6 @@ public class SARSA implements Serializable {
      * @return returns a double which is the resulting Q-Value produced by the defined update function.
      */
     public double computerQValue(State current, Action action, State next, double reward) {
-        // SARSA => q-value = q-value + LEARNING_FACTOR * (reward + (DISCOUNT_FACTOR * next_q-value) - q-value)
         double qvalue = qTable.get(current).get(action);
         double errorvalue = LEARNING_RATE * (reward + (DISCOUNT_FACTOR * qTable.getMaxValue(next)) - qvalue);
 
