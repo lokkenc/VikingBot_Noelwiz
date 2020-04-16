@@ -14,7 +14,8 @@ import java.util.Map;
 public class QTable extends HashMap<State, Map<Action, Double>> implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
-     * This constructor takes a Collection of ML.States and a Collection of ML.Actions and adds them to the ML.States.State -> (Action, Double) HashMap.
+     * This constructor takes a Collection of ML.States and a Collection of ML.Actions and adds them to the
+     * (State, (Action, Double)) HashMap.
      * @param states All possible states that will be included in the HashMap.
      * @param actions All possible actions that can occur.
      */
@@ -22,7 +23,7 @@ public class QTable extends HashMap<State, Map<Action, Double>> implements Seria
         super(states.size());
 
         for(State state : states) {
-            Map<Action, Double> actionDoubleMap = new HashMap<Action, Double>();
+            Map<Action, Double> actionDoubleMap = new HashMap<>();
 
             for(Action action : actions) {
                 actionDoubleMap.put(action, Double.NEGATIVE_INFINITY);

@@ -7,6 +7,9 @@ import ML.States.StateSpaceManager;
 
 import java.util.Random;
 
+/**
+ * Selects either the best Action for a specified State or a randomly sampled Action.
+ */
 public class GreedyActionChooser {
     private static final double epsilon = 0.6;
     private final Random random;

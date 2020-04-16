@@ -13,6 +13,9 @@ import java.io.*;
 import java.util.Map;
 import java.io.Serializable;
 
+/**
+ * The main implementation of the SARSA learning algorithm.
+ */
 public class SARSA implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -40,7 +43,7 @@ public class SARSA implements Serializable {
     /**
      * Computes the Q-Value for SARSA which requires the current State, Action executed, next State, and reward.
      * This uses the following update function:
-     *      Q(s_(t), a_(t)) <-- Q(s_(t), a_(t)) + a * [r_(t) + g * Q(s_(t+1), a_(t+1)) - Q(s_(t), a_(t)]
+     *      Q(s_(t), a_(t)) = Q(s_(t), a_(t)) + a * [r_(t) + g * Q(s_(t+1), a_(t+1)) - Q(s_(t), a_(t)]
      *
      * Where the terms are defined as the following:
      *      Q(s, a): the Q-Value function that returns a Q-Value for a (State, Action) pair.
@@ -112,10 +115,16 @@ public class SARSA implements Serializable {
      */
     public void storeQTable() {
         FileOutputStream fos = null;
+        boolean ret;
 
         try {
             File f = new File("TrainingFiles/Tables/" + type.toString() + "Table.ser");
-            f.getParentFile().mkdirs();
+
+            ret = f.getParentFile().mkdirs();
+
+            if(!ret)
+                System.out.println("SARSA: Error: failed to create directories to QTable file.");
+
             fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(qTable);
@@ -161,10 +170,16 @@ public class SARSA implements Serializable {
      */
     public void storeDataManager() {
         FileOutputStream fos = null;
+        boolean ret;
 
         try {
             File f = new File("TrainingFiles/Tables/" + type.toString() + "Data.ser");
-            f.getParentFile().mkdirs();
+
+            ret = f.getParentFile().mkdirs();
+
+            if(!ret)
+                System.out.println("SARSA: Error: failed to create directories to QTable file.");
+
             fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(dataManager);
