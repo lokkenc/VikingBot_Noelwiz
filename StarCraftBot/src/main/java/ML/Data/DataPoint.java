@@ -6,15 +6,27 @@ import ML.States.State;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Represents relevant information such as current State, executed Action, next State, produced reward, and Q-Value.
+ */
 public class DataPoint implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private State current;
-    private Action action;
-    private State next;
-    private double reward;
-    private double qvalue;
+    private final State current;
+    private final Action action;
+    private final State next;
+    private final double reward;
+    private final double qvalue;
 
+    /**
+     * Initialize the DataPoint with relative information such as the current State, executed Action, next State,
+     * reward received, and the calculated Q-Value.
+     * @param current the current State.
+     * @param action the Action executed in the current State.
+     * @param next the resulting State from executing the Action in the current State.
+     * @param reward the reward received for executing the Action in the current State.
+     * @param qvalue the calculated Q-Value for the (State, Action, State, reward) tuple.
+     */
     public DataPoint(State current, Action action, State next, double reward, double qvalue) {
         this.current = current;
         this.action = action;
@@ -23,22 +35,42 @@ public class DataPoint implements Serializable {
         this.qvalue = qvalue;
     }
 
+    /**
+     * Get the current State.
+     * @return returns the current State.
+     */
     public State getCurrent() {
         return current;
     }
 
+    /**
+     * Get the Action executed in the current State.
+     * @return returns the Action executed in the current State.
+     */
     public Action getAction() {
         return action;
     }
 
+    /**
+     * Gets the resulting next State from executing the Action in the current State.
+     * @return returns the resulting next State.
+     */
     public State getNext() {
         return next;
     }
 
+    /**
+     * Gets the reward given for executing the Action in the current State.
+     * @return returns a reward in the form of a double for executing the Action in the current State.
+     */
     public double getReward() {
         return reward;
     }
 
+    /**
+     * Gets the Q-Value associated with the (State, Action, State, reward) tuple.
+     * @return returns the Q-Value for the (State, Action, State, reward) tuple.
+     */
     public double getQvalue() {
         return qvalue;
     }

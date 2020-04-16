@@ -5,19 +5,33 @@ import ML.Range.*;
 
 import java.util.*;
 
+/**
+ * Manages the state space and available actions.
+ */
 public class StateSpaceManager {
     private List<Action> actionList;
     private Set<State> stateSet;
 
+    /**
+     * Initialize the StateSpaceManager
+     */
     public StateSpaceManager() {
         this.actionList = getValidActions();
         this.stateSet = createStates();
     }
 
+    /**
+     *
+     * @return returns a List of valid actions.
+     */
     public List<Action> getValidActions() {
         return Arrays.asList(new Attack(), new Retreat(), new MoveTowards());
     }
 
+    /**
+     * Initializes the entire state space for every possible combination of State fields.
+     * @return returns a Set containing all possible states.
+     */
     public Set<State> createStates() {
         Set<State> states = new HashSet<State>();
         boolean onCoolDown = false;
@@ -40,10 +54,18 @@ public class StateSpaceManager {
         return states;
     }
 
+    /**
+     *
+     * @return returns a List of the valid actions.
+     */
     public List<Action> getActionList() {
         return actionList;
     }
 
+    /**
+     *
+     * @return returns the Set of all States.
+     */
     public Set<State> getStateSet() {
         return stateSet;
     }

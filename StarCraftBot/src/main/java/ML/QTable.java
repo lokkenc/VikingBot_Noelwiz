@@ -8,10 +8,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Maps (State, Action) pairs to double values representing the q-value for executing the Action in the specific State.
+ */
 public class QTable extends HashMap<State, Map<Action, Double>> implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
-     * This constructor takes a Collection of ML.States and a Collection of ML.Actions and adds them to the ML.States.State -> (Action, Double) HashMap.
+     * This constructor takes a Collection of ML.States and a Collection of ML.Actions and adds them to the
+     * (State, (Action, Double)) HashMap.
      * @param states All possible states that will be included in the HashMap.
      * @param actions All possible actions that can occur.
      */
@@ -19,16 +23,21 @@ public class QTable extends HashMap<State, Map<Action, Double>> implements Seria
         super(states.size());
 
         for(State state : states) {
-            Map<Action, Double> actionDoubleMap = new HashMap<Action, Double>();
+            Map<Action, Double> actionDoubleMap = new HashMap<>();
 
             for(Action action : actions) {
-                actionDoubleMap.put(action, 0.0);
+                actionDoubleMap.put(action, Double.NEGATIVE_INFINITY);
             }
 
             this.put(state, actionDoubleMap);
         }
     }
 
+    /**
+     * Gets the (Action, double) pair for a given state.
+     * @param state key to index the QTable.
+     * @return Returns (Action, double) pair for the given state.
+     */
     public Map<Action, Double> get(State state) {
         return super.get(state);
     }
