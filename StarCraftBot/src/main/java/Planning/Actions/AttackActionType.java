@@ -73,19 +73,18 @@ public class AttackActionType implements ActionType {
 
         //enumarate all valid attack actions
         if (!(boolean) state.get("attackingEnemyBase") && HaveCombatUnits(combatStatus)){
-            for (int whatop = 0; whatop < whatOptions.length; whatop++) {
-                String whatOptStr = "what=".concat(whatOptions[whatop]);
+            for (String whatOption : whatOptions) {
+                String whatOptStr = "what=".concat(whatOption);
 
-                for(int unitStatusi = 0; unitStatusi < combatStatus.size(); unitStatusi++){
-                    CombatUnitStatus currentUnit = combatStatus.get(unitStatusi);
-                    if(currentUnit.getAmount() > 0 && currentUnit.getCombatUnit().canAttack() && !currentUnit.getCombatUnit().isWorker()){
-                        optionset = new String[]{whatOptStr, "unit=".concat(currentUnit.getCombatUnit().name()) };
+                for (CombatUnitStatus currentUnit : combatStatus) {
+                    if (currentUnit.getAmount() > 0 && currentUnit.getCombatUnit().canAttack() && !currentUnit.getCombatUnit().isWorker()) {
+                        optionset = new String[]{whatOptStr, "unit=".concat(currentUnit.getCombatUnit().name())};
                         attackActions.add(new AttackAction(optionset));
                     }
                 }
 
                 //all option
-                optionset = new String[]{whatOptStr, "unit=all" };
+                optionset = new String[]{whatOptStr, "unit=all"};
                 attackActions.add(new AttackAction(optionset));
             }
         }
