@@ -19,22 +19,33 @@ import java.util.List;
 import java.util.Random;
 
 public class StarcraftModel implements FullModel {
-    Random rng = new Random();
-    RewardFunction rewardFunction;
+    private Random rng = new Random();
+    /**
+     * An implementation of the RewardFunction class from the Burlap API to
+     * assign reward values to a given action based on the state
+     */
+    private RewardFunction rewardFunction;
 
-    /*calculates the average time to train for randomizing the chance of a
+    /**calculates the average time to train for randomizing the chance of a
      * unit finishing it's training. the units in the paranthesies are in
      * seconds, taken from the wiki.
-     * TODO: incorperate more units the bot is likely to use in the furute.
+     * incorperate more units the bot is likely to use in the furute.
      */
     private static final float AverageUnitTrainingTime = 30 * /* conversion from seconds to frames */
     (40 /* zelot*/ + 20 /* probe */ + 28 /*zergling */ + 40 /* overlord */ + 20 /* drone */)/5;
 
-
+    /**
+     * Constructor. Used to create a new Model
+     * @param rf A reward function (see burlap api) to asign a reward value for various actions and outcomes.
+     */
     public StarcraftModel(RewardFunction rf){
         rewardFunction = rf;
     }
 
+    /**
+     * Used to change the reward function actions are taken based off of.
+     * @param rf A reward function (see burlap api) to asign a reward value for various actions and outcomes.
+     */
     public void SetRewardFunction(RewardFunction rf){
         rewardFunction= rf;
     }
@@ -42,6 +53,17 @@ public class StarcraftModel implements FullModel {
 
     /**
      * Possible transitions from the current state
+     *
+     * How it works:
+     * Broadly the idea is to create a base state, with what's guaranteed to change
+     * from an action being taken already incorporated. Then that base state is turned
+     * into a TransitionProb with an assumed 100% chance of happening. After that the
+     * TransitionProb is put in a list and sent through a bunch of functions that enumerate
+     * normal possible occurrences during game play splitting each entry in the list into
+     * multiple with the same total probability.
+     * At the end of the function there should be a list with every reasonable permutation of what
+     * could happen in the game, and with an approximate probability assigned.
+     *
      * @param state current state
      * @param action action being considered
      * @return a list of most possible states that could be transitioned to.
@@ -52,7 +74,7 @@ public class StarcraftModel implements FullModel {
         List<TransitionProb> AllProbabilities = new ArrayList<TransitionProb>();
         EnvironmentOutcome defaultoutcome;
 
-
+        //Get properties that don't change, or are modified a lot in different actions
         int[][] capacity = (int[][]) state.get("trainingCapacity");
         Race ourrace = (Race) state.get("playerRace");
 
@@ -63,8 +85,8 @@ public class StarcraftModel implements FullModel {
         System.out.println("Action taken: "+ arguments[0]);
 
 
+        //aproximates time passing in an actual match between planing steps
         int newtimesincelastscout = (int) state.get("timeSinceLastScout");
-
         newtimesincelastscout += Math.round(rng.nextFloat() * 30 * 600);
 
 
@@ -295,6 +317,8 @@ public class StarcraftModel implements FullModel {
 
     /**
      * Helper function to provide possible states if attacked.
+     *
+     * How it works: splits every list entery into two cases, either we're attacked or we're not.
      * @param Currentstate the current actual state
      * @param action the action to be taken
      * @param allProbabilities all possible resulting states and their probabilities so far.
@@ -304,6 +328,8 @@ public class StarcraftModel implements FullModel {
      */
     private List<TransitionProb> attackedTransitions(State Currentstate, Action action, List<TransitionProb> allProbabilities) {
         double attackprob = 0.05;
+        //IMPORTANT NOTE: the chance for us, or our enemy to lose a base is required for the planner to Sparse Sampling Planer
+        //used to plan. without this, the bot will be stuck in a seemingly infinite loop on start trying to assign Q Values.
         double attackAndLooseBaseprob = 0.01;
         double noattackprob = 1-attackprob-attackAndLooseBaseprob;
         TransitionProb currentprob;
@@ -456,16 +482,16 @@ public class StarcraftModel implements FullModel {
         Race ourrace = (Race) Currentstate.get("playerRace");
 
         TransitionProb currentprob;
-        List<CapacityProbibilityPair> capacities;
+        List<CapacityProbabilityPair> capacities;
 
 
-        CapacityProbibilityPair currentCapProbPair;
+        CapacityProbabilityPair currentCapProbPair;
 
         double remainingprobability = 1;
 
         for(int i = 0; i < allProbabilities.size(); i++){
             currentprob = allProbabilities.get(i);
-            List<CapacityProbibilityPair> currentPosibleCapacities = PosibleCapacities(ourrace, currentprob.eo.op);
+            List<CapacityProbabilityPair> currentPosibleCapacities = PosibleCapacities(ourrace, currentprob.eo.op);
 
             for( int j = 0; j < currentPosibleCapacities.size(); j++){
                 currentCapProbPair = currentPosibleCapacities.get(j);
@@ -511,7 +537,7 @@ public class StarcraftModel implements FullModel {
      */
     //TODO: this is missing more than a few possibilites, from different combinations of units finishing
     //training, and not finishing training.
-    private List<CapacityProbibilityPair> PosibleCapacities(Race ourrace, State possibleState){
+    private List<CapacityProbabilityPair> PosibleCapacities(Race ourrace, State possibleState){
         //deviding by 1800 to make this the chance of the unit finishing
         //at a given time in a single minute.
         //TODO: someone who's smart with probability should adjust this chance here, and for protoss below
@@ -520,7 +546,7 @@ public class StarcraftModel implements FullModel {
         double currentSituationProbab;
         int[][] capacity = (int[][]) possibleState.get("trainingCapacity");
 
-        List<CapacityProbibilityPair> possiblecapacities = new ArrayList<CapacityProbibilityPair>();
+        List<CapacityProbabilityPair> possiblecapacities = new ArrayList<CapacityProbabilityPair>();
 
 
         if(ourrace==Race.Zerg){
@@ -539,7 +565,7 @@ public class StarcraftModel implements FullModel {
                     currentSituationProbab = Math.pow(finishprob, unit+1);
                     //TODO: figure out how to make the probability correct
                     //this adds the probability that all the units finished training so far.
-                    possiblecapacities.add( new CapacityProbibilityPair(capacity, currentSituationProbab) );
+                    possiblecapacities.add( new CapacityProbabilityPair(capacity, currentSituationProbab) );
                 }
             }
 
@@ -558,7 +584,7 @@ public class StarcraftModel implements FullModel {
 
                         power++;
                         currentSituationProbab = Math.pow(finishprob, power);
-                        possiblecapacities.add( new CapacityProbibilityPair(capacity, currentSituationProbab) );
+                        possiblecapacities.add( new CapacityProbabilityPair(capacity, currentSituationProbab) );
                     }
                 }
             }
@@ -588,11 +614,17 @@ public class StarcraftModel implements FullModel {
     }
 
 
-    private static class CapacityProbibilityPair{
+    /**
+     * A class used to store a possible training capacity, and the probability of it occurring.
+     *
+     * Why this exists: we don't know how much time would pass between bot actions, so we
+     * have to guess, and we can't ask the game.
+     */
+    private static class CapacityProbabilityPair {
         int[][] cap;
         double prob;
 
-        CapacityProbibilityPair(int[][] capacity, double probability){
+        CapacityProbabilityPair(int[][] capacity, double probability){
             cap=capacity;
             prob=probability;
         }

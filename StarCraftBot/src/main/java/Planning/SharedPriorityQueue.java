@@ -4,6 +4,11 @@ import burlap.mdp.core.action.Action;
 
 import java.util.PriorityQueue;
 
+/**
+ * A priority queue for the ai planning to communicate with the starcraft bot
+ *
+ * Works with the StarcraftPlanner to decide what to do next.
+ */
 public class SharedPriorityQueue {
     private PriorityQueue<Action> ActionQueue;
     private StarcraftPlanner Planner;

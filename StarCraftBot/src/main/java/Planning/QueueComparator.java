@@ -62,14 +62,17 @@ public class QueueComparator implements Comparator {
         String a2name;
 
         if(a1type == a2type){
-            //TODO: look at arguments and prioratize based on that.
+            //TODO: Once the bellow are added to the build actions,
+            //      then the build action should be prioratized in that order
             //creep/power providers = highest priority
-            //new buildings = next highest
+            //population building = next highest (for Zerg, and terran if ever implemented)
+            //unique buildings = next highest
             //training buildings = next highest
 
             a1name = action1.actionName();
             a2name = action2.actionName();
 
+            //prioratizes population buildings above all others.
             if (a1name.equals(a2name)){
                 netdifference = 0; //no op
             } else if(a1name.endsWith("_pop")){
@@ -86,8 +89,13 @@ public class QueueComparator implements Comparator {
         return netdifference;
     }
 
-
-    private int ActionTypeValues(ActionParserHelper.ActionEnum atype){
+    /**
+     * Assigns a priority to an action given its type.
+     * @param atype an Action Type Enumerator from the ActionParserHelper class.
+     * @return an integer representing the priority of the action for the starcraft bot
+     *         to do.
+     */
+    private static int ActionTypeValues(ActionParserHelper.ActionEnum atype){
         int value = 0;
         switch (atype){
             case UPGRADE:

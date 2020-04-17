@@ -5,6 +5,12 @@ import burlap.behavior.valuefunction.QValue;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 
+/**
+ * A bad Q Value class from before we (or at least I) realized that the
+ * SparseSampler in burlap already implemented this for us.
+ *
+ * the goal is to just return a value, in an attempt to solve a bug earlier.
+ */
 public class DummyQValue implements QFunction {
 
     /**
