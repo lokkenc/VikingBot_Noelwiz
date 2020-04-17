@@ -2,6 +2,9 @@ package Planning.Actions;
 
 import burlap.mdp.core.action.Action;
 
+/**
+ * This class is meant to work similar to the Train and Build Actions.
+ */
 public class UpgradeAction implements Action {
     private String actionName;
     private static final String BaseActionName = "UpgradeAction";
@@ -11,8 +14,8 @@ public class UpgradeAction implements Action {
     }
 
     /**
-     *
-     * @param options
+     * create a new upgrade action.
+     * @param options A string representing options to specify to the bot what to upgrade.
      *          "what=%s", TO BE DETERMINED
      */
     public UpgradeAction(String options){
