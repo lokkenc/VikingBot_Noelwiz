@@ -56,7 +56,7 @@ public class StarcraftPlanner {
 
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;
-        sparsePlanner = new SparseSampling(domain,DiscountFactor,factory,10,1);
+        sparsePlanner = new SparseSampling(domain,DiscountFactor,factory,3,2);
 
         //get inital policy for planning
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
