@@ -7,6 +7,9 @@ import bwapi.Unit;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Action used to MoveTowards the closest enemy unit
+ */
 public class MoveTowards extends Action implements Serializable {
     private static final long serialVersionUID = 1L;
     private ActionType type = ActionType.MOVETOWARDS;
@@ -16,7 +19,7 @@ public class MoveTowards extends Action implements Serializable {
     /**
      * This function orders the unit to move towards the closest enemy
      * @param game The game that was initialized at the startup of the program
-     * @param unit The unit that makes up the commandable squad
+     * @param unit The unit that needs to approach the enemy
      */
     public void doAction(Game game, Unit unit) {
 
