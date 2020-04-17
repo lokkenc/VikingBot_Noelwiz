@@ -16,7 +16,7 @@ import java.util.List;
  * Why This Exists: To provide the ai planer with possible attacking actions.
  *
  * How to incorporate more options: in AllApplicableActions, add one or more attack
- * actions with the given argument.
+ * actions with the new possible options.
  *
  * I recommend doing this with another for loop inside
  * or encapsulating the existing ones to enumerate all the combinations of arguments.
