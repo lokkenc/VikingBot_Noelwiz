@@ -11,7 +11,7 @@ import java.util.Random;
  * Selects either the best Action for a specified State or a randomly sampled Action.
  */
 public class GreedyActionChooser {
-    private static final double epsilon = 0.6;
+    private static final double epsilon = 0.1;
     private final Random random;
     private final QTable qtable;
 
@@ -35,8 +35,14 @@ public class GreedyActionChooser {
         double rand = random.nextDouble();
 
         if(rand < epsilon) {
+            if(spMng.getActionList().get(0) == null) {
+                System.out.println("broken");
+            }
             return spMng.getActionList().get(random.nextInt(3));
         } else {
+            if(qtable.getMaxAction(curState) == null) {
+                System.out.println("broken too");
+            }
             return qtable.getMaxAction(curState);
         }
     }

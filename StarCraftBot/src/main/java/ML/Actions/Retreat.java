@@ -7,6 +7,9 @@ import bwapi.Unit;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Action that is used for moving away from enemy units. It will move a unit to a position opposite of the closest enemy unit.
+ */
 public class Retreat extends Action implements Serializable {
     private static final long serialVersionUID = 1L;
     private ActionType type = ActionType.RETREAT;
@@ -16,7 +19,7 @@ public class Retreat extends Action implements Serializable {
     /**
      * This function orders the unit to retreat
      * @param game The game that was initialized at the startup of the program
-     * @param unit The unit that makes up the commandable squad
+     * @param unit The unit that needs to retreat
      */
     public void doAction(Game game, Unit unit){
         Unit closestUnit = null; // set a variable to hold the lowerUnit id and its hp

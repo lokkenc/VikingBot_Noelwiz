@@ -1,6 +1,7 @@
 package ML.Data;
 
 import ML.Actions.Action;
+import ML.Model.UnitClassification;
 import ML.States.State;
 import bwapi.UnitType;
 
@@ -18,28 +19,28 @@ public class DataManager implements Serializable {
 
     private final ArrayList<DataPoint> dataPoints;
     private final HashMap<State, Integer> stateFrequency;
-    private final UnitType type;
+    private final UnitClassification unitClass;
 
     /**
      * Initializes the DataManager with the type of unit it's collecting data on.
-     * @param type the type of unit.
+     * @param unitClass the units classification as one of the following: Melee, Ranged
      */
-    public DataManager(UnitType type) {
+    public DataManager(UnitClassification unitClass) {
+        this.unitClass = unitClass;
         dataPoints = new ArrayList<>();
         stateFrequency = new HashMap<>();
-        this.type = type;
     }
 
     /**
      * Initializes the DataManager with the type of unit it's collecting data on as well as all possible States in the
      * State space.
-     * @param type the type of unit.
+     * @param unitClass the units classification as one of the following: Melee, Ranged
      * @param states the set of all possible States in the State space.
      */
-    public DataManager(UnitType type, Set<State> states) {
+    public DataManager(UnitClassification unitClass, Set<State> states) {
         dataPoints = new ArrayList<>();
         stateFrequency = new HashMap<>(states.size());
-        this.type = type;
+        this.unitClass = unitClass;
 
         for(State state : states) {
             stateFrequency.put(state, 0);
@@ -154,10 +155,10 @@ public class DataManager implements Serializable {
     }
 
     /**
-     * Gets the type of unit that the DataManager is collecting data on.
-     * @return returns the type of unit that the DataManager is collecting data on.
+     * Gets the unitClassification of unit that the DataManager is collecting data on.
+     * @return returns the classification of the unit we are gathering data on
      */
-    public UnitType getType() {
-        return type;
+    public UnitClassification getClassification() {
+        return unitClass;
     }
 }

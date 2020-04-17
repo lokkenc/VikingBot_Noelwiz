@@ -6,6 +6,9 @@ import bwapi.Unit;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Action that is used for Attacking. Attacks currently are based on Lowest Unit in attack range.
+ */
 public class Attack extends Action implements Serializable {
     private static final long serialVersionUID = 1L;
     private ActionType type = ActionType.ATTACK;
@@ -15,7 +18,7 @@ public class Attack extends Action implements Serializable {
     /**
      * This function orders the units to attack the enemy with the lowest health in range
      * @param game The game that was initialized at the startup of the program
-     * @param unit The unit that makes up the commandable squad
+     * @param unit The unit that should attack
      */
     public void doAction(Game game, Unit unit){
 

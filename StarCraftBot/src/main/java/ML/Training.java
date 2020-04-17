@@ -7,6 +7,9 @@ import bwapi.*;
 
 import java.util.ArrayList;
 
+/**
+ * This class is a skeleton of StrategyAgent that allows the ML model to train separately from the AI planning
+ */
 public class Training extends DefaultBWListener{
 
     private BWClient bwClient;
@@ -31,7 +34,7 @@ public class Training extends DefaultBWListener{
         intel = new IntelligenceAgent(self, game);
         combat = new CombatAgent(intel);
         
-        combat.addUnitTypeToModel(UnitType.Protoss_Zealot);
+        combat.addUnitTypeToModel(combat.getUnitClassification(UnitType.Protoss_Zealot));
         combat.loadModels();
     }
 
@@ -41,18 +44,18 @@ public class Training extends DefaultBWListener{
         //game.setTextSize(10);
         game.drawTextScreen(10, 10, "Playing as " + self.getName() + " - " + self.getRace());
         if(dm != null) {
-            game.drawTextScreen(10, 50, "Type: " + dm.getType());
+            game.drawTextScreen(10, 50, "Type: " + dm.getClassification());
             game.drawTextScreen(10, 60, "Data Points: " + dm.getDataPoints().size());
             game.drawTextScreen(10, 70, "Unique States: " + dm.getStateFrequency().keySet().size());
         }
         game.drawTextScreen(10, 230, "Resources: " + self.minerals() + " minerals,  " + self.gas() + " gas, " + (self.supplyUsed() / 2) + "/" + (self.supplyTotal() / 2) + " psi");
 
         intel.tabulateUnits(self);
-        frameCount++;
         if(frameCount % ML_Epoch == 0) {
             frameCount = 0;
             combat.controlArmy(game, new ArrayList<>(intel.getUnitsListOfType(UnitType.Protoss_Zealot)));
         }
+        frameCount++;
     }
 
     @Override

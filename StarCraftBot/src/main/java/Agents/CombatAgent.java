@@ -2,6 +2,7 @@ package Agents;
 
 import ML.Actions.Action;
 import ML.Data.DataManager;
+import ML.Model.UnitClassification;
 import ML.Range.Distance;
 import ML.Range.Hp;
 import ML.States.State;
@@ -15,29 +16,43 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * Main Class for Combat control. This Class has some hard coded functions to allow simple combat actions to be taken but
+ * in most cases the ControlArmy function should be used.
+ */
 public class CombatAgent {
 
     IntelligenceAgent intel;
     ArrayList<LearningManager> models;
     HashMap<Unit, StateAction> UnitStateActionPair;
 
+    /**
+     * Constructor
+     * @param intel intelligence agent
+     */
     public CombatAgent(IntelligenceAgent intel) {
         this.intel = intel;
         this.models = new ArrayList<LearningManager>();
         UnitStateActionPair = new HashMap<Unit, StateAction>();
     }
 
+    /**
+     * Retrieves the models for all active unit classifications
+     */
     public void loadModels() {
         for(LearningManager model : models) {
-            System.out.println("Loading Tables for: " + model.getUnitType());
+            System.out.println("Loading Tables for: " + model.getUnitClassification());
             model.loadQTable();
             model.loadDataManager();
         }
     }
 
+    /**
+     * Called on termination of the program to save any changes to all open models
+     */
     public void storeModels() {
         for(LearningManager model : models) {
-            System.out.println("Storing Tables for: " + model.getUnitType());
+            System.out.println("Storing Tables for: " + model.getUnitClassification());
             model.storeQTable();
             model.storeDataManager();
         }
@@ -77,23 +92,32 @@ public class CombatAgent {
         }
     }
 
-    public void addUnitTypeToModel(UnitType type) {
+    /**
+     * Adds a unit to the list of active models if it does not already exist
+     * @param unitClass Units classification into one of the following options: Melee, Ranged
+     */
+    public void addUnitTypeToModel(UnitClassification unitClass) {
         boolean add = true;
         for(LearningManager lm: models) {
-            if(lm.getUnitType() == type) {
+            if(lm.getUnitClassification() == unitClass) {
                 add = false;
             }
         }
 
         if(add) {
-            this.models.add(new LearningManager(type));
+            this.models.add(new LearningManager(unitClass));
         }
     }
 
+    /**
+     * Loops through all units using their qTable to compute best action based on current state
+     * @param game Active game passed from the StrategyAgent
+     * @param allUnits List of all units that are currently available
+     */
     public void controlArmy(Game game, ArrayList<Unit> allUnits) {
         for(Unit unit: allUnits) {
             for(LearningManager lm: models) {
-                if(lm.getUnitType() == unit.getType()) {
+                if(lm.getUnitClassification() == getUnitClassification(unit.getType())) {
                     State currentState = generateState(game, unit);
                     Action action = lm.getNextAction(currentState);
                     if(UnitStateActionPair.get(unit) != null) {
@@ -112,8 +136,28 @@ public class CombatAgent {
         }
     }
 
+    /**
+     * Get the unitClassification for a specified unitType
+     * @param unitType BWAPI information for unitType
+     * @return Classification of the given unit
+     */
+    public UnitClassification getUnitClassification(UnitType unitType) {
+        if(unitType.groundWeapon().maxRange() <= 32) { // 32 pixels in game equals 1 range
+            return UnitClassification.MELEE;
+        } else {
+            return UnitClassification.RANGED;
+        }
+    }
+
+    /**
+     * Checks information from given unit inside of the game to determine values for all variables used in a State
+     * @param game Active game stored in the StrategyAgent
+     * @param unit Unit that needs to create a State
+     * @return A State that holds all current information for the given unit
+     */
     public State generateState(Game game, Unit unit) {
-        boolean cooldown = false;
+        // These are the variables that make up a state
+        boolean cooldown = false; // weapon cooldown
         Distance closestEnemy = null;
         Units numberOfEnemies = null;
         Units numberOfFriendlies = null;
@@ -164,6 +208,10 @@ public class CombatAgent {
 
     }
 
+    /**
+     * Obtain a list of each LearningManagers DataManager
+     * @return A List of all DataManagers
+     */
     public ArrayList<DataManager> getDataManagers() {
         ArrayList<DataManager> managers = new ArrayList<>(models.size());
 
@@ -172,9 +220,5 @@ public class CombatAgent {
         }
 
         return managers;
-    }
-
-    public void attackClosestEnemy (Unit unit) {
-
     }
 }

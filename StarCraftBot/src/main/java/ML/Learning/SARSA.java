@@ -2,11 +2,11 @@ package ML.Learning;
 
 import ML.Actions.Action;
 import ML.Data.DataManager;
+import ML.Model.UnitClassification;
 import ML.QTable;
 import ML.States.State;
 import ML.States.StateSpaceManager;
 import ML.RewardFunction;
-import bwapi.UnitType;
 
 import javax.xml.crypto.Data;
 import java.io.*;
@@ -23,19 +23,19 @@ public class SARSA implements Serializable {
     private static final double DISCOUNT_FACTOR = .6;
 
     private DataManager dataManager;
-    private final UnitType type;
+    private final UnitClassification unitClass;
     private QTable qTable;
     private final StateSpaceManager spaceManager;
 
     /**
      * Initializes the SARSA learning algorithm, creates/loads the DataManager, sets the StateSpaceManager, and
      * creates a new QTable from the set of possible States and Actions.
-     * @param type the type of unit the learning algorithm is working around.
+     * @param unitClass the units classification as one of the following: Melee, Ranged
      * @param spaceManager the StateSpaceManager.
      */
-    public SARSA(UnitType type, StateSpaceManager spaceManager) {
-        this.type = type;
-        dataManager = new DataManager(type);
+    public SARSA(UnitClassification unitClass, StateSpaceManager spaceManager) {
+        this.unitClass = unitClass;
+        dataManager = new DataManager(unitClass);
         this.spaceManager = spaceManager;
         this.qTable = new QTable(this.spaceManager.getStateSet(), this.spaceManager.getActionList());
     }
@@ -92,7 +92,7 @@ public class SARSA implements Serializable {
     public void loadQTable() {
         FileInputStream fis = null;
         try {
-            File f = new File("TrainingFiles/Tables/" + type.toString() + "Table.ser");
+            File f = new File("TrainingFiles/Tables/" + unitClass.toString() + "Table.ser");
             fis = new FileInputStream(f);
             ObjectInputStream ois = new ObjectInputStream(fis);
             qTable = (QTable) ois.readObject();
@@ -117,7 +117,7 @@ public class SARSA implements Serializable {
         boolean ret;
 
         try {
-            File f = new File("TrainingFiles/Tables/" + type.toString() + "Table.ser");
+            File f = new File("TrainingFiles/Tables/" + unitClass.toString() + "Table.ser");
 
             ret = f.getParentFile().mkdirs();
 
@@ -147,7 +147,7 @@ public class SARSA implements Serializable {
         FileInputStream fis = null;
 
         try {
-            File f = new File("TrainingFiles/Tables/" + type.toString() + "Data.ser");
+            File f = new File("TrainingFiles/Tables/" + unitClass.toString() + "Data.ser");
             fis = new FileInputStream(f);
             ObjectInputStream ois = new ObjectInputStream(fis);
             dataManager = (DataManager) ois.readObject();
@@ -172,7 +172,7 @@ public class SARSA implements Serializable {
         boolean ret;
 
         try {
-            File f = new File("TrainingFiles/Tables/" + type.toString() + "Data.ser");
+            File f = new File("TrainingFiles/Tables/" + unitClass.toString() + "Data.ser");
 
             ret = f.getParentFile().mkdirs();
 
@@ -197,10 +197,10 @@ public class SARSA implements Serializable {
 
     /**
      * Gets the type of unit the SARSA learning algorithm is working with.
-     * @return returns the respective type of unit.
+     * @return returns the classification of the unit we are working with
      */
-    public UnitType getType() {
-        return type;
+    public UnitClassification getClassification() {
+        return unitClass;
     }
 
     /**

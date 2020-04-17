@@ -4,7 +4,7 @@ ML
 ML.Actions
 ML.Data
 ML.Learning
-ML.model
+ML.Model
 ML.Range
 ML.States
 Planning

@@ -46,7 +46,7 @@ public class StrategyAgent extends DefaultBWListener{
         BWTA.analyze();
         System.out.println("Map data ready");
 
-        combat.addUnitTypeToModel(UnitType.Protoss_Zealot);
+        combat.addUnitTypeToModel(combat.getUnitClassification(UnitType.Protoss_Zealot));
         combat.loadModels();
     }
 

@@ -2,6 +2,7 @@ package ML.Learning;
 
 import ML.Actions.Action;
 import ML.Data.DataManager;
+import ML.Model.UnitClassification;
 import bwapi.UnitType;
 import ML.States.*;
 
@@ -14,7 +15,7 @@ import java.io.Serializable;
 public class LearningManager implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final UnitType type;
+    private final UnitClassification unitClass;
     private final StateSpaceManager spaceManager;
     private final SARSA sarsa;
     private final GreedyActionChooser greedyActionChooser;
@@ -22,12 +23,12 @@ public class LearningManager implements Serializable {
     /**
      * Initialize the LearningManager, set the type of unit it's managing, create the state space, create the learning
      * algorithm, and create the GreedyActionChooser.
-     * @param type the type of unit the LearningManager will be controlling.
+     * @param unitClass Units classification into one of the following options: Melee, Ranged
      */
-    public LearningManager(UnitType type) {
-        this.type = type;
+    public LearningManager(UnitClassification unitClass) {
+        this.unitClass = unitClass;
         spaceManager = new StateSpaceManager();
-        sarsa = new SARSA(type, spaceManager);
+        sarsa = new SARSA(unitClass, spaceManager);
         greedyActionChooser = new GreedyActionChooser(sarsa.getQTable());
     }
 
@@ -35,7 +36,7 @@ public class LearningManager implements Serializable {
      * Load the QTable from disk if it exists.
      */
     public void loadQTable() {
-        File f = new File("TrainingFiles/Tables/" + type.toString() + "Table.ser");
+        File f = new File("TrainingFiles/Tables/" + unitClass.toString() + "Table.ser");
         if(f.exists()) {
             sarsa.loadQTable();
         }
@@ -52,7 +53,7 @@ public class LearningManager implements Serializable {
      * Load the DataManager from disk if it exists.
      */
     public void loadDataManager() {
-        File f = new File("TrainingFiles/Tables/" + type.toString() + "Data.ser");
+        File f = new File("TrainingFiles/Tables/" + unitClass.toString() + "Data.ser");
         if(f.exists()) {
             sarsa.loadDataManager();
         }
@@ -86,11 +87,9 @@ public class LearningManager implements Serializable {
 
     /**
      * Gets the type of unit the LearningManager is managing.
-     * @return returns the type of unit being managed.
+     * @return returns the classification of the unit being managed
      */
-    public UnitType getUnitType() {
-        return this.type;
-    }
+    public UnitClassification getUnitClassification() { return this.unitClass; }
 
     /**
      * Gets the DataManager being used by the LearningManager for collecting data points.
