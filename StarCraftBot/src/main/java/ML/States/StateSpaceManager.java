@@ -25,7 +25,7 @@ public class StateSpaceManager {
      * @return returns a List of valid actions.
      */
     public List<Action> getValidActions() {
-        return Arrays.asList(new Attack(), new Retreat(), new MoveTowards());
+        return Arrays.asList(new Attack(), new Retreat(), new MoveTowards(), new GoHome());
     }
 
     /**
@@ -35,19 +35,23 @@ public class StateSpaceManager {
     public Set<State> createStates() {
         Set<State> states = new HashSet<State>();
         boolean onCoolDown = false;
+        boolean skirmish = false;
 
         // Create all the states here
-        for(int i = 0; i < 2; i++) {
-            for(DistanceRange dRange: DistanceRange.values()) {
-                for(UnitsRange ueRange: UnitsRange.values()) {
-                    for(UnitsRange ufRange: UnitsRange.values()) {
-                        for (HpRange ehpRange : HpRange.values()) {
-                            for (HpRange fhpRange : HpRange.values()) {
-                                states.add(new State(onCoolDown, new Distance(dRange), new Units(ueRange), new Units(ufRange), new Hp(ehpRange), new Hp(fhpRange)));
+        for(int i = 0; i < 2; i++) { // true vs false onCoolDown value
+            for(int j = 0; j < 2; j++) { // true vs false skirmish value
+                for(DistanceRange dRange: DistanceRange.values()) {
+                    for (UnitsRange ueRange : UnitsRange.values()) {
+                        for (UnitsRange ufRange : UnitsRange.values()) {
+                            for (HpRange ehpRange : HpRange.values()) {
+                                for (HpRange fhpRange : HpRange.values()) {
+                                    states.add(new State(onCoolDown, new Distance(dRange), new Units(ueRange), new Units(ufRange), new Hp(ehpRange), new Hp(fhpRange), skirmish));
+                                }
                             }
                         }
                     }
                 }
+                skirmish = true;
             }
             onCoolDown = true;
         }
