@@ -35,14 +35,8 @@ public class GreedyActionChooser {
         double rand = random.nextDouble();
 
         if(rand < epsilon) {
-            if(spMng.getActionList().get(0) == null) {
-                System.out.println("broken");
-            }
-            return spMng.getActionList().get(random.nextInt(3));
+            return spMng.getActionList().get(random.nextInt(4));
         } else {
-            if(qtable.getMaxAction(curState) == null) {
-                System.out.println("broken too");
-            }
             return qtable.getMaxAction(curState);
         }
     }

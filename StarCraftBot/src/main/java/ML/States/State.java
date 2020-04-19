@@ -18,6 +18,7 @@ public class State implements Serializable {
     private Units numberOfFriendlies;
     private Hp enemyHp;
     private Hp friendlyHp;
+    private boolean skirmish;
 
     /**
      * Initializes the state given the current information around a specific unit.
@@ -27,14 +28,16 @@ public class State implements Serializable {
      * @param numberOfFriendlies the total number friendly units nearby.
      * @param enemyHp the total HP of nearby enemies.
      * @param friendlyHp the total HP of nearby allies.
+     * @param skirmish whether units should stop fighting or not
      */
-    public State(boolean onCoolDown, Distance closestEnemy, Units numberOfEnemies, Units numberOfFriendlies, Hp enemyHp, Hp friendlyHp) {
+    public State(boolean onCoolDown, Distance closestEnemy, Units numberOfEnemies, Units numberOfFriendlies, Hp enemyHp, Hp friendlyHp, boolean skirmish) {
         this.onCoolDown = onCoolDown;
         this.closestEnemy = closestEnemy;
         this.numberOfEnemies = numberOfEnemies;
         this.numberOfFriendlies = numberOfFriendlies;
         this.enemyHp = enemyHp;
         this.friendlyHp = friendlyHp;
+        this.skirmish = skirmish;
     }
 
     /**
@@ -84,6 +87,12 @@ public class State implements Serializable {
     public Hp getFriendlyHp() {
         return friendlyHp;
     }
+
+    /**
+     *
+     * @return returns the value of the goHome command
+     */
+    public boolean getSkirmish() { return skirmish; }
 
     @Override
     public boolean equals(Object o) {

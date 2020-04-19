@@ -62,4 +62,11 @@ public class Retreat extends Action implements Serializable {
     public int hashCode() {
         return Objects.hash(type);
     }
+
+    @Override
+    public String toString() {
+        return "Action{" +
+                "type=" + type +
+                '}';
+    }
 }

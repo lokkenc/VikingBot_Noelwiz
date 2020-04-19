@@ -25,6 +25,7 @@ public class CombatAgent {
     IntelligenceAgent intel;
     ArrayList<LearningManager> models;
     HashMap<Unit, StateAction> UnitStateActionPair;
+    private boolean skirmish;
 
     /**
      * Constructor
@@ -34,6 +35,15 @@ public class CombatAgent {
         this.intel = intel;
         this.models = new ArrayList<LearningManager>();
         UnitStateActionPair = new HashMap<Unit, StateAction>();
+        skirmish = false;
+    }
+
+    /**
+     * Allow manipulation of the fight/defend switch
+     * @param skirmish The new value of the skirmish. True for fight, false for hold position by base
+     */
+    public void setSkirmish(boolean skirmish) {
+        this.skirmish = skirmish;
     }
 
     /**
@@ -204,7 +214,7 @@ public class CombatAgent {
         numberOfEnemies = new Units(enemiesInRange);
         numberOfFriendlies = new Units(friendliesInRange);
 
-        return new State(cooldown, closestEnemy, numberOfEnemies, numberOfFriendlies, enemyHp, friendlyHp);
+        return new State(cooldown, closestEnemy, numberOfEnemies, numberOfFriendlies, enemyHp, friendlyHp, this.skirmish);
 
     }
 
