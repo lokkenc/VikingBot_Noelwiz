@@ -5,11 +5,47 @@ import burlap.mdp.core.action.Action;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * An Action that involves training a new unit. Currently cannot tell what
+ * units it's able to train from the state.
+ *
+ * Why this exists: So Burlap can plan what units to train.
+ *
+ * Current options:
+ *      "what=%s", unit type (worker or combatUnit)
+ *      "amount=%i", the amount to train, integer > 0
+ *
+ * How to add an option:
+ *      1) add validation of that option to the constructors
+ *      2) add the option to the tain action type
+ *      + add tests and documentation
+ *
+ * How to add a new Unit:
+ *      1) go to the possibleUnits array
+ *      2) add the string that identifys that unit.
+ *      3) add that to the TrainActionType as well.
+ */
 public class TrainAction implements Action {
+    /**
+     * The name of the action.
+     */
     private String actionName;
+    /**
+     * The unique name at the start of every Train Action that tells the bot
+     * an action is an attack and not anything else.
+     */
     private static final String BaseActionName = "TrainAction";
+    /**
+     * List of currently supported units that can be trained.
+     */
     private static final String[] possibleUnits = new String[]{"worker","combatUnit"};
+    /**
+     * Name of the unit to be trained. defaults to the empty string if no valid unit was given.
+     */
     private String unitToTrain = "";
+    /**
+     * The amount of the unit to train.
+     */
     private int amount = 0;
 
     @Override
@@ -22,10 +58,13 @@ public class TrainAction implements Action {
 
 
     /**
-     * Constructer for a new Training action.
-     * @param options stirng of options seperated by '_'
+     * Constructor for a new Training action.
+     * @param options string of options separated by '_'
      *          "what=%s", unit type (worker or combatUnit)
      *          "amount=%i", the amount to train, integer > 0
+     *
+     * How it works: if options are provided, checks all of them to make sure they are
+     *               valid given the rules above.
      */
     public TrainAction(String options){
         if(options == null || options.isEmpty()){
@@ -96,9 +135,21 @@ public class TrainAction implements Action {
         return new TrainAction(actionName.substring(BaseActionName.length()));
     }
 
+    /**
+     * Get's the name of the unit to train. Currently unused because it would
+     * require casting an action to a train action.
+     * @return a string, being the name of the unit, that's valid according to
+     * rules, or the empty string.
+     */
     public String getUnitToTrain() {
         return unitToTrain;
     }
+
+    /**
+     * Get's the number of the unit to train. Currently unused because it would
+     * require casting an action to a train action.
+     * @return the # of a unit to train.
+     */
     public int getAmount() {
         return amount;
     }

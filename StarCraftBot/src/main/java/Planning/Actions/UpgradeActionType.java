@@ -2,16 +2,20 @@ package Planning.Actions;
 
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
-import burlap.mdp.core.action.SimpleAction;
 import burlap.mdp.core.state.State;
 
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Currently does nothing as UpgradeAction needs to be better definied to be useful.
+ * Normally would analyze a state and provide the planner with possible actions to take,
+ * in this grade upgrades the bot can research.
+ */
 public class UpgradeActionType implements ActionType {
+    /**
+     * The String that is the name of this action type.
+     */
     private final static String name = "Upgrade_Type";
-    private final static String action_name = "ScoutAction";
-    private static SimpleAction scoutAction = new SimpleAction(action_name);
 
     @Override
     public String typeName() {
@@ -26,7 +30,8 @@ public class UpgradeActionType implements ActionType {
     @Override
     public ArrayList<Action> allApplicableActions(State state) {
         ArrayList<Action> actions = new ArrayList<Action>();
-        actions.add(scoutAction);
+        //TODO: make Upgrade work.
+        //actions.add(new UpgradeAction());
         return actions;
     }
 }

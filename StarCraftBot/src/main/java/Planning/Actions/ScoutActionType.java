@@ -18,6 +18,15 @@ import java.util.List;
  *
  * Future considerations: if a more detailed representation of our units is added
  * then we could specify a unit type.
+ *
+ * WHY DOES THIS LOOK DIFFERENT THAN THE OTHERS?
+ * The states don't and shouldn't know the map lay out, and should be
+ * map independent, so there's not really any information the bot needs
+ * to know other than that the planner wants to expand. The bot can track
+ * where the enemy base is to scout, and where it wants to look.
+ * So, I just used a single instance of Burlap's simple action which
+ * so there's only ever one of these in memory and that works. No need to
+ * implement the Action class ourselves.
  */
 public class ScoutActionType implements ActionType {
     private final static String name = "Scouttype";
