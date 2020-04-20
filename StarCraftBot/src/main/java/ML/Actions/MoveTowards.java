@@ -1,10 +1,13 @@
 package ML.Actions;
 
+import Agents.IntelligenceAgent;
 import bwapi.Game;
 import bwapi.Position;
 import bwapi.Unit;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -32,8 +35,15 @@ public class MoveTowards extends Action implements Serializable {
             }
         }
 
-        if(closestUnit != null) {
+        if(closestUnit != null) { // if there is a unit in vision
             unit.move(new Position(closestUnit.getX(), closestUnit.getY()));
+        } else { // if there is not a unit in vision use the knowledge we have of their bases
+           IntelligenceAgent intel =  IntelligenceAgent.getInstance(game);
+           HashSet<Position> enemyBuildings = intel.getEnemyBuildingMemory();
+           Iterator<Position> enemyBuildingsItr = enemyBuildings.iterator();
+           if(enemyBuildingsItr.hasNext()) { // if there is no knowledge of a base then nothing will happen still
+               unit.move(enemyBuildingsItr.next());
+           }
         }
     }
 

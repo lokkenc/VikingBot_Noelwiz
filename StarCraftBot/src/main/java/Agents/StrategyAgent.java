@@ -35,7 +35,7 @@ public class StrategyAgent extends DefaultBWListener{
     public void onStart() {
         game = bwClient.getGame();
         self = game.self();
-        intel =  new IntelligenceAgent(self, game);
+        intel =  IntelligenceAgent.getInstance(game);
         combat = new CombatAgent(intel);
         economy = new EconomyAgent(intel);
 

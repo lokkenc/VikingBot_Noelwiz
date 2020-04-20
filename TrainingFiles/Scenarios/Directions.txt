@@ -1,0 +1,1 @@
+Add the Scenarios folder to StarCraft1.16\maps directory to get them to appear in the ChaosLauncher map selection.
