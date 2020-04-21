@@ -16,6 +16,8 @@ import java.util.List;
 import static Planning.GameStatus.*;
 
 public class IntelligenceAgent {
+    private static IntelligenceAgent onlyInstance = null;
+
     private Race myrace;
     private Race enemyRace;
     private Player self;
@@ -29,13 +31,22 @@ public class IntelligenceAgent {
     private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
     private int scoutTimer;
 
-    public IntelligenceAgent(Player self, Game game) {
+    private IntelligenceAgent(Player self, Game game) {
         this.self = self;
         this.game = game;
-        //myrace = self.getRace();
-        //enemyRace = game.enemy().getRace();
+        myrace = self.getRace();
+        enemyRace = game.enemy().getRace();
         myrace = Race.Protoss;
         enemyRace = Race.Terran;
+
+    }
+
+    public static IntelligenceAgent getInstance(Game game) {
+        if(onlyInstance == null) {
+            onlyInstance = new IntelligenceAgent(game.self(), game);
+        }
+
+        return onlyInstance;
     }
 
     public Player getSelf() {

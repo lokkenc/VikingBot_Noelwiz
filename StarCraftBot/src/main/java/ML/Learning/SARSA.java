@@ -122,7 +122,7 @@ public class SARSA implements Serializable {
             ret = f.getParentFile().mkdirs();
 
             if(!ret)
-                System.out.println("SARSA: Error: failed to create directories to QTable file.");
+
 
             fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -177,7 +177,7 @@ public class SARSA implements Serializable {
             ret = f.getParentFile().mkdirs();
 
             if(!ret)
-                System.out.println("SARSA: Error: failed to create directories to QTable file.");
+
 
             fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);

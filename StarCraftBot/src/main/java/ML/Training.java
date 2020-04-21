@@ -3,6 +3,7 @@ package ML;
 import Agents.CombatAgent;
 import Agents.IntelligenceAgent;
 import ML.Data.DataManager;
+import ML.Model.UnitClassification;
 import bwapi.*;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class Training extends DefaultBWListener{
 
     private int ML_Epoch = 14;
     private int frameCount = 0;
+    private int Epoch_Cycles = 0;
 
     public void run() {
         bwClient = new BWClient(this);
@@ -31,15 +33,19 @@ public class Training extends DefaultBWListener{
     public void onStart() {
         game = bwClient.getGame();
         self = game.self();
-        intel = new IntelligenceAgent(self, game);
+        intel = IntelligenceAgent.getInstance(game);
         combat = new CombatAgent(intel);
         
-        combat.addUnitTypeToModel(combat.getUnitClassification(UnitType.Protoss_Zealot));
+        combat.addUnitTypeToModel(UnitClassification.MELEE);
+        combat.addUnitTypeToModel(UnitClassification.RANGED);
         combat.loadModels();
     }
 
     @Override
     public void onFrame() {
+        intel.tabulateUnits(self);
+        intel.updateEnemyBuildingMemory(game);
+
         DataManager dm = combat.getDataManagers().get(0);
         //game.setTextSize(10);
         game.drawTextScreen(10, 10, "Playing as " + self.getName() + " - " + self.getRace());
