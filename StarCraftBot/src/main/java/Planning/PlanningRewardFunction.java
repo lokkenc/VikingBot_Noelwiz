@@ -14,6 +14,13 @@ public class PlanningRewardFunction implements RewardFunction {
         this.gameStatus = gameStatus;
     }
 
+    /**
+     * Given the current game state, and action, and a resultant state, returns the reward value of that action
+     * @param s A State describing the current {@link PlanningState}
+     * @param a The Action being taken
+     * @param sprime The Game State after Action a is taken
+     * @return the reward value should that action be taken
+     */
     public double reward(State s, Action a, State sprime) {
         switch (gameStatus) {
             case EARLY:
@@ -25,6 +32,14 @@ public class PlanningRewardFunction implements RewardFunction {
         }
     }
 
+    /**
+     * Returns the reward for the given action if the {@link GameStatus} is in the early game
+     * @param s A State describing the current {@link PlanningState}
+     * @param a The Action being taken
+     * @param sprime The Game State after Action a is taken
+     * @return the reward value should that action be taken
+     * @see #reward(State, Action, State)
+     */
     private double earlyGameReward(State s, Action a, State sprime) {
         int targetNumWorkers = 12 * (int) s.get("numBases");
         int targetMineralProduction = 500; //500 minerals per minute
@@ -110,15 +125,37 @@ public class PlanningRewardFunction implements RewardFunction {
         }
         return reward;
     }
+
+    /**
+     * Returns the reward for the given action if the {@link GameStatus} is in the mid game
+     * @param s A State describing the current {@link PlanningState}
+     * @param a The Action being taken
+     * @param sprime The Game State after Action a is taken
+     * @return the reward value should that action be taken
+     * @see #reward(State, Action, State)
+     */
     private double midGameReward(State s, Action a, State sprime) {
         double reward = 0.0;
         return reward;
     }
+
+    /**
+     * Returns the reward for the given action if the {@link GameStatus} is in the late game
+     * @param s A State describing the current {@link PlanningState}
+     * @param a The Action being taken
+     * @param sprime The Game State after Action a is taken
+     * @return the reward value should that action be taken
+     * @see #reward(State, Action, State)
+     */
     private double lateGameReward(State s, Action a, State sprime) {
         double reward = 0.0;
         return reward;
     }
 
+    /**
+     * Sets the game status (Early, mid, or late)
+     * @param gameStatus a {@link GameStatus} that represents the current game status
+     */
     public void setGameStatus(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
     }

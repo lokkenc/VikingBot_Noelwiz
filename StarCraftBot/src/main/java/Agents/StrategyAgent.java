@@ -26,11 +26,17 @@ public class StrategyAgent extends DefaultBWListener{
     private boolean training = true;
     private int frameCount = 0;
 
+    /**
+     * starts execution of the bot
+     */
     public void run() {
         bwClient = new BWClient(this);
         bwClient.startGame();
     }
 
+    /**
+     * Initializes agents and analyzes map before game begins
+     */
     @Override
     public void onStart() {
         game = bwClient.getGame();
@@ -50,6 +56,11 @@ public class StrategyAgent extends DefaultBWListener{
         combat.loadModels();
     }
 
+    /**
+     * Runs on every frame
+     * Checks if the first action in priority queue can be executed, and performs action if possible.
+     * Also loops through units to perform basic tasks such as farming resources
+     */
     @Override
     public void onFrame() {
         //game.setTextSize(10);
@@ -118,11 +129,20 @@ public class StrategyAgent extends DefaultBWListener{
         }
     }
 
+    /**
+     * @param unit Unit that should be destroyed
+     * @see IntelligenceAgent#onUnitDestroy(Unit)
+     */
     @Override
     public void onUnitDestroy(Unit unit) {
         intel.onUnitDestroy(unit);
     }
 
+    /**
+     * Adds revealed unit to game intelligence
+     * @param unit Unit that has been revealed
+     * @see IntelligenceAgent#onUnitShow(Unit)
+     */
     @Override
     public void onUnitShow(Unit unit) {
         intel.onUnitShow(unit);
@@ -131,16 +151,28 @@ public class StrategyAgent extends DefaultBWListener{
     }
 
 
+    /**
+     * Runs when the game ends
+     * @param isWinner true if player has won the game, false otherwise
+     */
     @Override
     public void onEnd(boolean isWinner) {
         combat.storeModels();
     }
 
+    /**
+     * main method
+     */
     public static void main(String[] args) {
         new StrategyAgent().run();
     }
 
 
+    /**
+     * Checks if a given action can possibly be executed at the present time
+     * @param a the action being taken
+     * @return true if action can be taken, false otherwise
+     */
     private boolean canExecute(Action a){
         boolean result = false;
 

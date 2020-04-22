@@ -32,9 +32,10 @@ public class StarcraftEnvironment implements Environment {
 
 
     /**
-     * Constructer for the enviorment. Takes a reward function to
-     * use for calulating rewards.
-     * @param rf
+     * Constructer for the enviorment
+     * @param rf the reward function that should be used to calculate rewards
+     * @param intelligenceAgent the {@link IntelligenceAgent} associated with the current game
+     * @param model the {@link StarcraftModel} that is associated with this environment
      */
     public StarcraftEnvironment(RewardFunction rf, IntelligenceAgent intelligenceAgent, StarcraftModel model){
         this.intelligenceAgent = intelligenceAgent;
@@ -50,7 +51,7 @@ public class StarcraftEnvironment implements Environment {
 
     /**
      * Change the reward function used.
-     * @param rf
+     * @param rf the reward function that should be used
      */
     public void UpdateRewardFunction(RewardFunction rf){
         rewardFunction = rf;
@@ -60,7 +61,7 @@ public class StarcraftEnvironment implements Environment {
     /**
      * Calls some unknown functions in the Agents.IntelligenceAgent to figure
      * out the current state of the game.
-     * @return
+     * @return a {@link State} representing the current observation
      */
     public State currentObservation() {
         State retState;
@@ -88,8 +89,8 @@ public class StarcraftEnvironment implements Environment {
 
     /**
      * Intercepts the action given by executeAction(Action) and sends it to the bot to be done.
-     * @param action
-     * @return
+     * @param action the action to be executed
+     * @return the {@link EnvironmentOutcome} that results from the action being taken
      */
     public EnvironmentOutcome executeAction(Action action) {
         ActionParserHelper aph = new ActionParserHelper();
@@ -141,6 +142,9 @@ public class StarcraftEnvironment implements Environment {
                 resultingstate,  /*reward*/ PreviousReward, isTerminalState(resultingstate));
     }
 
+    /**
+     * @return #PreviousReward
+     */
     public double lastReward() {
         return PreviousReward;
     }
@@ -158,7 +162,7 @@ public class StarcraftEnvironment implements Environment {
     /**
      * Check if we have no town centers, or if the
      * enemy has no town centers, or if the game is done.
-     * @return
+     * @return true if the game is in terminal state, false otherwise
      */
     public boolean isTerminalState(State s) {
         boolean terminal = false;
