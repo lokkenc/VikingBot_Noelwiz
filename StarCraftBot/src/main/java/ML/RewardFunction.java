@@ -4,16 +4,24 @@ import ML.Actions.Action;
 import ML.Actions.ActionType;
 import ML.Range.HpRange;
 import ML.States.State;
+import exception.IncorrectActionTypeException;
 
 public class RewardFunction {
+    private static final double defaultReward = 100.0;
+    private static final double rewardScalar = 1.0;
+    private static final double skirmishScalar = 1.0;
+    private static final double attackScalar = 1.0;
+    private static final double goHomeScalar = 1.0;
+    private static final double moveScalar = 1.0;
+    private static final double retreatScalar = 1.0;
+
     /**
      * This function returns the reward to be given based on the action taken and the difference in states
      * @param current The state before the action is taken
      * @param action The action that was performed
-     * @param next The state after the action is taken
      * @return A Double that contains the value of the reward
      */
-    public static double getRewardValue(State current, Action action, State next) {
+    public static double getRewardValue(State current, Action action) {
         if (action.getType() == ActionType.ATTACK) { // if we are attacking then we can check damage done
             if(!current.getSkirmish()) { // if the AI Planner told us to stop fighting we should be returning to home
                 return -1;
@@ -65,5 +73,90 @@ public class RewardFunction {
                 return -1;
             }
         }
+    }
+
+    /**
+     * This function returns the reward to be given based on the action taken and the difference in states
+     * @param current The state before the action is taken
+     * @param action The action that was performed
+     * @param next The state after the action is taken
+     * @return A Double that contains the value of the reward
+     */
+    public static double getRewardValue(State current, Action action, State next) {
+        double reward = 0;
+
+        // Information on total units and change in total units
+        int currentTotalNumberOfEnemies = current.getNumberOfEnemies().getValue();
+        int nextTotalNumberOfEnemies = next.getNumberOfEnemies().getValue();
+        int totalNumberOfEnemiesDiff = nextTotalNumberOfEnemies - currentTotalNumberOfEnemies;
+        int currentTotalNumberOfFriendlies = current.getNumberOfFriendlies().getValue();
+        int nextTotalNumberOfFriendlies = next.getNumberOfFriendlies().getValue();
+        int totalNumberOfFriendliesDiff = nextTotalNumberOfFriendlies - currentTotalNumberOfFriendlies;
+
+        // Information on total HP and change in total HP
+        double currentTotalEnemyHp = current.getEnemyHp().getValue();
+        double currentTotalFriendlyHp = current.getFriendlyHp().getValue();
+        double nextTotalEnemyHp = next.getEnemyHp().getValue();
+        double nextTotalFriendlyHp = next.getFriendlyHp().getValue();
+        double totalEnemyHpDiff = nextTotalEnemyHp - currentTotalEnemyHp;
+        double totalFriendlyHpDiff = nextTotalFriendlyHp - currentTotalFriendlyHp;
+        double normalizedHpFactor = currentTotalEnemyHp / currentTotalFriendlyHp;
+
+        if(action.getType() == ActionType.ATTACK) {
+            // If skirmish is false, the only valid action is GoHome
+            if(!current.getSkirmish()) {
+                reward = -(defaultReward * rewardScalar * skirmishScalar);
+            }
+            else {
+                // Check if there are enemies nearby
+                if (currentTotalNumberOfEnemies == 0) {
+                    reward = -(defaultReward * rewardScalar * attackScalar);
+                }
+                else {
+                    // Calculate the reward based on the differences in enemy and friendly HP
+                    reward = (totalEnemyHpDiff - (normalizedHpFactor * totalFriendlyHpDiff)) / 10;
+
+                    reward *= attackScalar;
+                }
+            }
+        }
+        else if(action.getType() == ActionType.GOHOME) {
+            // If skirmish is true, all actions except GoHome are valid
+            if(current.getSkirmish()) {
+                reward = -(defaultReward * rewardScalar * skirmishScalar);
+            }
+            else {
+                reward = (defaultReward * rewardScalar * goHomeScalar);
+            }
+        }
+        else if(action.getType() == ActionType.MOVETOWARDS) {
+            // If skirmish is false, the only valid action is GoHome
+            if(!current.getSkirmish()) {
+                reward = -(defaultReward * rewardScalar * skirmishScalar);
+            }
+            else {
+                reward = (defaultReward * rewardScalar * moveScalar);
+            }
+        }
+        else if(action.getType() == ActionType.RETREAT) {
+            // If skirmish is false, the only valid action is GoHome
+            if(!current.getSkirmish()) {
+                reward = -(defaultReward * rewardScalar * skirmishScalar);
+            }
+            else {
+                // Check if there are enemies nearby
+                if (currentTotalNumberOfEnemies == 0) {
+                    reward = -(defaultReward * rewardScalar * retreatScalar);
+                }
+                else {
+                    reward = (defaultReward * rewardScalar * retreatScalar);
+                }
+            }
+        }
+        else {
+            throw new IncorrectActionTypeException("ActionType is unrecognized: " + action.getType().getName());
+        }
+
+        return reward;
     }
 }

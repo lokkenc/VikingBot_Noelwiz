@@ -12,13 +12,13 @@ import static ML.Range.UnitsRange.*;
  */
 public class State implements Serializable {
     private static final long serialVersionUID = 1L;
-    private boolean onCoolDown;
-    private Distance closestEnemy;
-    private Units numberOfEnemies;
-    private Units numberOfFriendlies;
-    private Hp enemyHp;
-    private Hp friendlyHp;
-    private boolean skirmish;
+    private final boolean onCoolDown;
+    private final Distance closestEnemy;
+    private final Units numberOfEnemies;
+    private final Units numberOfFriendlies;
+    private final Hp enemyHp;
+    private final Hp friendlyHp;
+    private final boolean skirmish;
 
     /**
      * Initializes the state given the current information around a specific unit.

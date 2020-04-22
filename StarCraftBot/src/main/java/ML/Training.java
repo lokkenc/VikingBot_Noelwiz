@@ -2,6 +2,7 @@ package ML;
 
 import Agents.CombatAgent;
 import Agents.IntelligenceAgent;
+import ML.Actions.ActionType;
 import ML.Data.DataManager;
 import ML.Model.UnitClassification;
 import bwapi.*;
@@ -39,6 +40,7 @@ public class Training extends DefaultBWListener{
         combat.addUnitTypeToModel(UnitClassification.MELEE);
         combat.addUnitTypeToModel(UnitClassification.RANGED);
         combat.loadModels();
+        combat.setSkirmish(true);
     }
 
     @Override
@@ -53,6 +55,11 @@ public class Training extends DefaultBWListener{
             game.drawTextScreen(10, 50, "Type: " + dm.getClassification());
             game.drawTextScreen(10, 60, "Data Points: " + dm.getDataPoints().size());
             game.drawTextScreen(10, 70, "Unique States: " + dm.getStateFrequency().keySet().size());
+            game.drawTextScreen(10, 80, "Average Reward: " + dm.getAverageReward());
+            game.drawTextScreen(10, 90, "Avg. Attack Reward: " + dm.getAverageReward(ActionType.valueOf("Attack")));
+            game.drawTextScreen(10, 100, "Avg. GoHome Reward: " + dm.getAverageReward(ActionType.valueOf("GoHome")));
+            game.drawTextScreen(10, 110, "Avg. MoveTowards Reward: " + dm.getAverageReward(ActionType.valueOf("MoveTowards")));
+            game.drawTextScreen(10, 120, "Avg. Retreat Reward: " + dm.getAverageReward(ActionType.valueOf("Retreat")));
         }
         game.drawTextScreen(10, 230, "Resources: " + self.minerals() + " minerals,  " + self.gas() + " gas, " + (self.supplyUsed() / 2) + "/" + (self.supplyTotal() / 2) + " psi");
 

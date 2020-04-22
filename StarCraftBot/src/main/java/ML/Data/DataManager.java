@@ -1,6 +1,7 @@
 package ML.Data;
 
 import ML.Actions.Action;
+import ML.Actions.ActionType;
 import ML.Model.UnitClassification;
 import ML.States.State;
 import bwapi.UnitType;
@@ -91,6 +92,45 @@ public class DataManager implements Serializable {
         }
 
         return rewards;
+    }
+
+    /**
+     * Gets the average of all of the rewards that have been collected.
+     * @return returns a double of the average over all collected rewards.
+     */
+    public double getAverageReward() {
+        double avg = 0;
+
+        for(DataPoint point : dataPoints) {
+            avg += point.getReward();
+        }
+
+        if(!dataPoints.isEmpty()) {
+            avg /= dataPoints.size();
+        }
+
+        return avg;
+    }
+
+    /**
+     * Gets the average of all rewards given to a specific ActionType.
+     * @param type the ActionType for filtering rewards.
+     * @return returns a double of the average over all collected rewards for the specified ActionType.
+     */
+    public double getAverageReward(ActionType type) {
+        double avg = 0;
+
+        for(DataPoint point : dataPoints) {
+            if(point.getAction().getType() == type) {
+                avg += point.getReward();
+            }
+        }
+
+        if(!dataPoints.isEmpty()) {
+            avg /= dataPoints.size();
+        }
+
+        return avg;
     }
 
     /**
