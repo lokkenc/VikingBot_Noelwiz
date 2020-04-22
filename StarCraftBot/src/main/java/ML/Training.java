@@ -39,6 +39,7 @@ public class Training extends DefaultBWListener{
         combat.addUnitTypeToModel(UnitClassification.MELEE);
         combat.addUnitTypeToModel(UnitClassification.RANGED);
         combat.loadModels();
+        combat.setSkirmish(true);
     }
 
     @Override

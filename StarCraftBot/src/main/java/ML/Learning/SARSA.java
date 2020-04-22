@@ -121,9 +121,6 @@ public class SARSA implements Serializable {
 
             ret = f.getParentFile().mkdirs();
 
-            if(!ret)
-
-
             fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(qTable);
@@ -175,8 +172,6 @@ public class SARSA implements Serializable {
             File f = new File("TrainingFiles/Tables/" + unitClass.toString() + "Data.ser");
 
             ret = f.getParentFile().mkdirs();
-
-            if(!ret)
 
 
             fos = new FileOutputStream(f);
