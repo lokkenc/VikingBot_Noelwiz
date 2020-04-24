@@ -45,7 +45,7 @@ public class StateSpaceManager {
                         for (UnitsRange ufRange : UnitsRange.values()) {
                             for (HpRange ehpRange : HpRange.values()) {
                                 for (HpRange fhpRange : HpRange.values()) {
-                                    states.add(new State(onCoolDown, new Distance(dRange), new Units(ueRange), new Units(ufRange), new Hp(ehpRange), new Hp(fhpRange), skirmish));
+                                    states.add(new State(onCoolDown, new Distance(dRange), new Units(ueRange), new Units(ufRange), new Hp(ehpRange), new Hp(fhpRange), skirmish, null));
                                 }
                             }
                         }

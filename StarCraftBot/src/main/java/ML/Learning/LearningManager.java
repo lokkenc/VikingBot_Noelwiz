@@ -29,7 +29,7 @@ public class LearningManager implements Serializable {
         this.unitClass = unitClass;
         spaceManager = new StateSpaceManager();
         sarsa = new SARSA(unitClass, spaceManager);
-        greedyActionChooser = new GreedyActionChooser(sarsa.getQTable());
+        greedyActionChooser = new GreedyActionChooser();
     }
 
     /**
@@ -82,7 +82,7 @@ public class LearningManager implements Serializable {
      * @return returns the Action that should be executed in the current State.
      */
     public Action getNextAction(State state) {
-        return greedyActionChooser.chooseAction(spaceManager, state);
+        return greedyActionChooser.chooseAction(spaceManager, state, sarsa.getQTable());
     }
 
     /**

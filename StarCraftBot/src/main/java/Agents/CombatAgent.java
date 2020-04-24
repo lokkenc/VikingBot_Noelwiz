@@ -214,7 +214,7 @@ public class CombatAgent {
         numberOfEnemies = new Units(enemiesInRange);
         numberOfFriendlies = new Units(friendliesInRange);
 
-        return new State(cooldown, closestEnemy, numberOfEnemies, numberOfFriendlies, enemyHp, friendlyHp, this.skirmish);
+        return new State(cooldown, closestEnemy, numberOfEnemies, numberOfFriendlies, enemyHp, friendlyHp, this.skirmish, getUnitClassification(unit.getType()));
 
     }
 

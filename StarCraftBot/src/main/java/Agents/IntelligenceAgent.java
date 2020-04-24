@@ -163,19 +163,25 @@ public class IntelligenceAgent {
         for (Position pos: enemyBuildingMemory) {
             TilePosition tileCorrespondingToPos = new TilePosition(pos.getX()/32, pos.getY()/32);
 
-            if(game.isVisible(tileCorrespondingToPos)) {
-                boolean buildingStillThere = false;
-                for (Unit enemyUnit: game.enemy().getUnits()) {
-                    if(enemyUnit.getType().isBuilding() && enemyUnit.getOrderTargetPosition().equals(pos)) {
+            boolean buildingStillThere = false;
+            int i = 0;
+            List<Unit> enemyUnits = game.enemy().getUnits();
+            while(game.isVisible(tileCorrespondingToPos) && i < enemyUnits.size()) {
+                if(enemyUnits.get(i).getTargetPosition().equals(new Position(0,0)) && enemyUnits.get(i).getType().isBuilding()) {
+                    buildingStillThere = true;
+                    break;
+                } else {
+                    if (enemyUnits.get(i).getType().isBuilding() && enemyUnits.get(i).getOrderTargetPosition().equals(pos)) {
                         buildingStillThere = true;
                         break;
                     }
                 }
+                i++;
+            }
 
-                if (!buildingStillThere) {
-                    enemyBuildingMemory.remove(pos);
-                    break;
-                }
+            if (!buildingStillThere && i >= enemyUnits.size() && i != 0) {
+                enemyBuildingMemory.remove(pos);
+                break;
             }
         }
     }
