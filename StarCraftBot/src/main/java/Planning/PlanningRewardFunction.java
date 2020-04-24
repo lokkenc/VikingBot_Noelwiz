@@ -1,6 +1,8 @@
 package Planning;
 
 import Planning.Actions.ActionParserHelper;
+import Planning.Actions.BuildAction;
+import Planning.Actions.TrainAction;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
@@ -41,7 +43,7 @@ public class PlanningRewardFunction implements RewardFunction {
      * @return the reward value should that action be taken
      * @see #reward(State, Action, State)
      */
-    private double earlyGameReward(State s, Action a, State sprime) {
+    /*private double earlyGameReward(State s, Action a, State sprime) {
         int targetNumWorkers = 12 * (int) s.get("numBases");
         int targetMineralProduction = 500; //500 minerals per minute
         int targetGasProduction = 250; //250 units per minute
@@ -131,6 +133,84 @@ public class PlanningRewardFunction implements RewardFunction {
                         reward += targetArmySize - curArmy;
                     } else {
                         reward -= 100;
+                    }
+                }
+                break;
+            case UPGRADE:
+                reward -= 100;
+                break;
+        }
+        return reward;
+    }*/
+
+    private double earlyGameReward(State s, Action a, State sprime) {
+        int targetNumWorkers = 12 * (int) s.get("numBases");
+        int targetMineralProduction = 500; //500 minerals per minute
+        int targetGasProduction = 250; //250 units per minute
+        int targetArmySize = 50;
+        int maxTimeSinceLastScout = 3600;
+        int incentiveMultiplier = 100;
+        int populationCap = 9; //POSSIBLE VARIABLE IN STATE ???
+        double reward = 0.0;
+        ActionParserHelper aph = new ActionParserHelper();
+        switch(aph.GetActionType(a)) {
+            case ATTACK :
+                reward -= 500;
+                break;
+            case BUILD:
+                //Get information of what is being built?
+                Random rand = new Random();
+                String toBuild = ((BuildAction) a).getUnitToBuild();
+                if (toBuild.equals("pop")) {
+                    reward += 50;
+                    if ((int) s.get("numWorkers") == populationCap)
+                        reward += 75;
+                    if (rand.nextInt(10) == 2)
+                        reward += 50;
+                } else if (toBuild.equals("train")) {
+                    reward += 50;
+                    if ((int) s.get("numWorkers") > targetNumWorkers) {
+                        reward += 75;
+                    } if (rand.nextInt(10) == 2)
+                        reward += 50;
+                } else {
+                    reward -= 50;
+                }
+
+
+                //PLACEHOLDER REWARD
+                break;
+            case EXPAND:
+                if ((int) s.get("numBases") < 2) {
+                    //Give reward if preconditions for expanding are met
+                    if ((int) s.get("numWorkers") >= targetNumWorkers && (int) s.get("mineralProductionRate") >= targetMineralProduction
+                            && (int) s.get("gasProductionRate") >= targetGasProduction) {
+                        reward += 500;
+                    }
+                    else {
+                        reward -= 500;
+                    }
+                } else {
+                    reward -= 500;
+                } break;
+            case SCOUT :
+                //Checks the last time scouted and gives reward based on that
+                if ((int) s.get("timeSinceLastScout") > maxTimeSinceLastScout) {
+                    reward += (int) s.get("timeSinceLastScout") / 100;
+                } else {
+                    reward -= (int) s.get("timeSinceLastScout") / 100;
+                }
+                break;
+            case TRAIN:
+                //TEMPORARY REWARD
+                String toTrain = ((TrainAction) a).getUnitToTrain();
+                if (toTrain.equals("worker")) {
+                    if ((int) s.get("numWorkers") < targetNumWorkers)
+                        reward += 50;
+                    reward += 50;
+                } else if (toTrain.equals("combatUnit")) {
+                    if ((int) s.get("numWorkers") >= targetNumWorkers) {
+                        reward += 150;
                     }
                 }
                 break;

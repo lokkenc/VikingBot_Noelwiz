@@ -70,7 +70,7 @@ public class IntelligenceAgent {
     public void tabulateUnits (Player self) {
         unitMemory.clear();
         for (Unit unit : self.getUnits()) {
-            if (unit.isTraining()) {
+            if (!unit.isCompleted()) {
                 continue;
             }
 

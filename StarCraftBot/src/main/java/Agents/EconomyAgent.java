@@ -139,7 +139,7 @@ public class EconomyAgent {
         for (Unit gateway: intel.getUnitsListOfType(UnitType.Protoss_Gateway)) {
             List<UnitType> trainingQueue = gateway.getTrainingQueue();
             if (trainingQueue.size() < 5) {
-                gateway.train(UnitType.Protoss_Probe);
+                gateway.train(UnitType.Protoss_Zealot);
             }
         }
     }
