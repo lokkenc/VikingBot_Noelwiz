@@ -1,4 +1,4 @@
-package Planning;
+package planning;
 
 import burlap.behavior.valuefunction.QFunction;
 import burlap.behavior.valuefunction.QValue;

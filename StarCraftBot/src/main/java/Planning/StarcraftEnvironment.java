@@ -1,10 +1,10 @@
-package Planning;
+package planning;
 
-import Agents.EconomyAgent;
-import Agents.IntelligenceAgent;
-import Planning.Actions.ActionParserHelper;
-import Planning.Actions.BuildAction;
-import Planning.Actions.TrainAction;
+import agents.EconomyAgent;
+import agents.IntelligenceAgent;
+import planning.actions.ActionParserHelper;
+import planning.actions.BuildAction;
+import planning.actions.TrainAction;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;

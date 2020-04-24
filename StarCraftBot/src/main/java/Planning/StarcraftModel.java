@@ -1,10 +1,10 @@
-package Planning;
+package planning;
 
-import Knowledge.GeneralRaceProductionKnowledge;
-import Knowledge.ProtossGeneralKnowledge;
-import Knowledge.TerrenGeneralKnowledge;
-import Knowledge.ZergGeneralKnowledge;
-import Planning.Actions.ActionParserHelper;
+import knowledge.GeneralRaceProductionKnowledge;
+import knowledge.ProtossGeneralKnowledge;
+import knowledge.TerrenGeneralKnowledge;
+import knowledge.ZergGeneralKnowledge;
+import planning.actions.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;

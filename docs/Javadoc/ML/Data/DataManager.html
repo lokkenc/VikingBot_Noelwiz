@@ -116,7 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">ML.Data</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">ml.data</a></div>
 <h2 title="Class DataManager" class="title">Class DataManager</h2>
 </div>
 <div class="contentContainer">
@@ -124,7 +124,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>ML.Data.DataManager</li>
+<li>ml.data.DataManager</li>
 </ul>
 </li>
 </ul>
@@ -171,7 +171,7 @@ implements java.io.Serializable</pre>
 </tr>
 <tr class="rowColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(bwapi.UnitType,java.util.Set)">DataManager</a></span>&#8203;(bwapi.UnitType&nbsp;type,
-           java.util.Set&lt;<a href="../States/State.html" title="class in ML.States">State</a>&gt;&nbsp;states)</code></th>
+           java.util.Set&lt;<a href="../States/State.html" title="class in ml.state">State</a>&gt;&nbsp;states)</code></th>
 <td class="colLast">
 <div class="block">Initializes the DataManager with the type of unit it's collecting data on as well as all possible States in the
  State space.</div>
@@ -197,16 +197,16 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addDataPoint(ML.Data.DataPoint)">addDataPoint</a></span>&#8203;(<a href="DataPoint.html" title="class in ML.Data">DataPoint</a>&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addDataPoint(ml.data.DataPoint)">addDataPoint</a></span>&#8203;(<a href="DataPoint.html" title="class in ml.data">DataPoint</a>&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block">Adds a DataPoint to collection of DataPoints being stored within the DataManager.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addDataPoint(ML.States.State,ML.Actions.Action,ML.States.State,double,double)">addDataPoint</a></span>&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;current,
-            <a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;action,
-            <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;next,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addDataPoint(ml.state.State,ml.actions.Action,ml.state.State,double,double)">addDataPoint</a></span>&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;current,
+            <a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;action,
+            <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;next,
             double&nbsp;reward,
             double&nbsp;qvalue)</code></th>
 <td class="colLast">
@@ -215,13 +215,13 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addState(ML.States.State)">addState</a></span>&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;state)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addState(ml.state.State)">addState</a></span>&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;state)</code></th>
 <td class="colLast">
 <div class="block">Add a State to the stateFrequency map.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="DataPoint.html" title="class in ML.Data">DataPoint</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.ArrayList&lt;<a href="DataPoint.html" title="class in ml.data">DataPoint</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDataPoints()">getDataPoints</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets an ArrayList of all of the DataPoints that have been collected.</div>
@@ -229,7 +229,7 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFrequency(ML.States.State)">getFrequency</a></span>&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;state)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFrequency(ml.state.State)">getFrequency</a></span>&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;state)</code></th>
 <td class="colLast">
 <div class="block">Gets the integer frequency of a specific State.</div>
 </td>
@@ -242,7 +242,7 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code><a href="../States/State.html" title="class in ML.States">State</a></code></td>
+<td class="colFirst"><code><a href="../States/State.html" title="class in ml.state">State</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxFrequencyState()">getMaxFrequencyState</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets the State that has the largest frequency.</div>
@@ -263,7 +263,7 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>java.util.HashMap&lt;<a href="../States/State.html" title="class in ML.States">State</a>,&#8203;java.lang.Integer&gt;</code></td>
+<td class="colFirst"><code>java.util.HashMap&lt;<a href="../States/State.html" title="class in ml.state">State</a>,&#8203;java.lang.Integer&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getStateFrequency()">getStateFrequency</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets the stateFrequency map.</div>
@@ -321,7 +321,7 @@ implements java.io.Serializable</pre>
 <li class="blockList">
 <h4>DataManager</h4>
 <pre>public&nbsp;DataManager&#8203;(bwapi.UnitType&nbsp;type,
-                   java.util.Set&lt;<a href="../States/State.html" title="class in ML.States">State</a>&gt;&nbsp;states)</pre>
+                   java.util.Set&lt;<a href="../States/State.html" title="class in ml.state">State</a>&gt;&nbsp;states)</pre>
 <div class="block">Initializes the DataManager with the type of unit it's collecting data on as well as all possible States in the
  State space.</div>
 <dl>
@@ -341,13 +341,13 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="addDataPoint(ML.Data.DataPoint)">
+<a id="addDataPoint(ml.data.DataPoint)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addDataPoint</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;addDataPoint&#8203;(<a href="DataPoint.html" title="class in ML.Data">DataPoint</a>&nbsp;point)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;addDataPoint&#8203;(<a href="DataPoint.html" title="class in ml.data">DataPoint</a>&nbsp;point)</pre>
 <div class="block">Adds a DataPoint to collection of DataPoints being stored within the DataManager.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -355,15 +355,15 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="addDataPoint(ML.States.State,ML.Actions.Action,ML.States.State,double,double)">
+<a id="addDataPoint(ml.state.State,ml.actions.Action,ml.state.State,double,double)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addDataPoint</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;addDataPoint&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;current,
-                         <a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;action,
-                         <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;next,
+<pre class="methodSignature">public&nbsp;void&nbsp;addDataPoint&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;current,
+                         <a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;action,
+                         <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;next,
                          double&nbsp;reward,
                          double&nbsp;qvalue)</pre>
 <div class="block">Constructs and adds a DataPoint to the collection of DataPoints being stored within the DataManager.</div>
@@ -377,13 +377,13 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="addState(ML.States.State)">
+<a id="addState(ml.state.State)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addState</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;addState&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;state)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;addState&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;state)</pre>
 <div class="block">Add a State to the stateFrequency map.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -419,13 +419,13 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="getFrequency(ML.States.State)">
+<a id="getFrequency(ml.state.State)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getFrequency</h4>
-<pre class="methodSignature">public&nbsp;int&nbsp;getFrequency&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;state)</pre>
+<pre class="methodSignature">public&nbsp;int&nbsp;getFrequency&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;state)</pre>
 <div class="block">Gets the integer frequency of a specific State.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -455,7 +455,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getMaxFrequencyState</h4>
-<pre class="methodSignature">public&nbsp;<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;getMaxFrequencyState()</pre>
+<pre class="methodSignature">public&nbsp;<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;getMaxFrequencyState()</pre>
 <div class="block">Gets the State that has the largest frequency.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -469,7 +469,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getDataPoints</h4>
-<pre class="methodSignature">public&nbsp;java.util.ArrayList&lt;<a href="DataPoint.html" title="class in ML.Data">DataPoint</a>&gt;&nbsp;getDataPoints()</pre>
+<pre class="methodSignature">public&nbsp;java.util.ArrayList&lt;<a href="DataPoint.html" title="class in ml.data">DataPoint</a>&gt;&nbsp;getDataPoints()</pre>
 <div class="block">Gets an ArrayList of all of the DataPoints that have been collected.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -483,7 +483,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getStateFrequency</h4>
-<pre class="methodSignature">public&nbsp;java.util.HashMap&lt;<a href="../States/State.html" title="class in ML.States">State</a>,&#8203;java.lang.Integer&gt;&nbsp;getStateFrequency()</pre>
+<pre class="methodSignature">public&nbsp;java.util.HashMap&lt;<a href="../States/State.html" title="class in ml.state">State</a>,&#8203;java.lang.Integer&gt;&nbsp;getStateFrequency()</pre>
 <div class="block">Gets the stateFrequency map.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

@@ -116,7 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">ML.Data</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">ml.data</a></div>
 <h2 title="Class DataPoint" class="title">Class DataPoint</h2>
 </div>
 <div class="contentContainer">
@@ -124,7 +124,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>ML.Data.DataPoint</li>
+<li>ml.data.DataPoint</li>
 </ul>
 </li>
 </ul>
@@ -164,9 +164,9 @@ implements java.io.Serializable</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(ML.States.State,ML.Actions.Action,ML.States.State,double,double)">DataPoint</a></span>&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;current,
-         <a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;action,
-         <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;next,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(ml.state.State,ml.actions.Action,ml.state.State,double,double)">DataPoint</a></span>&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;current,
+         <a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;action,
+         <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;next,
          double&nbsp;reward,
          double&nbsp;qvalue)</code></th>
 <td class="colLast">
@@ -198,21 +198,21 @@ implements java.io.Serializable</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../Actions/Action.html" title="class in ML.Actions">Action</a></code></td>
+<td class="colFirst"><code><a href="../Actions/Action.html" title="class in ml.actions">Action</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAction()">getAction</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the Action executed in the current State.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="../States/State.html" title="class in ML.States">State</a></code></td>
+<td class="colFirst"><code><a href="../States/State.html" title="class in ml.state">State</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCurrent()">getCurrent</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the current State.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../States/State.html" title="class in ML.States">State</a></code></td>
+<td class="colFirst"><code><a href="../States/State.html" title="class in ml.state">State</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getNext()">getNext</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets the resulting next State from executing the Action in the current State.</div>
@@ -266,15 +266,15 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(ML.States.State,ML.Actions.Action,ML.States.State,double,double)">
+<a id="&lt;init&gt;(ml.state.State,ml.actions.Action,ml.state.State,double,double)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DataPoint</h4>
-<pre>public&nbsp;DataPoint&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;current,
-                 <a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;action,
-                 <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;next,
+<pre>public&nbsp;DataPoint&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;current,
+                 <a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;action,
+                 <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;next,
                  double&nbsp;reward,
                  double&nbsp;qvalue)</pre>
 <div class="block">Initialize the DataPoint with relative information such as the current State, executed Action, next State,
@@ -305,7 +305,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCurrent</h4>
-<pre class="methodSignature">public&nbsp;<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;getCurrent()</pre>
+<pre class="methodSignature">public&nbsp;<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;getCurrent()</pre>
 <div class="block">Get the current State.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -319,7 +319,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getAction</h4>
-<pre class="methodSignature">public&nbsp;<a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;getAction()</pre>
+<pre class="methodSignature">public&nbsp;<a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;getAction()</pre>
 <div class="block">Get the Action executed in the current State.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -333,7 +333,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getNext</h4>
-<pre class="methodSignature">public&nbsp;<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;getNext()</pre>
+<pre class="methodSignature">public&nbsp;<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;getNext()</pre>
 <div class="block">Gets the resulting next State from executing the Action in the current State.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

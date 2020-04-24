@@ -1,13 +1,12 @@
-package Planning;
+package planning;
 
-import Planning.Actions.ActionParserHelper;
-import Planning.Actions.BuildAction;
-import Planning.Actions.TrainAction;
+import planning.actions.ActionParserHelper;
+import planning.actions.BuildAction;
+import planning.actions.TrainAction;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class PlanningRewardFunction implements RewardFunction {

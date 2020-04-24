@@ -1,10 +1,10 @@
-package ML;
+package ml;
 
-import Agents.CombatAgent;
-import Agents.IntelligenceAgent;
-import ML.Actions.ActionType;
-import ML.Data.DataManager;
-import ML.Model.UnitClassification;
+import agents.CombatAgent;
+import agents.IntelligenceAgent;
+import ml.actions.ActionType;
+import ml.data.DataManager;
+import ml.model.UnitClassification;
 import bwapi.*;
 
 import java.util.ArrayList;
@@ -86,6 +86,6 @@ public class Training extends DefaultBWListener{
     }
 
     public static void main(String[] args) {
-        new ML.Training().run();
+        new ml.Training().run();
     }
 }

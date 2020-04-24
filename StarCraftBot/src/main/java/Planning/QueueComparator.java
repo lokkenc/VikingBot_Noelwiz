@@ -1,7 +1,7 @@
-package Planning;
+package planning;
 
 
-import Planning.Actions.ActionParserHelper;
+import planning.actions.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 
 import java.util.Comparator;
