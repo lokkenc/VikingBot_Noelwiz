@@ -1,10 +1,10 @@
-package ML;
+package ml;
 
-import ML.Actions.Action;
-import ML.Actions.ActionType;
-import ML.Model.UnitClassification;
-import ML.Range.HpRange;
-import ML.States.State;
+import ml.actions.Action;
+import ml.actions.ActionType;
+import ml.model.UnitClassification;
+import ml.range.HpRange;
+import ml.state.State;
 import exception.IncorrectActionTypeException;
 
 public class RewardFunction {

@@ -1,4 +1,4 @@
-package ML.Model;
+package ml.model;
 
 /**
  * Enum to classify units based on their weapon range

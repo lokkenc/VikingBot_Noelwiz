@@ -1,7 +1,7 @@
-package Planning;
+package planning;
 
-import Agents.IntelligenceAgent;
-import Planning.Actions.*;
+import agents.IntelligenceAgent;
+import planning.actions.*;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.singleagent.Episode;

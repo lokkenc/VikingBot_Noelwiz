@@ -1,4 +1,4 @@
-package ML.Actions;
+package ml.actions;
 
 import bwapi.Game;
 import bwapi.Position;

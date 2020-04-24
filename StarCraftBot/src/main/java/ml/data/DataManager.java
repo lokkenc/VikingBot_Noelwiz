@@ -1,10 +1,9 @@
-package ML.Data;
+package ml.data;
 
-import ML.Actions.Action;
-import ML.Actions.ActionType;
-import ML.Model.UnitClassification;
-import ML.States.State;
-import bwapi.UnitType;
+import ml.actions.Action;
+import ml.actions.ActionType;
+import ml.model.UnitClassification;
+import ml.state.State;
 
 import java.io.Serializable;
 import java.util.ArrayList;

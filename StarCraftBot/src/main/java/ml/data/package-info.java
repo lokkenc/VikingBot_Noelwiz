@@ -1,4 +1,4 @@
 /**
- * Provides the necessary classes for collecting and managing DataPoints (see the {@link ML.Data.DataPoint} class).
+ * Provides the necessary classes for collecting and managing DataPoints (see the {@link ml.data.DataPoint} class).
  */
-package ML.Data;
+package ml.data;

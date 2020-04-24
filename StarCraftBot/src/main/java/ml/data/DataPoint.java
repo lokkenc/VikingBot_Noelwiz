@@ -1,7 +1,7 @@
-package ML.Data;
+package ml.data;
 
-import ML.Actions.Action;
-import ML.States.State;
+import ml.actions.Action;
+import ml.state.State;
 
 import java.io.Serializable;
 import java.util.Objects;

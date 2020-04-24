@@ -1,7 +1,7 @@
-package ML.States;
+package ml.state;
 
-import ML.actions.*;
-import ML.Range.*;
+import ml.actions.*;
+import ml.range.*;
 
 import java.util.*;
 

@@ -1,14 +1,13 @@
-package ML.Learning;
+package ml.learning;
 
-import ML.Actions.Action;
-import ML.Data.DataManager;
-import ML.Model.UnitClassification;
-import ML.QTable;
-import ML.States.State;
-import ML.States.StateSpaceManager;
-import ML.RewardFunction;
+import ml.actions.Action;
+import ml.data.DataManager;
+import ml.model.UnitClassification;
+import ml.QTable;
+import ml.state.State;
+import ml.state.StateSpaceManager;
+import ml.RewardFunction;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.Map;
 import java.io.Serializable;

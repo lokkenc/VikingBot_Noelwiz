@@ -1,6 +1,6 @@
-package ML.Actions;
+package ml.actions;
 
-import Agents.IntelligenceAgent;
+import agents.IntelligenceAgent;
 import bwapi.Game;
 import bwapi.Position;
 import bwapi.Unit;

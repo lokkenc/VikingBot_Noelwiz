@@ -1,6 +1,6 @@
-package ML.States;
+package ml.state;
 
-import ML.actions.Action;
+import ml.actions.Action;
 
 /**
  * Represents a (State, Action) pair.

@@ -1,7 +1,7 @@
-package ML.States;
+package ml.state;
 
-import ML.model.UnitClassification;
-import ML.Range.*;
+import ml.model.UnitClassification;
+import ml.range.*;
 
 import java.io.Serializable;
 import java.util.Objects;

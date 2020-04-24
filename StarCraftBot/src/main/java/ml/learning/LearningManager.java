@@ -1,10 +1,9 @@
-package ML.Learning;
+package ml.learning;
 
-import ML.Actions.Action;
-import ML.Data.DataManager;
-import ML.Model.UnitClassification;
-import bwapi.UnitType;
-import ML.States.*;
+import ml.actions.Action;
+import ml.data.DataManager;
+import ml.model.UnitClassification;
+import ml.state.*;
 
 import java.io.File;
 import java.io.Serializable;

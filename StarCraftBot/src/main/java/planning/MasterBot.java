@@ -1,9 +1,9 @@
-package Planning;
+package planning;
 
-import Agents.EconomyAgent;
-import Agents.StrategyAgent;
-import Agents.CombatAgent;
-import Agents.IntelligenceAgent;
+import agents.EconomyAgent;
+import agents.StrategyAgent;
+import agents.CombatAgent;
+import agents.IntelligenceAgent;
 
 public class MasterBot {
     IntelligenceAgent intelligenceAgent;

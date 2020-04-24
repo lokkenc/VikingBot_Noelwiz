@@ -1,4 +1,4 @@
-package ML.Actions;
+package ml.actions;
 
 public enum ActionType {
     ATTACK("Attack"),

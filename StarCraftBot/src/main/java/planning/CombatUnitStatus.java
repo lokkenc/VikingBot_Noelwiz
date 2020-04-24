@@ -1,4 +1,4 @@
-package Planning;
+package planning;
 
 import bwapi.*;
 

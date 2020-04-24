@@ -1,6 +1,6 @@
-package Planning.Actions;
+package planning.actions;
 
-import Planning.CombatUnitStatus;
+import planning.CombatUnitStatus;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.state.State;

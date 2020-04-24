@@ -1,4 +1,4 @@
-package ML.Range;
+package ml.range;
 
 import java.io.Serializable;
 

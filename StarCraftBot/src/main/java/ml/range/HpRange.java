@@ -1,4 +1,4 @@
-package ML.Range;
+package ml.range;
 
 /**
  * Represents a range of possible hp values and categorizes them into a relative enum.
