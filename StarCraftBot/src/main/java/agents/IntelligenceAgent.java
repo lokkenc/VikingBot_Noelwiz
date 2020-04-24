@@ -67,9 +67,9 @@ public class IntelligenceAgent {
     public void tabulateUnits (Player self) {
         unitMemory.clear();
         for (Unit unit : self.getUnits()) {
-            if (!unit.isCompleted()) {
+            /*if (!unit.isCompleted()) {
                 continue;
-            }
+            }*/
 
             updateUnitMemory(unit.getType(), 1);
         }
