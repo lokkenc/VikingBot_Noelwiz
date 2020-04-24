@@ -26,17 +26,18 @@ public class StarCraftBotListener extends GameListener {
         game = bwClient.getGame();
         self = game.self();
 
-        // Initialize the Agents
-        combat = new CombatAgent(intel);
-        economy = new EconomyAgent(intel);
-        intel =  IntelligenceAgent.getInstance(game);
-        strategy = new StrategyAgent(game, intel);
-
         // Analyze the map
         System.out.println("Analyzing map...");
         BWTA.readMap(game);
         BWTA.analyze();
         System.out.println("Map data ready");
+
+        // Initialize the Agents
+        intel = IntelligenceAgent.getInstance(game);
+        intel.tabulateUnits(self);
+        combat = new CombatAgent(intel);
+        economy = new EconomyAgent(intel);
+        strategy = new StrategyAgent(game, intel);
 
         // Prepare the Agents
         combat.addUnitTypeToModel(combat.getUnitClassification(UnitType.Protoss_Zealot));
