@@ -1,30 +1,36 @@
 package agents;
 
-import planning.actions.ActionParserHelper;
-import planning.SharedPriorityQueue;
-import planning.StarcraftPlanner;
 import burlap.mdp.core.action.Action;
 import bwapi.*;
-import bwta.*;
+import planning.SharedPriorityQueue;
+import planning.StarcraftPlanner;
+import planning.actions.ActionParserHelper;
+
+import java.util.List;
 
 public class StrategyAgent {
     private Game game;
     private Player self;
+
+    //units given
+    private int retreatThreshold = 0;
 
     private IntelligenceAgent intel;
     private EconomyAgent economy;
     private StarcraftPlanner planner;
     private SharedPriorityQueue todo;
 
-    public StrategyAgent(Game game, IntelligenceAgent intel) {
+    public StrategyAgent(Game game) {
         this.game = game;
         this.self = game.self();
-        this.intel = intel;
-        this.economy = new EconomyAgent(intel);
-        planner = new StarcraftPlanner(intel);
+        this.intel = IntelligenceAgent.getInstance(game);
+        this.economy = new EconomyAgent(game);
+        planner = new StarcraftPlanner(intel, this);
         todo = new SharedPriorityQueue(planner);
         planner.Initalize(todo);
     }
+
+
 
     public void update() {
         //use the planner
@@ -46,8 +52,11 @@ public class StrategyAgent {
         }
         */
 
+        int numCombatUnits = 0;
+        UnitType currentUnitType;
         //iterate through my units
         for (Unit myUnit : self.getUnits()) {
+            currentUnitType = myUnit.getType();
 
             /*
             if (myUnit.getType() == UnitType.Protoss_Nexus && myUnit.isUnderAttack()) {
@@ -56,9 +65,10 @@ public class StrategyAgent {
             */
 
             //if it's a worker and it's idle, send it to the closest mineral patch
-            if (myUnit.getType().isWorker() && myUnit.isIdle()) {
+            if (currentUnitType.isWorker() && myUnit.isIdle()) {
                 if(intel.isScout(myUnit.getID())) {
                     if(!intel.getEnemyBuildingMemory().isEmpty()) {
+                        //get a base to gather minerals at
                         for(Unit unit: self.getUnits()) {
                             if(unit.getType() == UnitType.Protoss_Nexus) {
                                 economy.gatherMinerals(game, myUnit, unit);
@@ -68,10 +78,41 @@ public class StrategyAgent {
                 } else {
                     economy.gatherMinerals(game, myUnit);
                 }
+                //count number of combat units to decide if to retreat
+            } else if (!myUnit.getType().isBuilding() && myUnit.getType().canAttack()){
+                numCombatUnits++;
             }
         }
 
+
+        //retreat the army.
+        //TODO: figure out when to take controll again, and if we can..
+        if(numCombatUnits < retreatThreshold){
+            CombatAgent.getInstance(game).setSkirmish(true);
+        }
+
     }
+
+
+    public void attackEnemy(List<Unit> army){
+        if(army != null){
+            CombatAgent ca = CombatAgent.getInstance(game);
+            ca.setSkirmish(false);
+            //retreat when we only have 1/8 units remaining
+            retreatThreshold = army.size()/8;
+            ca.controlArmy(game, army);
+            if(self.getRace() == Race.Protoss){
+                ca.attackEnemyBase(self, UnitType.Protoss_Zealot);
+            } else if (self.getRace() == Race.Zerg) {
+                ca.attackEnemyBase(self, UnitType.Zerg_Zergling);
+            }
+
+        } else {
+            System.err.println("attackEnemy passed empty army");
+        }
+    }
+
+
 
     /**
      * Checks if a given action can possibly be executed at the present time

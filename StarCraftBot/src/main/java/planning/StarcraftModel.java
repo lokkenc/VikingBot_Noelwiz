@@ -82,7 +82,7 @@ public class StarcraftModel implements FullModel {
         String actionstr = action.actionName();
         String[] arguments = actionstr.split("_");
 
-        System.out.println("Action taken: "+ arguments[0]);
+        //System.out.println("Action taken: "+ arguments[0]);
 
 
         //aproximates time passing in an actual match between planing steps

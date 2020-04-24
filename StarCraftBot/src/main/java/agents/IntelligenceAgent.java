@@ -320,6 +320,33 @@ public class IntelligenceAgent {
         return false;
     }
 
+
+    /**
+     * Get the current combat units that exist to attack with.
+     * @param self the Player
+     * @return a List of fighting <Units>s.
+     */
+    public List<Unit> getCombatUnits(Player self){
+        UnitFilter filter = new UnitFilter() {
+            @Override
+            public boolean test(Unit unit) {
+                return (!(unit.isBeingConstructed() && unit.getType().isWorker() &&
+                        unit.getType().isBuilding()) && unit.canAttack());
+            }
+        };
+
+        List<Unit> military = new LinkedList<Unit>();
+
+        for (Unit unit : self.getUnits()) {
+            if(filter.test(unit)){
+                military.add(unit);
+            }
+
+        }
+
+        return military;
+    }
+
     /**
      * Returns a unit of type target that has no units of type type in the specified radius
      * @param game Game value assigned at game start

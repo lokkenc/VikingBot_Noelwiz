@@ -22,6 +22,7 @@ import java.util.List;
  * in most cases the ControlArmy function should be used.
  */
 public class CombatAgent {
+    private static CombatAgent onlyInstance = null;
 
     IntelligenceAgent intel;
     ArrayList<LearningManager> models;
@@ -30,13 +31,22 @@ public class CombatAgent {
 
     /**
      * Constructor
-     * @param intel intelligence agent
+     * @param game the current game
      */
-    public CombatAgent(IntelligenceAgent intel) {
-        this.intel = intel;
+    private CombatAgent(Game game) {
+        this.intel = IntelligenceAgent.getInstance(game);
         this.models = new ArrayList<LearningManager>();
         UnitStateActionPair = new HashMap<Unit, StateAction>();
         skirmish = false;
+    }
+
+
+    public static CombatAgent getInstance(Game game) {
+        if(onlyInstance == null) {
+            onlyInstance = new CombatAgent(game);
+        }
+
+        return onlyInstance;
     }
 
     /**

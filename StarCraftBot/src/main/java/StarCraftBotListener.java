@@ -2,7 +2,10 @@ import agents.CombatAgent;
 import agents.EconomyAgent;
 import agents.IntelligenceAgent;
 import agents.StrategyAgent;
-import bwapi.*;
+import bwapi.Game;
+import bwapi.Player;
+import bwapi.Unit;
+import bwapi.UnitType;
 import bwta.BWTA;
 import listener.GameListener;
 import listener.ListenerType;
@@ -35,9 +38,9 @@ public class StarCraftBotListener extends GameListener {
         // Initialize the Agents
         intel = IntelligenceAgent.getInstance(game);
         intel.tabulateUnits(self);
-        combat = new CombatAgent(intel);
-        economy = new EconomyAgent(intel);
-        strategy = new StrategyAgent(game, intel);
+        combat = CombatAgent.getInstance(game);
+        economy = new EconomyAgent(game);
+        strategy = new StrategyAgent(game);
 
         // Prepare the Agents
         combat.addUnitTypeToModel(combat.getUnitClassification(UnitType.Protoss_Zealot));

@@ -8,8 +8,8 @@ public class EconomyAgent {
 
     IntelligenceAgent intel;
 
-    public EconomyAgent( IntelligenceAgent itagent){
-        intel = itagent;
+    public EconomyAgent( Game game){
+        intel = IntelligenceAgent.getInstance(game);
     }
 
 
