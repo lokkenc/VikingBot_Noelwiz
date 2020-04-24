@@ -1,5 +1,6 @@
 import listener.GameListener;
 import listener.ListenerType;
+import listeners.MlTrainingListener;
 
 public enum StarCraftBot {
     INSTANCE;
@@ -11,7 +12,12 @@ public enum StarCraftBot {
     private GameListener listener;
 
     public void initialize(ListenerType type) {
-        listener = new StarCraftBotListener(type);
+        if(type == ListenerType.TRAINING) {
+            listener = new MlTrainingListener(type);
+        }
+        else {
+            listener = new StarCraftBotListener(type);
+        }
     }
 
     public GameListener getListener() {
