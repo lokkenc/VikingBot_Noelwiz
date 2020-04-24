@@ -21,6 +21,7 @@ public class StrategyAgent {
         this.intel = intel;
         planner = new StarcraftPlanner(intel);
         todo = new SharedPriorityQueue(planner);
+        planner.Initalize(todo);
     }
 
     public void update() {
