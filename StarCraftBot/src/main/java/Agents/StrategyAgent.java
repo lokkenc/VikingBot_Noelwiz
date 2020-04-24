@@ -54,6 +54,14 @@ public class StrategyAgent extends DefaultBWListener{
 
         combat.addUnitTypeToModel(combat.getUnitClassification(UnitType.Protoss_Zealot));
         combat.loadModels();
+
+        //initalize ai planningplanner
+        planner = new StarcraftPlanner(this.intel);
+
+        todo = new SharedPriorityQueue(planner);
+
+        planner.Initalize(todo);
+
     }
 
     /**
@@ -96,20 +104,6 @@ public class StrategyAgent extends DefaultBWListener{
 
             if (myUnit.getType() == UnitType.Protoss_Nexus && myUnit.isUnderAttack()) {
                 combat.attackPosition(self, UnitType.Protoss_Zealot, myUnit.getPosition());
-            }
-
-            //if there's enough minerals, train a Probe
-            if (myUnit.getType() == UnitType.Protoss_Nexus && self.minerals() >= 50 && (intel.getUnitsOfType(self, UnitType.Protoss_Probe) < 12 || intel.unitExists(UnitType.Protoss_Gateway))) {
-                if (self.supplyTotal() - self.supplyUsed() > 4 && intel.getUnitsOfType(self, UnitType.Protoss_Probe) < 12) {
-                    myUnit.train(UnitType.Protoss_Probe);
-                }
-            }
-
-            //if there's enough minerals, train a Zealot
-            if (myUnit.getType() == UnitType.Protoss_Gateway && self.minerals() >= 100) {
-                if (self.supplyTotal() - self.supplyUsed() > 4) {
-                    myUnit.train(UnitType.Protoss_Zealot);
-                }
             }
 
             //if it's a worker and it's idle, send it to the closest mineral patch
