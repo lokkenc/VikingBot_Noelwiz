@@ -1,5 +1,6 @@
 package ML.States;
 
+import ML.Model.UnitClassification;
 import ML.Range.*;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ public class State implements Serializable {
     private final Hp enemyHp;
     private final Hp friendlyHp;
     private final boolean skirmish;
+    private final UnitClassification unitClass;
 
     /**
      * Initializes the state given the current information around a specific unit.
@@ -29,8 +31,9 @@ public class State implements Serializable {
      * @param enemyHp the total HP of nearby enemies.
      * @param friendlyHp the total HP of nearby allies.
      * @param skirmish whether units should stop fighting or not
+     * @param unitClass the unitClassification for the given unit
      */
-    public State(boolean onCoolDown, Distance closestEnemy, Units numberOfEnemies, Units numberOfFriendlies, Hp enemyHp, Hp friendlyHp, boolean skirmish) {
+    public State(boolean onCoolDown, Distance closestEnemy, Units numberOfEnemies, Units numberOfFriendlies, Hp enemyHp, Hp friendlyHp, boolean skirmish, UnitClassification unitClass) {
         this.onCoolDown = onCoolDown;
         this.closestEnemy = closestEnemy;
         this.numberOfEnemies = numberOfEnemies;
@@ -38,6 +41,7 @@ public class State implements Serializable {
         this.enemyHp = enemyHp;
         this.friendlyHp = friendlyHp;
         this.skirmish = skirmish;
+        this.unitClass = unitClass;
     }
 
     /**
@@ -93,6 +97,12 @@ public class State implements Serializable {
      * @return returns the value of the goHome command
      */
     public boolean getSkirmish() { return skirmish; }
+
+    /**
+     *
+     * @return returns the classification of the unit
+     */
+    public UnitClassification getUnitClass() { return unitClass; }
 
     @Override
     public boolean equals(Object o) {

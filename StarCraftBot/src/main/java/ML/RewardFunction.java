@@ -2,6 +2,7 @@ package ML;
 
 import ML.Actions.Action;
 import ML.Actions.ActionType;
+import ML.Model.UnitClassification;
 import ML.Range.HpRange;
 import ML.States.State;
 import exception.IncorrectActionTypeException;
@@ -85,6 +86,10 @@ public class RewardFunction {
     public static double getRewardValue(State current, Action action, State next) {
         double reward = 0;
 
+        // Information on unit location
+        int currentClosestEnemyRange = current.getClosestEnemy().getValue();
+        int nextClosestEnemyRange = next.getClosestEnemy().getValue();
+
         // Information on total units and change in total units
         int currentTotalNumberOfEnemies = current.getNumberOfEnemies().getValue();
         int nextTotalNumberOfEnemies = next.getNumberOfEnemies().getValue();
@@ -114,9 +119,10 @@ public class RewardFunction {
                 }
                 else {
                     // Calculate the reward based on the differences in enemy and friendly HP
-                    reward = (totalEnemyHpDiff - (normalizedHpFactor * totalFriendlyHpDiff)) / 10;
-
-                    reward *= attackScalar;
+//                    reward = -(totalEnemyHpDiff / 10.0);
+//                    System.out.println("Attack Reward : " + reward);
+//                    reward *= attackScalar;
+                    reward = defaultReward * rewardScalar * attackScalar;
                 }
             }
         }
@@ -135,7 +141,11 @@ public class RewardFunction {
                 reward = -(defaultReward * rewardScalar * skirmishScalar);
             }
             else {
-                reward = (defaultReward * rewardScalar * moveScalar);
+                if(currentTotalNumberOfEnemies > 0) {
+                    reward = -(defaultReward * rewardScalar * moveScalar);
+                } else {
+                    reward = (defaultReward * rewardScalar * moveScalar);
+                }
             }
         }
         else if(action.getType() == ActionType.RETREAT) {
@@ -144,12 +154,12 @@ public class RewardFunction {
                 reward = -(defaultReward * rewardScalar * skirmishScalar);
             }
             else {
-                // Check if there are enemies nearby
-                if (currentTotalNumberOfEnemies == 0) {
-                    reward = -(defaultReward * rewardScalar * retreatScalar);
+                // Check if there are enemies closer than 50% of attack range
+                if (currentClosestEnemyRange <= 50.00 && current.getUnitClass() != UnitClassification.MELEE) {
+                    reward = (defaultReward * rewardScalar * retreatScalar);
                 }
                 else {
-                    reward = (defaultReward * rewardScalar * retreatScalar);
+                    reward = -(defaultReward * rewardScalar * retreatScalar);
                 }
             }
         }

@@ -13,14 +13,11 @@ import java.util.Random;
 public class GreedyActionChooser {
     private static final double epsilon = 0.1;
     private final Random random;
-    private final QTable qtable;
 
     /**
      * Initialize the GreedyActionChooser with a QTable.
-     * @param qtable the QTable used to initialize the GreedyActionChooser.
      */
-    public GreedyActionChooser(QTable qtable) {
-        this.qtable = qtable;
+    public GreedyActionChooser() {
         random = new Random();
     }
 
@@ -31,7 +28,7 @@ public class GreedyActionChooser {
      * @param curState the current State to get the optimal Action from the QTable.
      * @return returns an Action that is either randomly selected or the optimal Action for the current State.
      */
-    public Action chooseAction(StateSpaceManager spMng, State curState) {
+    public Action chooseAction(StateSpaceManager spMng, State curState, QTable qtable) {
         double rand = random.nextDouble();
 
         if(rand < epsilon) {
