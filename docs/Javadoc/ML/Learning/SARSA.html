@@ -116,7 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">ML.Learning</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">ml.learning</a></div>
 <h2 title="Class SARSA" class="title">Class SARSA</h2>
 </div>
 <div class="contentContainer">
@@ -124,7 +124,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>ML.Learning.SARSA</li>
+<li>ml.learning.SARSA</li>
 </ul>
 </li>
 </ul>
@@ -164,8 +164,8 @@ implements java.io.Serializable</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(bwapi.UnitType,ML.States.StateSpaceManager)">SARSA</a></span>&#8203;(bwapi.UnitType&nbsp;type,
-     <a href="../States/StateSpaceManager.html" title="class in ML.States">StateSpaceManager</a>&nbsp;spaceManager)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(bwapi.UnitType,ml.state.StateSpaceManager)">SARSA</a></span>&#8203;(bwapi.UnitType&nbsp;type,
+     <a href="../States/StateSpaceManager.html" title="class in ml.state">StateSpaceManager</a>&nbsp;spaceManager)</code></th>
 <td class="colLast">
 <div class="block">Initializes the SARSA learning algorithm, creates/loads the DataManager, sets the StateSpaceManager, and
  creates a new QTable from the set of possible States and Actions.</div>
@@ -191,16 +191,16 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#computerQValue(ML.States.State,ML.Actions.Action,ML.States.State,double)">computerQValue</a></span>&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;current,
-              <a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;action,
-              <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;next,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#computerQValue(ml.state.State,ml.actions.Action,ml.state.State,double)">computerQValue</a></span>&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;current,
+              <a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;action,
+              <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;next,
               double&nbsp;reward)</code></th>
 <td class="colLast">
 <div class="block">Computes the Q-Value for SARSA which requires the current State, Action executed, next State, and reward.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../Data/DataManager.html" title="class in ML.Data">DataManager</a></code></td>
+<td class="colFirst"><code><a href="../Data/DataManager.html" title="class in ml.data">DataManager</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDataManager()">getDataManager</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets the DataManager being used by the SARSA learning algorithm.</div>
@@ -214,7 +214,7 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../States/StateSpaceManager.html" title="class in ML.States">StateSpaceManager</a></code></td>
+<td class="colFirst"><code><a href="../States/StateSpaceManager.html" title="class in ml.state">StateSpaceManager</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSpaceManager()">getSpaceManager</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets the StateSpaceManager being used by the SARSA learning algorithm.</div>
@@ -257,9 +257,9 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateQTable(ML.States.State,ML.Actions.Action,ML.States.State)">updateQTable</a></span>&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;current,
-            <a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;action,
-            <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;next)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateQTable(ml.state.State,ml.actions.Action,ml.state.State)">updateQTable</a></span>&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;current,
+            <a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;action,
+            <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;next)</code></th>
 <td class="colLast">
 <div class="block">Updates the QTable with the resulting Q-Value produced from the (current, action, next) tuple.</div>
 </td>
@@ -288,14 +288,14 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(bwapi.UnitType,ML.States.StateSpaceManager)">
+<a id="&lt;init&gt;(bwapi.UnitType,ml.state.StateSpaceManager)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SARSA</h4>
 <pre>public&nbsp;SARSA&#8203;(bwapi.UnitType&nbsp;type,
-             <a href="../States/StateSpaceManager.html" title="class in ML.States">StateSpaceManager</a>&nbsp;spaceManager)</pre>
+             <a href="../States/StateSpaceManager.html" title="class in ml.state">StateSpaceManager</a>&nbsp;spaceManager)</pre>
 <div class="block">Initializes the SARSA learning algorithm, creates/loads the DataManager, sets the StateSpaceManager, and
  creates a new QTable from the set of possible States and Actions.</div>
 <dl>
@@ -315,15 +315,15 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="computerQValue(ML.States.State,ML.Actions.Action,ML.States.State,double)">
+<a id="computerQValue(ml.state.State,ml.actions.Action,ml.state.State,double)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>computerQValue</h4>
-<pre class="methodSignature">public&nbsp;double&nbsp;computerQValue&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;current,
-                             <a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;action,
-                             <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;next,
+<pre class="methodSignature">public&nbsp;double&nbsp;computerQValue&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;current,
+                             <a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;action,
+                             <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;next,
                              double&nbsp;reward)</pre>
 <div class="block">Computes the Q-Value for SARSA which requires the current State, Action executed, next State, and reward.
  This uses the following update function:
@@ -347,15 +347,15 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="updateQTable(ML.States.State,ML.Actions.Action,ML.States.State)">
+<a id="updateQTable(ml.state.State,ml.actions.Action,ml.state.State)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>updateQTable</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;updateQTable&#8203;(<a href="../States/State.html" title="class in ML.States">State</a>&nbsp;current,
-                         <a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;action,
-                         <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;next)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;updateQTable&#8203;(<a href="../States/State.html" title="class in ml.state">State</a>&nbsp;current,
+                         <a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;action,
+                         <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;next)</pre>
 <div class="block">Updates the QTable with the resulting Q-Value produced from the (current, action, next) tuple. This method
  calculates the produced reward and Q-Value then puts the Q-Value into the (State, (Action, double)) map.</div>
 <dl>
@@ -440,7 +440,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getSpaceManager</h4>
-<pre class="methodSignature">public&nbsp;<a href="../States/StateSpaceManager.html" title="class in ML.States">StateSpaceManager</a>&nbsp;getSpaceManager()</pre>
+<pre class="methodSignature">public&nbsp;<a href="../States/StateSpaceManager.html" title="class in ml.state">StateSpaceManager</a>&nbsp;getSpaceManager()</pre>
 <div class="block">Gets the StateSpaceManager being used by the SARSA learning algorithm.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -454,7 +454,7 @@ implements java.io.Serializable</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getDataManager</h4>
-<pre class="methodSignature">public&nbsp;<a href="../Data/DataManager.html" title="class in ML.Data">DataManager</a>&nbsp;getDataManager()</pre>
+<pre class="methodSignature">public&nbsp;<a href="../Data/DataManager.html" title="class in ml.data">DataManager</a>&nbsp;getDataManager()</pre>
 <div class="block">Gets the DataManager being used by the SARSA learning algorithm.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

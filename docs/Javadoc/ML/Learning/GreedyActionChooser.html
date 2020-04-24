@@ -116,7 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">ML.Learning</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">ml.learning</a></div>
 <h2 title="Class GreedyActionChooser" class="title">Class GreedyActionChooser</h2>
 </div>
 <div class="contentContainer">
@@ -124,7 +124,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>ML.Learning.GreedyActionChooser</li>
+<li>ml.learning.GreedyActionChooser</li>
 </ul>
 </li>
 </ul>
@@ -155,7 +155,7 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(ML.QTable)">GreedyActionChooser</a></span>&#8203;(<a href="../QTable.html" title="class in ML">QTable</a>&nbsp;qtable)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(ml.QTable)">GreedyActionChooser</a></span>&#8203;(<a href="../QTable.html" title="class in ML">QTable</a>&nbsp;qtable)</code></th>
 <td class="colLast">
 <div class="block">Initialize the GreedyActionChooser with a QTable.</div>
 </td>
@@ -179,9 +179,9 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../Actions/Action.html" title="class in ML.Actions">Action</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#chooseAction(ML.States.StateSpaceManager,ML.States.State)">chooseAction</a></span>&#8203;(<a href="../States/StateSpaceManager.html" title="class in ML.States">StateSpaceManager</a>&nbsp;spMng,
-            <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;curState)</code></th>
+<td class="colFirst"><code><a href="../Actions/Action.html" title="class in ml.actions">Action</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#chooseAction(ml.state.StateSpaceManager,ml.state.State)">chooseAction</a></span>&#8203;(<a href="../States/StateSpaceManager.html" title="class in ml.state">StateSpaceManager</a>&nbsp;spMng,
+            <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;curState)</code></th>
 <td class="colLast">
 <div class="block">Samples a random real value between [0, 1] and either picks the best action for the current state from the QTable
  or a random action if the sampled value is within the range [0, epsilon).</div>
@@ -211,7 +211,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(ML.QTable)">
+<a id="&lt;init&gt;(ml.QTable)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -235,14 +235,14 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="chooseAction(ML.States.StateSpaceManager,ML.States.State)">
+<a id="chooseAction(ml.state.StateSpaceManager,ml.state.State)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>chooseAction</h4>
-<pre class="methodSignature">public&nbsp;<a href="../Actions/Action.html" title="class in ML.Actions">Action</a>&nbsp;chooseAction&#8203;(<a href="../States/StateSpaceManager.html" title="class in ML.States">StateSpaceManager</a>&nbsp;spMng,
-                           <a href="../States/State.html" title="class in ML.States">State</a>&nbsp;curState)</pre>
+<pre class="methodSignature">public&nbsp;<a href="../Actions/Action.html" title="class in ml.actions">Action</a>&nbsp;chooseAction&#8203;(<a href="../States/StateSpaceManager.html" title="class in ml.state">StateSpaceManager</a>&nbsp;spMng,
+                           <a href="../States/State.html" title="class in ml.state">State</a>&nbsp;curState)</pre>
 <div class="block">Samples a random real value between [0, 1] and either picks the best action for the current state from the QTable
  or a random action if the sampled value is within the range [0, epsilon).</div>
 <dl>
