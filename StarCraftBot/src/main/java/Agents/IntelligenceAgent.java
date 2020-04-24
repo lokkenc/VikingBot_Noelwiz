@@ -34,8 +34,8 @@ public class IntelligenceAgent {
     private IntelligenceAgent(Player self, Game game) {
         this.self = self;
         this.game = game;
-        myrace = self.getRace();
-        enemyRace = game.enemy().getRace();
+        //myrace = self.getRace();
+        //enemyRace = game.enemy().getRace();
         myrace = Race.Protoss;
         enemyRace = Race.Terran;
 

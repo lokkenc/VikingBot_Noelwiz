@@ -6,6 +6,7 @@ import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PlanningRewardFunction implements RewardFunction {
     private GameStatus gameStatus;
@@ -46,6 +47,8 @@ public class PlanningRewardFunction implements RewardFunction {
         int targetGasProduction = 250; //250 units per minute
         int targetArmySize = 50;
         int maxTimeSinceLastScout = 3600;
+        int incentiveMultiplier = 100;
+        int populationCap = 9; //POSSIBLE VARIABLE IN STATE ???
         double reward = 0.0;
         ActionParserHelper aph = new ActionParserHelper();
         switch(aph.GetActionType(a)) {
@@ -53,14 +56,19 @@ public class PlanningRewardFunction implements RewardFunction {
                 if ((Boolean) sprime.get("attackingEnemyBase") == true) {
                     reward -= 500;
                 } else { //We are attacking intruders
-                    reward += 100;
+                    //reward += 100;
                 }
                 break;
             case BUILD:
                 //Get information of what is being built?
+                Random rand = new Random();
+                reward += 50;
+                if ((int) s.get("numWorkers") == populationCap)
+                    reward += 75;
+                if (rand.nextInt(10) == 2)
+                    reward += 50;
 
                 //PLACEHOLDER REWARD
-                reward += 50;
                 break;
             case EXPAND:
                 if ((int) s.get("numBases") < 2) {
@@ -84,6 +92,13 @@ public class PlanningRewardFunction implements RewardFunction {
                 }
                 break;
             case TRAIN:
+                //TEMPORARY REWARD
+                if ((int) s.get("numWorkers") < targetNumWorkers)
+                    reward += 50;
+                reward += 50;
+
+
+
                 int[][] trainingCapacity = (int[][]) s.get("trainingCapacity");
                 //Checking worker status
                 if ((int) sprime.get("numWorkers") > (int) s.get("numWorkers")) {
@@ -92,7 +107,7 @@ public class PlanningRewardFunction implements RewardFunction {
                         reward -= 100;
                     //Given or taking reward based on if the action is training worker
                     if ((int) s.get("numWorkers") < targetNumWorkers)
-                        reward += targetNumWorkers - (int) s.get("numWorkers");
+                        reward += targetNumWorkers - (int) s.get("numWorkers") * incentiveMultiplier;
                     else
                         reward -= 100;
                 }
@@ -125,6 +140,7 @@ public class PlanningRewardFunction implements RewardFunction {
         }
         return reward;
     }
+
 
     /**
      * Returns the reward for the given action if the {@link GameStatus} is in the mid game

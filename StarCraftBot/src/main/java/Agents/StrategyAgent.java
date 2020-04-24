@@ -51,6 +51,9 @@ public class StrategyAgent extends DefaultBWListener{
         BWTA.readMap(game);
         BWTA.analyze();
         System.out.println("Map data ready");
+        intel.tabulateUnits(self);
+
+
 
         combat.addUnitTypeToModel(combat.getUnitClassification(UnitType.Protoss_Zealot));
         combat.loadModels();
@@ -102,9 +105,11 @@ public class StrategyAgent extends DefaultBWListener{
         //iterate through my units
         for (Unit myUnit : self.getUnits()) {
 
+            /*
             if (myUnit.getType() == UnitType.Protoss_Nexus && myUnit.isUnderAttack()) {
                 combat.attackPosition(self, UnitType.Protoss_Zealot, myUnit.getPosition());
             }
+            */
 
             //if it's a worker and it's idle, send it to the closest mineral patch
             if (myUnit.getType().isWorker() && myUnit.isIdle()) {
