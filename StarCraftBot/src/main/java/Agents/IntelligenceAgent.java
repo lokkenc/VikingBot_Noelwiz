@@ -34,8 +34,8 @@ public class IntelligenceAgent {
     private IntelligenceAgent(Player self, Game game) {
         this.self = self;
         this.game = game;
-        myrace = self.getRace();
-        enemyRace = game.enemy().getRace();
+        //myrace = self.getRace();
+        //enemyRace = game.enemy().getRace();
         myrace = Race.Protoss;
         enemyRace = Race.Terran;
 
@@ -49,9 +49,16 @@ public class IntelligenceAgent {
         return onlyInstance;
     }
 
+    /**
+     * @return the player
+     */
     public Player getSelf() {
         return self;
     }
+
+    /**
+     * @return the game
+     */
     public Game getGame() {
         return game;
     }
@@ -63,7 +70,7 @@ public class IntelligenceAgent {
     public void tabulateUnits (Player self) {
         unitMemory.clear();
         for (Unit unit : self.getUnits()) {
-            if (unit.isTraining()) {
+            if (!unit.isCompleted()) {
                 continue;
             }
 
@@ -422,6 +429,10 @@ public class IntelligenceAgent {
         return numworkers;
     }
 
+    /**
+     * Gets number of workers gathering minerals
+     * @return Number of workers gathering minerals
+     */
     private int getNumWorkersGatheringMinerals() {
         int numWorkers = 0;
         for (Unit unit : self.getUnits()) {
@@ -432,6 +443,10 @@ public class IntelligenceAgent {
         return numWorkers;
     }
 
+    /**
+     * Gets number of workers gathering gas
+     * @return Number of workers gathering gas
+     */
     private int getNumWorkersGatheringGas() {
         int numWorkers = 0;
         for (Unit unit : self.getUnits()) {
@@ -442,6 +457,10 @@ public class IntelligenceAgent {
         return numWorkers;
     }
 
+    /**
+     * Gets the mineral production rate
+     * @return float, the current mineral production rate
+     */
     public float getMineralProductionRate() {
         float productionRate = 0f;
         int numBases;
@@ -478,6 +497,10 @@ public class IntelligenceAgent {
         return productionRate;
     }
 
+    /**
+     * Gets the gas production rate
+     * @return float, the current gas production rate
+     */
     public float getGasProductionRate() {
         float productionRate = 0f;
         int numBases;
@@ -514,6 +537,10 @@ public class IntelligenceAgent {
         return productionRate;
     }
 
+    /**
+     * Gets the number of friendly bases
+     * @return number of bases controlled by the player
+     */
     public int getNumBases() {
         int numBases = 0;
 
@@ -532,14 +559,25 @@ public class IntelligenceAgent {
         return numBases;
     }
 
+    /**
+     * Marks the current frame count as the last scout time
+     */
     public void setScoutTimer() {
         scoutTimer = game.getFrameCount();
     }
 
+    /**
+     * Gets the number of frames since last scout was sent
+     * @return the number of frames since a scout was last sent
+     */
     public int getTimeSinceLastScout() {
         return game.getFrameCount() - scoutTimer;
     }
 
+    /**
+     * Gets a list of friendly combat unit statuses
+     * @return An ArrayList containing the {@link CombatUnitStatus} of each combat unit
+     */
     public ArrayList<CombatUnitStatus> getCombatUnitStatuses() {
         ArrayList<CombatUnitStatus> list = new ArrayList<CombatUnitStatus>();
         for (UnitType unit: unitMemory.keySet()) {
@@ -551,6 +589,11 @@ public class IntelligenceAgent {
         return list;
     }
 
+
+    /**
+     * Get the number of enemy workers
+     * @return the number of known workers controlled by the enemy
+     */
     public int getNumEnemyWorkers() {
         int numworkers = 0;
 
@@ -572,6 +615,10 @@ public class IntelligenceAgent {
         return numworkers;
     }
 
+    /**
+     * Get number of enemy bases
+     * @return the number of bases controlled by the enemy player
+     */
     public int getNumEnemyBases() {
         int numBases = 1;
 
@@ -593,6 +640,10 @@ public class IntelligenceAgent {
         return numBases;
     }
 
+    /**
+     * Get the most common combat unit of the players army
+     * @return The UnitType of the most common combat unit controlled by the player
+     */
     public UnitType getMostCommonCombatUnit() {
         UnitType mostCommonType = null;
         int amount = 0;
@@ -607,6 +658,10 @@ public class IntelligenceAgent {
         return mostCommonType;
     }
 
+    /**
+     * Checks if the players is attacking the enemy base
+     * @return true if the players is attacking the enemy base, false otherwise
+     */
     public Boolean attackingEnemyBase() {
         ArrayList<Unit> enemyBases = new ArrayList<>();
         UnitType baseType;
@@ -638,6 +693,10 @@ public class IntelligenceAgent {
         return false;
     }
 
+    /**
+     * Checks if the players bases is being attacked
+     * @return true if the player's base is being attacked, false otherwise
+     */
     public Boolean beingAttacked() {
         ArrayList<Unit> bases = new ArrayList<>();
         UnitType baseType;
@@ -669,14 +728,24 @@ public class IntelligenceAgent {
         return false;
     }
 
+    /**
+     * @return the player's race
+     */
     public Race getPlayerRace() {
         return myrace;
     }
 
+    /**
+     * @return the enemy's race
+     */
     public Race getEnemyRace() {
         return enemyRace;
     }
 
+    /**
+     * Get the current {@link GameStatus}
+     * @return return a {@link GameStatus} describing the current game
+     */
     public GameStatus getGameStatus() {
         GameStatus gameStatus;
         int earlyGameThreshold = 12600;
@@ -691,6 +760,10 @@ public class IntelligenceAgent {
         return gameStatus;
     }
 
+    /**
+     * @return A two-dimensional array of the form [workers[used, avail] , ground[used, avail], combat air[used, avail],
+     *                                             support air[used, avail]]
+     */
     public int[][] getTrainingCapacity() {
         int trainingCapacity[][] = {{0,3}, {0,3}, {0,3}, {0,3}};
         return trainingCapacity;

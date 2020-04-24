@@ -151,7 +151,9 @@ public class PlanningState implements HashableState, State {
     }
 
 
-
+    /**
+     * @return a copy of this {@link PlanningState}
+     */
     public PlanningState copy() {
         PlanningState copy = new PlanningState(this.numWorkers, this.mineralProductionRate,this.gasProductionRate,this.numBases,
                 this.timeSinceLastScout, this.combatUnitStatuses, this.numEnemyWorkers,this.numEnemyBases,
