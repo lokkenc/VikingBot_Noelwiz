@@ -8,10 +8,7 @@ import planning.GameStatus;
 import bwapi.*;
 import bwta.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static planning.GameStatus.*;
 
@@ -409,6 +406,21 @@ public class IntelligenceAgent {
         }
 
         return numberOfBuildingUnits;
+    }
+
+    public Position nextBaseLocationToCheck(Game game) {
+       Iterator<TilePosition> startLoc = game.getStartLocations().iterator();
+       for(int i = 0; i < baseLoc; i++) {
+           startLoc.next();
+       }
+
+       TilePosition startLocTP = startLoc.next();
+       if(game.isVisible(startLocTP)) {
+           baseLoc++;
+           return startLoc.next().toPosition();
+       } else {
+           return startLocTP.toPosition();
+       }
     }
 
     // * * * Information retrieval for AI Planning * * *//
