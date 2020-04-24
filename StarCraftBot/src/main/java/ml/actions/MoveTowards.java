@@ -43,6 +43,8 @@ public class MoveTowards extends Action implements Serializable {
            Iterator<Position> enemyBuildingsItr = enemyBuildings.iterator();
            if(enemyBuildingsItr.hasNext()) { // if there is no knowledge of a base then nothing will happen still
                unit.move(enemyBuildingsItr.next());
+           } else { // if there is no vision of anything start walking towards potential bases
+               unit.move(intel.nextBaseLocationToCheck(game));
            }
         }
     }
