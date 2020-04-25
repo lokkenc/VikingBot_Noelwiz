@@ -19,6 +19,7 @@ public class StrategyAgent {
     private EconomyAgent economy;
     private StarcraftPlanner planner;
     private SharedPriorityQueue todo;
+    private Action lastAct = null;
 
     public StrategyAgent(Game game) {
         this.game = game;
@@ -35,10 +36,13 @@ public class StrategyAgent {
     public void update() {
         //use the planner
         //if we can do the action
-        if(canExecute(todo.Peek())){
+        if(canExecute(todo.Peek()) && todo.Peek() != lastAct){
             //tell the planner to tell the enviorment to tell the bot
             //to do the action.
+            lastAct = todo.Peek();
             planner.ExecuteAction();
+        } else if(lastAct != null){
+            lastAct = null;
         }
 
 
@@ -110,6 +114,8 @@ public class StrategyAgent {
         } else {
             System.err.println("attackEnemy passed empty army");
         }
+
+
     }
 
 
@@ -121,44 +127,50 @@ public class StrategyAgent {
      */
     private boolean canExecute(Action a){
         boolean result = false;
-
+        int availMinerals = self.minerals() -  intel.getOrderedMineralUse();
 
         switch (ActionParserHelper.GetActionType(a)){
             case UPGRADE:
                 //TODO: check cost of upgrade + implement
-                if(self.minerals() > 200){
+                if(availMinerals > 200 ){
                     //TODO: CHANGE THIS TO TRUE WHEN implemented
                     result = false;
                 }
                 break;
             case TRAIN:
                 int numUnits  = 1;
-                //UnitType.Protoss_Nexus.mineralPrice();
-                UnitType whatUnit = UnitType.Unknown;
 
-                String args[] = a.actionName().split("_");
-                for(int i = 0; i < args.length; i++){
-                    String currentarg;
-                    if(args[i].startsWith("what=")){
-                        currentarg = args[i].split("=")[1];
-                        switch (currentarg){
-                            case "worker":
-                                whatUnit = UnitType.Protoss_Probe;
-                                break;
-                            case "combatUnit":
-                                whatUnit = UnitType.Protoss_Zealot;
-                                break;
+                if(self.supplyTotal() > self.supplyUsed()){
+                    //UnitType.Protoss_Nexus.mineralPrice();
+                    UnitType whatUnit = UnitType.Unknown;
+
+                    String args[] = a.actionName().split("_");
+                    for(int i = 0; i < args.length; i++){
+                        String currentarg;
+                        if(args[i].startsWith("what=")){
+                            currentarg = args[i].split("=")[1];
+                            switch (currentarg){
+                                case "worker":
+                                    whatUnit = UnitType.Protoss_Probe;
+                                    break;
+                                case "combatUnit":
+                                    if( intel.getUnitsOfType(self, UnitType.Protoss_Gateway) > 0){
+                                        whatUnit = UnitType.Protoss_Zealot;
+                                    } //else we can't train this.
+                                    break;
+                            }
+
+                        }else if(args[i].startsWith("amount=")){
+                            currentarg=args[i].split("=")[1];
+                            numUnits = Integer.parseInt(currentarg);
                         }
-
-                    }else if(args[i].startsWith("amount=")){
-                        currentarg=args[i].split("=")[1];
-                        numUnits = Integer.parseInt(currentarg);
                     }
-                }
 
-                //TODO: check cost of unit in action
-                if(whatUnit != UnitType.Unknown){
-                    result = numUnits * whatUnit.mineralPrice() <= self.minerals();
+                    //TODO: check cost of unit in action
+                    if(whatUnit != UnitType.Unknown){
+                        result = numUnits * whatUnit.mineralPrice() <= self.minerals()
+                        && self.supplyTotal() > self.supplyUsed()+ + whatUnit.supplyRequired();
+                    }
                 }
                 break;
             case SCOUT:
@@ -174,9 +186,9 @@ public class StrategyAgent {
             case BUILD:
                 String what = a.actionName().split("_")[1];
                 //check cost of building
-                if(what.equals("pop") && self.minerals() > 100){
+                if(what.equals("pop") && availMinerals > 100){
                     result = true;
-                } else if(what.equals("train") && self.minerals() > 150){
+                } else if(what.equals("train") && availMinerals > 150){
                     result = true;
                 }
                 break;
