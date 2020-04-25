@@ -158,7 +158,7 @@ public class StrategyAgent {
 
                 //TODO: check cost of unit in action
                 if(whatUnit != UnitType.Unknown){
-                    result = numUnits * whatUnit.mineralPrice() >= self.minerals();
+                    result = numUnits * whatUnit.mineralPrice() <= self.minerals();
                 }
                 break;
             case SCOUT:
