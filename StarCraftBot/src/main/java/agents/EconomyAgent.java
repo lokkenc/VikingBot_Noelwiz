@@ -135,12 +135,23 @@ public class EconomyAgent {
         }
     }
 
+    /**
+     * Trains a combat unit. Finds the gateway with the smallest queue and trains there
+     */
     public void trainCombatUnit() {
-        for (Unit gateway: intel.getUnitsListOfType(UnitType.Protoss_Gateway)) {
-            List<UnitType> trainingQueue = gateway.getTrainingQueue();
-            if (trainingQueue.size() < 5) {
-                gateway.train(UnitType.Protoss_Zealot);
+        List<Unit> Gateways = intel.getUnitsListOfType(UnitType.Protoss_Gateway);
+        if(Gateways != null && Gateways.size() != 0){
+            Unit minTrainingGateway = Gateways.get(0);
+            int minTraingingQueueLength = minTrainingGateway.getTrainingQueue().size();
+            for (Unit gateway: Gateways) {
+                List<UnitType> trainingQueue = gateway.getTrainingQueue();
+                if (trainingQueue.size() < minTraingingQueueLength) {
+                    minTrainingGateway = gateway;
+                    minTraingingQueueLength = trainingQueue.size();
+                }
             }
+
+            minTrainingGateway.train(UnitType.Protoss_Zealot);
         }
     }
 }
