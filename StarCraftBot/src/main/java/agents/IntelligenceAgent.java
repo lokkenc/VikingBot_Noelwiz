@@ -779,31 +779,47 @@ public class IntelligenceAgent {
     public Boolean beingAttacked() {
         ArrayList<Unit> bases = new ArrayList<>();
         UnitType baseType;
+        UnitType creepOrPower = null;
+        UnitType train;
         switch (enemyRace) {
             case Terran:
                 baseType = UnitType.Terran_Command_Center;
+                train = UnitType.Terran_Academy;
+                creepOrPower = UnitType.Terran_Bunker;
                 break;
             case Zerg:
                 baseType = UnitType.Zerg_Hatchery;
+                train = UnitType.Zerg_Spawning_Pool;
                 break;
             default:
                 baseType = UnitType.Protoss_Nexus;
+                train = UnitType.Protoss_Gateway;
+                creepOrPower = UnitType.Protoss_Pylon;
                 break;
         }
-        //Get list of our bases
-        for (Unit unit: self.getUnits()) {
-            if (unit.getType() == baseType) {
-                bases.add(unit);
-            }
-        }
+
         //For each base, check if we are being attacked there
-        for (Unit base: bases) {
-            for (Unit unit: game.enemy().getUnits()) {
-                if (unit.isAttacking() && unit.getRegion() == base.getRegion()) {
-                    return true;
-                }
+        for (Unit base: getUnitsListOfType(baseType)) {
+            if(base.isUnderAttack()){
+                return true;
             }
         }
+
+        //For each base, check if we are being attacked there
+        for (Unit pop: getUnitsListOfType(creepOrPower)) {
+            if(pop.isUnderAttack()){
+                return true;
+            }
+        }
+
+        //For each base, check if we are being attacked there
+        for (Unit base: getUnitsListOfType(train)) {
+            if(base.isUnderAttack()){
+                return true;
+            }
+        }
+
+
         return false;
     }
 
