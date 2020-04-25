@@ -132,9 +132,33 @@ public class StrategyAgent {
                 }
                 break;
             case TRAIN:
+                int numUnits  = 1;
+                //UnitType.Protoss_Nexus.mineralPrice();
+                UnitType whatUnit = UnitType.Unknown;
+
+                String args[] = a.actionName().split("_");
+                for(int i = 0; i < args.length; i++){
+                    String currentarg;
+                    if(args[i].startsWith("what=")){
+                        currentarg = args[i].split("=")[1];
+                        switch (currentarg){
+                            case "worker":
+                                whatUnit = UnitType.Protoss_Probe;
+                                break;
+                            case "combatUnit":
+                                whatUnit = UnitType.Protoss_Zealot;
+                                break;
+                        }
+
+                    }else if(args[i].startsWith("amount=")){
+                        currentarg=args[i].split("=")[1];
+                        numUnits = Integer.parseInt(currentarg);
+                    }
+                }
+
                 //TODO: check cost of unit in action
-                if(self.minerals() >= 50){
-                    result = true;
+                if(whatUnit != UnitType.Unknown){
+                    result = numUnits * whatUnit.mineralPrice() >= self.minerals();
                 }
                 break;
             case SCOUT:
@@ -148,15 +172,18 @@ public class StrategyAgent {
                 }
                 break;
             case BUILD:
-                //TODO: CHECK BUILDING PRICE of the actions desired building.
-                if(self.minerals() > 150){
-                    //TODO: implement expand.
+                String what = a.actionName().split("_")[1];
+                //check cost of building
+                if(what.equals("pop") && self.minerals() > 100){
+                    result = true;
+                } else if(what.equals("train") && self.minerals() > 150){
                     result = true;
                 }
                 break;
             case ATTACK:
-                //TODO: implement + change this to true
-                result = false;
+                if(intel.getUnitsListOfType(UnitType.Protoss_Zealot).size() > 0) {
+                    result = true;
+                }
                 break;
             case UNKNOWN:
                 result = false;
