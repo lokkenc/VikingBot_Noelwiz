@@ -299,6 +299,40 @@ public class IntelligenceAgent {
         return unitsList;
     }
 
+
+    public int getOrderedMineralUse(){
+        int mineralsUsed = 0;
+        List<Unit> nexi = getUnitsListOfType(UnitType.Protoss_Nexus);
+        for(Unit nexus : nexi){
+            if(nexus.getTrainingQueue().size() > 0){
+                for(UnitType unit: nexus.getTrainingQueue()){
+                    mineralsUsed+=unit.mineralPrice();
+                }
+            }
+        }
+
+        List<Unit> gateways = getUnitsListOfType(UnitType.Protoss_Gateway);
+        for(Unit gateway : gateways){
+            if(gateway.getTrainingQueue().size() > 0){
+                for(UnitType unit: gateway.getTrainingQueue()){
+                    mineralsUsed+=unit.mineralPrice();
+                }
+            }
+        }
+
+
+        List<Unit> probes = getUnitsListOfType(UnitType.Protoss_Probe);
+        for(Unit probe : probes){
+            if(probe.isConstructing()){
+                //TODO: see if there's a way to figure out what will be constructed.
+                // Orders are not helpful apparently
+                mineralsUsed+=100; //generic number
+            }
+        }
+
+        return mineralsUsed;
+    }
+
     /**
      * True if unit of type is within radius of position
      * @param game Game value assigned at game start
