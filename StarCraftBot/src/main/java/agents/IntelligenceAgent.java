@@ -810,7 +810,34 @@ public class IntelligenceAgent {
      *                                             support air[used, avail]]
      */
     public int[][] getTrainingCapacity() {
-        int trainingCapacity[][] = {{0,3}, {0,3}, {0,3}, {0,3}};
+        int workerCapacity = 0;
+        int workerUsed = 0;
+        for (Unit base : this.getUnitsListOfType(UnitType.Protoss_Nexus)){
+            if(base.isCompleted())
+            {
+                if(base.getTrainingQueue().isEmpty()){
+                    workerCapacity++;
+                }else {
+                    workerUsed++;
+                }
+            }
+        }
+
+        int combatCapacity = 0;
+        int combatUsed = 0;
+        for (Unit gateway : this.getUnitsListOfType(UnitType.Protoss_Gateway)){
+            if(gateway.isCompleted()){
+                if(gateway.getTrainingQueue().isEmpty()){
+                    combatCapacity++;
+                }else {
+                    combatUsed++;
+                }
+            }
+        }
+
+        int trainingCapacity[][] = {{workerUsed,workerCapacity}, {combatUsed,combatCapacity}, {0,0}, {0,0}};
+
+
         return trainingCapacity;
     }
 
