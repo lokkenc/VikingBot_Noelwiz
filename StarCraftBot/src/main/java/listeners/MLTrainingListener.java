@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * This class is a skeleton of StarCraftBotListener that allows the ML model to train separately from the AI planning
  */
-public class MlTrainingListener extends GameListener {
+public class MLTrainingListener extends GameListener {
     private Game game;
     private Player self;
 
@@ -30,7 +30,7 @@ public class MlTrainingListener extends GameListener {
      * Creates a new MlTrainingListener with the specified ListenerType.
      * @param type the ListenerType used to create the listener.
      */
-    public MlTrainingListener(ListenerType type) {
+    public MLTrainingListener(ListenerType type) {
         super(type);
     }
 

@@ -1,6 +1,6 @@
 import listener.GameListener;
 import listener.ListenerType;
-import listeners.MlTrainingListener;
+import listeners.MLTrainingListener;
 
 /**
  * The main instance of the StarCraftBot which will handle setting up the agents between games.
@@ -20,7 +20,7 @@ public enum StarCraftBot {
      */
     public void initialize(ListenerType type) {
         if(type == ListenerType.TRAINING) {
-            listener = new MlTrainingListener(type);
+            listener = new MLTrainingListener(type);
         }
         else {
             listener = new StarCraftBotListener(type);
