@@ -1,6 +1,7 @@
 package planning;
 
 import agents.IntelligenceAgent;
+import agents.StrategyAgent;
 import planning.actions.*;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
@@ -21,9 +22,11 @@ public class StarcraftPlanner {
     private IntelligenceAgent intelligenceAgent;
     private SharedPriorityQueue Actions;
 
-    public StarcraftPlanner(IntelligenceAgent intelligenceAgent) {
-        this.intelligenceAgent = intelligenceAgent;
+    private StrategyAgent strat;
 
+    public StarcraftPlanner(IntelligenceAgent intelligenceAgent, StrategyAgent strategy) {
+        this.intelligenceAgent = intelligenceAgent;
+        strat = strategy;
     }
 
     /**
@@ -39,9 +42,9 @@ public class StarcraftPlanner {
         domain.addActionType(new AttackActionType());
         domain.addActionType(new BuildActionType());
         domain.addActionType(new ExpandActionType());
-        domain.addActionType(new ScoutActionType());
+        //domain.addActionType(new ScoutActionType());
         domain.addActionType(new TrainActionType());
-        domain.addActionType(new UpgradeActionType());
+        //domain.addActionType(new UpgradeActionType());
 
         RewardFunction initalreward = new PlanningRewardFunction(GameStatus.EARLY);
 
@@ -52,7 +55,7 @@ public class StarcraftPlanner {
         HashableStateFactory factory = new ReflectiveHashableStateFactory();
 
         //Tmake sure the enviorment is initalized with everything it needs or something
-        game = new StarcraftEnvironment(initalreward, intelligenceAgent, model);
+        game = new StarcraftEnvironment(initalreward, intelligenceAgent, model, strat);
 
         //NOTE TO FUTURE SELVES: consider adjusting the discount factor.
         float DiscountFactor = 0.5f;

@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.github.JavaBWAPI</groupId>
             <artifactId>JBWAPI</artifactId>
-            <version>1.0.0</version>
+            <version>1.4</version>
         </dependency>
 
         <dependency>

@@ -1,4 +1,4 @@
-package Planning.Actions;
+package planning.actions;
 
 import org.junit.jupiter.api.Test;
 

@@ -2,9 +2,7 @@ package planning;
 
 import agents.EconomyAgent;
 import agents.IntelligenceAgent;
-import planning.actions.ActionParserHelper;
-import planning.actions.BuildAction;
-import planning.actions.TrainAction;
+import agents.StrategyAgent;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
@@ -14,6 +12,9 @@ import bwapi.Game;
 import bwapi.Player;
 import bwapi.Race;
 import bwapi.UnitType;
+import planning.actions.ActionParserHelper;
+import planning.actions.BuildAction;
+import planning.actions.TrainAction;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
@@ -29,6 +30,7 @@ public class StarcraftEnvironment implements Environment {
     private StarcraftModel model;
     private Game game;
     private Player self;
+    private StrategyAgent strategyAgent;
 
 
     /**
@@ -36,10 +38,11 @@ public class StarcraftEnvironment implements Environment {
      * @param rf the reward function that should be used to calculate rewards
      * @param intelligenceAgent the {@link IntelligenceAgent} associated with the current game
      * @param model the {@link StarcraftModel} that is associated with this environment
+     * @param strats The strategy agent for the attacking
      */
-    public StarcraftEnvironment(RewardFunction rf, IntelligenceAgent intelligenceAgent, StarcraftModel model){
+    public StarcraftEnvironment(RewardFunction rf, IntelligenceAgent intelligenceAgent, StarcraftModel model, StrategyAgent strats){
         this.intelligenceAgent = intelligenceAgent;
-        economyAgent = new EconomyAgent(intelligenceAgent);
+        economyAgent = new EconomyAgent(intelligenceAgent.getGame());
         this.model = model;
         rewardFunction = rf;
         ActionQueue = new PriorityQueue<Action>(new QueueComparator());
@@ -47,6 +50,7 @@ public class StarcraftEnvironment implements Environment {
         EnemyRace = intelligenceAgent.getEnemyRace();
         game = intelligenceAgent.getGame();
         self = intelligenceAgent.getSelf();
+        strategyAgent = strats;
     }
 
     /**
@@ -76,14 +80,13 @@ public class StarcraftEnvironment implements Environment {
         UnitType mostCommonCombatUnit = intelligenceAgent.getMostCommonCombatUnit();
         Boolean attackingEnemyBase = intelligenceAgent.attackingEnemyBase();
         Boolean beingAttacked = intelligenceAgent.beingAttacked();
-        Race playerRace = intelligenceAgent.getPlayerRace();
         Race enemyRace = intelligenceAgent.getEnemyRace();
         GameStatus gameStatus = intelligenceAgent.getGameStatus();
         int[][] trainingCapacity = intelligenceAgent.getTrainingCapacity();
 
         retState = new PlanningState(numWorkers, mineralProductionRate, gasProductionRate, numBases, timeSinceLastScout,
                 combatUnitStatuses, numEnemyWorkers, numEnemyBases, mostCommonCombatUnit, attackingEnemyBase,
-                beingAttacked, playerRace, enemyRace, gameStatus, trainingCapacity);
+                beingAttacked, PlayerRace, enemyRace, gameStatus, trainingCapacity);
         return retState;
     }
 
@@ -98,6 +101,53 @@ public class StarcraftEnvironment implements Environment {
         String actionName = action.actionName();
         switch (aph.GetActionType(action)) {
             case ATTACK:
+                String args[] = actionName.split("_");
+                String attackTarget = " ";
+                //temp boolean since we either attack with everything, or
+                //some combo of units
+                boolean attackWith = true;
+
+                for (int i = 0; i < args.length; i++){
+                    if(args[i].startsWith("what=")){
+                        attackTarget = args[i].substring(5);
+                    }else if(args[i].startsWith("unit=")){
+                        /*
+                        unsued right now.
+                        TODO: parse this argument when implemented
+                        if(args[i].endsWith("all")) {
+                            attackWith = true;
+                        } else {
+                            attackWith = false;
+                        }
+                        */
+
+                    }
+                }
+
+                switch (attackTarget){
+                    case "harass":
+
+                        break;
+                    case "base":
+
+
+                        break;
+
+                    case "army":
+
+
+                        break;
+
+                    case "defend":
+
+
+                        break;
+                    default:
+                        //intelligenceAgent.get
+                        break;
+                }
+
+                strategyAgent.attackEnemy(IntelligenceAgent.getInstance(game).getCombatUnits(self));
 
                 break;
             case BUILD:

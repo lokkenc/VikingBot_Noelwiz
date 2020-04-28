@@ -15,12 +15,14 @@ import ml.range.Units;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Main Class for Combat control. This Class has some hard coded functions to allow simple combat actions to be taken but
  * in most cases the ControlArmy function should be used.
  */
 public class CombatAgent {
+    private static CombatAgent onlyInstance = null;
 
     IntelligenceAgent intel;
     ArrayList<LearningManager> models;
@@ -29,13 +31,22 @@ public class CombatAgent {
 
     /**
      * Constructor
-     * @param intel intelligence agent
+     * @param game the current game
      */
-    public CombatAgent(IntelligenceAgent intel) {
-        this.intel = intel;
+    private CombatAgent(Game game) {
+        this.intel = IntelligenceAgent.getInstance(game);
         this.models = new ArrayList<LearningManager>();
         UnitStateActionPair = new HashMap<Unit, StateAction>();
         skirmish = false;
+    }
+
+
+    public static CombatAgent getInstance(Game game) {
+        if(onlyInstance == null) {
+            onlyInstance = new CombatAgent(game);
+        }
+
+        return onlyInstance;
     }
 
     /**
@@ -124,7 +135,7 @@ public class CombatAgent {
      * @param game Active game passed from the StrategyAgent
      * @param allUnits List of all units that are currently available
      */
-    public void controlArmy(Game game, ArrayList<Unit> allUnits) {
+    public void controlArmy(Game game, List<Unit> allUnits) {
         for(Unit unit: allUnits) {
             for(LearningManager lm: models) {
                 if(lm.getUnitClassification() == getUnitClassification(unit.getType())) {

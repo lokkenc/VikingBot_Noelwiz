@@ -1,4 +1,4 @@
-package Planning.Actions;
+package planning.actions;
 
 public class testingattackaction extends AttackAction {
 

@@ -1,38 +1,48 @@
 package agents;
 
-import planning.actions.ActionParserHelper;
-import planning.SharedPriorityQueue;
-import planning.StarcraftPlanner;
 import burlap.mdp.core.action.Action;
 import bwapi.*;
-import bwta.*;
+import planning.SharedPriorityQueue;
+import planning.StarcraftPlanner;
+import planning.actions.ActionParserHelper;
+
+import java.util.List;
 
 public class StrategyAgent {
     private Game game;
     private Player self;
 
+    //units given
+    private int retreatThreshold = 0;
+
     private IntelligenceAgent intel;
     private EconomyAgent economy;
     private StarcraftPlanner planner;
     private SharedPriorityQueue todo;
+    private Action lastAct = null;
 
-    public StrategyAgent(Game game, IntelligenceAgent intel) {
+    public StrategyAgent(Game game) {
         this.game = game;
         this.self = game.self();
-        this.intel = intel;
-        this.economy = new EconomyAgent(intel);
-        planner = new StarcraftPlanner(intel);
+        this.intel = IntelligenceAgent.getInstance(game);
+        this.economy = new EconomyAgent(game);
+        planner = new StarcraftPlanner(intel, this);
         todo = new SharedPriorityQueue(planner);
         planner.Initalize(todo);
     }
 
+
+
     public void update() {
         //use the planner
         //if we can do the action
-        if(canExecute(todo.Peek())){
+        if(canExecute(todo.Peek()) && todo.Peek() != lastAct){
             //tell the planner to tell the enviorment to tell the bot
             //to do the action.
+            lastAct = todo.Peek();
             planner.ExecuteAction();
+        } else if(lastAct != null){
+            lastAct = null;
         }
 
 
@@ -46,8 +56,11 @@ public class StrategyAgent {
         }
         */
 
+        int numCombatUnits = 0;
+        UnitType currentUnitType;
         //iterate through my units
         for (Unit myUnit : self.getUnits()) {
+            currentUnitType = myUnit.getType();
 
             /*
             if (myUnit.getType() == UnitType.Protoss_Nexus && myUnit.isUnderAttack()) {
@@ -56,9 +69,10 @@ public class StrategyAgent {
             */
 
             //if it's a worker and it's idle, send it to the closest mineral patch
-            if (myUnit.getType().isWorker() && myUnit.isIdle()) {
+            if (currentUnitType.isWorker() && myUnit.isIdle()) {
                 if(intel.isScout(myUnit.getID())) {
                     if(!intel.getEnemyBuildingMemory().isEmpty()) {
+                        //get a base to gather minerals at
                         for(Unit unit: self.getUnits()) {
                             if(unit.getType() == UnitType.Protoss_Nexus) {
                                 economy.gatherMinerals(game, myUnit, unit);
@@ -68,10 +82,43 @@ public class StrategyAgent {
                 } else {
                     economy.gatherMinerals(game, myUnit);
                 }
+                //count number of combat units to decide if to retreat
+            } else if (!myUnit.getType().isBuilding() && myUnit.getType().canAttack()){
+                numCombatUnits++;
             }
         }
 
+
+        //retreat the army.
+        //TODO: figure out when to take controll again, and if we can..
+        if(numCombatUnits < retreatThreshold){
+            CombatAgent.getInstance(game).setSkirmish(true);
+        }
+
     }
+
+
+    public void attackEnemy(List<Unit> army){
+        if(army != null){
+            CombatAgent ca = CombatAgent.getInstance(game);
+            ca.setSkirmish(false);
+            //retreat when we only have 1/8 units remaining
+            retreatThreshold = army.size()/8;
+            ca.controlArmy(game, army);
+            if(self.getRace() == Race.Protoss){
+                ca.attackEnemyBase(self, UnitType.Protoss_Zealot);
+            } else if (self.getRace() == Race.Zerg) {
+                ca.attackEnemyBase(self, UnitType.Zerg_Zergling);
+            }
+
+        } else {
+            System.err.println("attackEnemy passed empty army");
+        }
+
+
+    }
+
+
 
     /**
      * Checks if a given action can possibly be executed at the present time
@@ -80,20 +127,50 @@ public class StrategyAgent {
      */
     private boolean canExecute(Action a){
         boolean result = false;
-
+        int availMinerals = self.minerals() -  intel.getOrderedMineralUse();
 
         switch (ActionParserHelper.GetActionType(a)){
             case UPGRADE:
                 //TODO: check cost of upgrade + implement
-                if(self.minerals() > 200){
+                if(availMinerals > 200 ){
                     //TODO: CHANGE THIS TO TRUE WHEN implemented
                     result = false;
                 }
                 break;
             case TRAIN:
-                //TODO: check cost of unit in action
-                if(self.minerals() >= 50){
-                    result = true;
+                int numUnits  = 1;
+
+                if(self.supplyTotal() > self.supplyUsed()){
+                    //UnitType.Protoss_Nexus.mineralPrice();
+                    UnitType whatUnit = UnitType.Unknown;
+
+                    String args[] = a.actionName().split("_");
+                    for(int i = 0; i < args.length; i++){
+                        String currentarg;
+                        if(args[i].startsWith("what=")){
+                            currentarg = args[i].split("=")[1];
+                            switch (currentarg){
+                                case "worker":
+                                    whatUnit = UnitType.Protoss_Probe;
+                                    break;
+                                case "combatUnit":
+                                    if( intel.getUnitsOfType(self, UnitType.Protoss_Gateway) > 0){
+                                        whatUnit = UnitType.Protoss_Zealot;
+                                    } //else we can't train this.
+                                    break;
+                            }
+
+                        }else if(args[i].startsWith("amount=")){
+                            currentarg=args[i].split("=")[1];
+                            numUnits = Integer.parseInt(currentarg);
+                        }
+                    }
+
+                    //TODO: check cost of unit in action
+                    if(whatUnit != UnitType.Unknown){
+                        result = numUnits * whatUnit.mineralPrice() <= self.minerals()
+                        && self.supplyTotal() > self.supplyUsed()+ + whatUnit.supplyRequired();
+                    }
                 }
                 break;
             case SCOUT:
@@ -107,15 +184,18 @@ public class StrategyAgent {
                 }
                 break;
             case BUILD:
-                //TODO: CHECK BUILDING PRICE of the actions desired building.
-                if(self.minerals() > 150){
-                    //TODO: implement expand.
+                String what = a.actionName().split("_")[1];
+                //check cost of building
+                if(what.equals("pop") && availMinerals > 100){
+                    result = true;
+                } else if(what.equals("train") && availMinerals > 150){
                     result = true;
                 }
                 break;
             case ATTACK:
-                //TODO: implement + change this to true
-                result = false;
+                if(intel.getUnitsListOfType(UnitType.Protoss_Zealot).size() > 0) {
+                    result = true;
+                }
                 break;
             case UNKNOWN:
                 result = false;

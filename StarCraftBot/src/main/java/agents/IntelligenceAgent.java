@@ -299,6 +299,40 @@ public class IntelligenceAgent {
         return unitsList;
     }
 
+
+    public int getOrderedMineralUse(){
+        int mineralsUsed = 0;
+        List<Unit> nexi = getUnitsListOfType(UnitType.Protoss_Nexus);
+        for(Unit nexus : nexi){
+            if(nexus.getTrainingQueue().size() > 0){
+                for(UnitType unit: nexus.getTrainingQueue()){
+                    mineralsUsed+=unit.mineralPrice();
+                }
+            }
+        }
+
+        List<Unit> gateways = getUnitsListOfType(UnitType.Protoss_Gateway);
+        for(Unit gateway : gateways){
+            if(gateway.getTrainingQueue().size() > 0){
+                for(UnitType unit: gateway.getTrainingQueue()){
+                    mineralsUsed+=unit.mineralPrice();
+                }
+            }
+        }
+
+
+        List<Unit> probes = getUnitsListOfType(UnitType.Protoss_Probe);
+        for(Unit probe : probes){
+            if(probe.isConstructing()){
+                //TODO: see if there's a way to figure out what will be constructed.
+                // Orders are not helpful apparently
+                mineralsUsed+=100; //generic number
+            }
+        }
+
+        return mineralsUsed;
+    }
+
     /**
      * True if unit of type is within radius of position
      * @param game Game value assigned at game start
@@ -318,6 +352,33 @@ public class IntelligenceAgent {
         }
 
         return false;
+    }
+
+
+    /**
+     * Get the current combat units that exist to attack with.
+     * @param self the Player
+     * @return a List of fighting <Units>s.
+     */
+    public List<Unit> getCombatUnits(Player self){
+        UnitFilter filter = new UnitFilter() {
+            @Override
+            public boolean test(Unit unit) {
+                return (!(unit.isBeingConstructed() && unit.getType().isWorker() &&
+                        unit.getType().isBuilding()) && unit.canAttack());
+            }
+        };
+
+        List<Unit> military = new LinkedList<Unit>();
+
+        for (Unit unit : self.getUnits()) {
+            if(filter.test(unit)){
+                military.add(unit);
+            }
+
+        }
+
+        return military;
     }
 
     /**
@@ -718,31 +779,47 @@ public class IntelligenceAgent {
     public Boolean beingAttacked() {
         ArrayList<Unit> bases = new ArrayList<>();
         UnitType baseType;
+        UnitType creepOrPower = null;
+        UnitType train;
         switch (enemyRace) {
             case Terran:
                 baseType = UnitType.Terran_Command_Center;
+                train = UnitType.Terran_Academy;
+                creepOrPower = UnitType.Terran_Bunker;
                 break;
             case Zerg:
                 baseType = UnitType.Zerg_Hatchery;
+                train = UnitType.Zerg_Spawning_Pool;
                 break;
             default:
                 baseType = UnitType.Protoss_Nexus;
+                train = UnitType.Protoss_Gateway;
+                creepOrPower = UnitType.Protoss_Pylon;
                 break;
         }
-        //Get list of our bases
-        for (Unit unit: self.getUnits()) {
-            if (unit.getType() == baseType) {
-                bases.add(unit);
-            }
-        }
+
         //For each base, check if we are being attacked there
-        for (Unit base: bases) {
-            for (Unit unit: game.enemy().getUnits()) {
-                if (unit.isAttacking() && unit.getRegion() == base.getRegion()) {
-                    return true;
-                }
+        for (Unit base: getUnitsListOfType(baseType)) {
+            if(base.isUnderAttack()){
+                return true;
             }
         }
+
+        //For each base, check if we are being attacked there
+        for (Unit pop: getUnitsListOfType(creepOrPower)) {
+            if(pop.isUnderAttack()){
+                return true;
+            }
+        }
+
+        //For each base, check if we are being attacked there
+        for (Unit base: getUnitsListOfType(train)) {
+            if(base.isUnderAttack()){
+                return true;
+            }
+        }
+
+
         return false;
     }
 
@@ -783,7 +860,34 @@ public class IntelligenceAgent {
      *                                             support air[used, avail]]
      */
     public int[][] getTrainingCapacity() {
-        int trainingCapacity[][] = {{0,3}, {0,3}, {0,3}, {0,3}};
+        int workerCapacity = 0;
+        int workerUsed = 0;
+        for (Unit base : this.getUnitsListOfType(UnitType.Protoss_Nexus)){
+            if(base.isCompleted())
+            {
+                if(base.getTrainingQueue().isEmpty()){
+                    workerCapacity++;
+                }else {
+                    workerUsed++;
+                }
+            }
+        }
+
+        int combatCapacity = 0;
+        int combatUsed = 0;
+        for (Unit gateway : this.getUnitsListOfType(UnitType.Protoss_Gateway)){
+            if(gateway.isCompleted()){
+                if(gateway.getTrainingQueue().isEmpty()){
+                    combatCapacity++;
+                }else {
+                    combatUsed++;
+                }
+            }
+        }
+
+        int trainingCapacity[][] = {{workerUsed,workerCapacity}, {combatUsed,combatCapacity}, {0,0}, {0,0}};
+
+
         return trainingCapacity;
     }
 
