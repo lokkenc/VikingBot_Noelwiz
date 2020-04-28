@@ -170,8 +170,9 @@ public class PlanningRewardFunction implements RewardFunction {
                     reward += 50;
                     if ((int) s.get("numWorkers") > targetNumWorkers) {
                         reward += 75;
-                    } if (rand.nextInt(10) == 2)
-                        reward += 50;
+                    }
+                    /*if (rand.nextInt(10) == 2)
+                        reward += 50;*/
                 } else {
                     reward -= 50;
                 }

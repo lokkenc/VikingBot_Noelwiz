@@ -1,6 +1,6 @@
-package Planning.Actions;
+package planning.actions;
 
-import Planning.CombatUnitStatus;
+import planning.CombatUnitStatus;
 import bwapi.UnitType;
 import org.junit.jupiter.api.Test;
 

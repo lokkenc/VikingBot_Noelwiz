@@ -30,6 +30,8 @@ public class SharedPriorityQueue {
     public boolean EnQueue(Action action){
         boolean add = ActionQueue.add(action);
 
+        System.out.println("Enqueued: "+action.actionName());
+
         if(!add){
             System.err.println("Error: failed to add action.");
         }

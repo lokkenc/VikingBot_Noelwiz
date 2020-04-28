@@ -36,7 +36,7 @@ public class Training extends DefaultBWListener{
         game = bwClient.getGame();
         self = game.self();
         intel = IntelligenceAgent.getInstance(game);
-        combat = new CombatAgent(intel);
+        combat = CombatAgent.getInstance(game);
         
         combat.addUnitTypeToModel(UnitClassification.MELEE);
         combat.addUnitTypeToModel(UnitClassification.RANGED);
