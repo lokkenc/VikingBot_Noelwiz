@@ -65,7 +65,7 @@ public class StarcraftPlanner {
         sparcePolicy = new GreedyQPolicy(sparsePlanner);
 
         //NOTE TO FUTURE SELVES: consider adjusting this.
-        sparsePlanner.setForgetPreviousPlanResults(true);
+        sparsePlanner.setForgetPreviousPlanResults(false);
         //sparsePlanner.setComputeExactValueFunction(true);
 
         //enqueue 3 actions
