@@ -905,6 +905,22 @@ public class IntelligenceAgent {
         return trainingCapacity;
     }
 
+    /**
+     *
+     * @return the maximum number of units that can currently exist.
+     */
+    public int getPopulationCapacity() {
+        return self.supplyTotal();
+    }
+
+    /**
+     *
+     * @return the total number of units that currently exist.
+     */
+    public int getPopulationUsed() {
+        return self.supplyUsed();
+    }
+
     /* * *Supporting Methods for getTrainingCapacity() * * */
 
 
