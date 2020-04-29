@@ -62,6 +62,14 @@ public class IntelligenceAgent {
     }
 
     /**
+     *
+     * @return the HashMap of UnitTypes and number of Units of the respective UnitType.
+     */
+    public HashMap<UnitType, Integer> getUnitMemory() {
+        return unitMemory;
+    }
+
+    /**
      * Clears current unitMemory and uses {@link #updateUnitMemory} to add all trained units to hashmap
      * @param self Player assigned to the bot
      */

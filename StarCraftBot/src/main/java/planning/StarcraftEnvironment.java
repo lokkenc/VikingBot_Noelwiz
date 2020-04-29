@@ -17,6 +17,7 @@ import planning.actions.BuildAction;
 import planning.actions.TrainAction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class StarcraftEnvironment implements Environment {
@@ -85,10 +86,12 @@ public class StarcraftEnvironment implements Environment {
         int[][] trainingCapacity = intelligenceAgent.getTrainingCapacity();
         int populationCapacity = intelligenceAgent.getPopulationCapacity();
         int populationUsed = intelligenceAgent.getPopulationUsed();
+        HashMap<UnitType, Integer> unitMemory = intelligenceAgent.getUnitMemory();
 
         retState = new PlanningState(numWorkers, mineralProductionRate, gasProductionRate, numBases, timeSinceLastScout,
                 combatUnitStatuses, numEnemyWorkers, numEnemyBases, mostCommonCombatUnit, attackingEnemyBase,
-                beingAttacked, PlayerRace, enemyRace, gameStatus, trainingCapacity, populationCapacity, populationUsed);
+                beingAttacked, PlayerRace, enemyRace, gameStatus, trainingCapacity, populationCapacity, populationUsed,
+                unitMemory);
 
         return retState;
     }
