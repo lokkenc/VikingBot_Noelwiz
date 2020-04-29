@@ -36,7 +36,7 @@ public class StrategyAgent {
     public void update() {
         //use the planner
         //if we can do the action
-        if(canExecute(todo.Peek()) && todo.Peek() != lastAct){
+        if(canExecute(todo.Peek())){
             //tell the planner to tell the enviorment to tell the bot
             //to do the action.
             lastAct = todo.Peek();
@@ -93,17 +93,24 @@ public class StrategyAgent {
         //TODO: figure out when to take controll again, and if we can..
         if(numCombatUnits < retreatThreshold){
             CombatAgent.getInstance(game).setSkirmish(true);
+            //RETREEAT
+            intel.setAttacking(false);
         }
 
     }
 
-
+    /**
+     * Hand over an army to the ML
+     * @param army list of units for the ML to use
+     */
     public void attackEnemy(List<Unit> army){
         if(army != null){
             CombatAgent ca = CombatAgent.getInstance(game);
             ca.setSkirmish(false);
             //retreat when we only have 1/8 units remaining
             retreatThreshold = army.size()/8;
+            //attacK
+            intel.setAttacking(true);
             ca.controlArmy(game, army);
             if(self.getRace() == Race.Protoss){
                 ca.attackEnemyBase(self, UnitType.Protoss_Zealot);
@@ -184,12 +191,19 @@ public class StrategyAgent {
                 }
                 break;
             case BUILD:
-                String what = a.actionName().split("_")[1];
-                //check cost of building
-                if(what.equals("pop") && availMinerals > 100){
-                    result = true;
-                } else if(what.equals("train") && availMinerals > 150){
-                    result = true;
+                //we need a worker
+                if(intel.getUnitsOfType(self, UnitType.Protoss_Probe) > 0){
+                    String what = a.actionName().split("_")[1];
+                    //check cost of building
+                    if(what.equals("pop") && availMinerals > 100){
+                        result = true;
+                        //TODO: MORE general function to test if there's a space to biold on
+
+                    } else if(intel.getUnitsOfType(self, UnitType.Protoss_Pylon) > 1){
+                        if(what.equals("train") && availMinerals > 150){
+                            result = true;
+                        }
+                    }
                 }
                 break;
             case ATTACK:

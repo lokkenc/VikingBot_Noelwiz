@@ -7,6 +7,7 @@ import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class PlanningRewardFunction implements RewardFunction {
@@ -146,7 +147,8 @@ public class PlanningRewardFunction implements RewardFunction {
         int targetNumWorkers = 12 * (int) s.get("numBases");
         int targetMineralProduction = 500; //500 minerals per minute
         int targetGasProduction = 250; //250 units per minute
-        int targetArmySize = 50;
+        //8 because the planner will consistantly get to 8 units
+        int targetArmySize = 8;
         int maxTimeSinceLastScout = 3600;
         int incentiveMultiplier = 100;
         int populationCap = 9; //POSSIBLE VARIABLE IN STATE ???
@@ -154,7 +156,29 @@ public class PlanningRewardFunction implements RewardFunction {
         ActionParserHelper aph = new ActionParserHelper();
         switch(aph.GetActionType(a)) {
             case ATTACK :
-                reward -= 500;
+                String target = "";
+                String actionarg[] = a.actionName().split("_");
+
+                for(String arg : actionarg){
+                    String argumentparts[] = arg.split("=");
+                    switch (argumentparts[0]){
+                        case "what":
+                            target = argumentparts[1];
+                            break;
+                        //case "unit":
+                        default:
+                            //with what units
+                            break;
+                    }
+                }
+
+                if( ((boolean) s.get("beingAttacked")) && target.equals("defend") ){
+                    reward += 1000;
+                } else if ((Boolean) sprime.get("attackingEnemyBase") == false && this.calcArmySize(s) >= targetArmySize){
+                    reward += 750;
+                } else {
+                    reward -= 500;
+                }
                 break;
             case BUILD:
                 //Get information of what is being built?
@@ -254,5 +278,21 @@ public class PlanningRewardFunction implements RewardFunction {
      */
     public void setGameStatus(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
+    }
+
+
+    /**
+     * retrieves the army size from a given state.
+     * @param s a state
+     * @return # combat units
+     */
+    private int calcArmySize(State s){
+        ArrayList<CombatUnitStatus> combatUnitStatuses = (ArrayList<CombatUnitStatus>) s.get("combatUnitStatuses");
+        int armysize = 0;
+        for(CombatUnitStatus cbs: combatUnitStatuses){
+            //intel makes sure these are combat units
+            armysize += cbs.getAmount();
+        }
+        return armysize;
     }
 }

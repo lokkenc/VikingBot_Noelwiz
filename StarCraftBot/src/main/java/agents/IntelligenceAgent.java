@@ -27,6 +27,7 @@ public class IntelligenceAgent {
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
     private int scoutTimer;
+    private boolean attacking = false;
 
     private IntelligenceAgent(Player self, Game game) {
         this.self = self;
@@ -564,13 +565,15 @@ public class IntelligenceAgent {
                 productionRate= zgk.AverageMineralProductionRate(numWorkers);
                 break;
             case Protoss:
-                numBases = unitMemory.get(UnitType.Protoss_Nexus);
-                numWorkers = new int[numBases];
-                for (int i = 0; i < numBases; i++) {
-                    numWorkers[i] = getNumWorkersGatheringMinerals() / numBases;
+                if(unitMemory!= null){
+                    numBases = unitMemory.get(UnitType.Protoss_Nexus);
+                    numWorkers = new int[numBases];
+                    for (int i = 0; i < numBases; i++) {
+                        numWorkers[i] = getNumWorkersGatheringMinerals() / numBases;
+                    }
+                    ProtossGeneralKnowledge pgk= new ProtossGeneralKnowledge();
+                    productionRate= pgk.AverageMineralProductionRate(numWorkers);
                 }
-                ProtossGeneralKnowledge pgk= new ProtossGeneralKnowledge();
-                productionRate= pgk.AverageMineralProductionRate(numWorkers);
                 break;
         }
         return productionRate;
@@ -660,7 +663,7 @@ public class IntelligenceAgent {
     public ArrayList<CombatUnitStatus> getCombatUnitStatuses() {
         ArrayList<CombatUnitStatus> list = new ArrayList<CombatUnitStatus>();
         for (UnitType unit: unitMemory.keySet()) {
-            if (unit.canAttack() && !(unit.isWorker())) {
+            if (unit.canAttack() && !(unit.isWorker()) /*&& !unit.isBuilding() */) {
                 CombatUnitStatus status = new CombatUnitStatus(unit, unitMemory.get(unit));
                 list.add(status);
             }
@@ -737,6 +740,15 @@ public class IntelligenceAgent {
         return mostCommonType;
     }
 
+
+    /**
+     * let the intel agent tell ask if we're attacking.
+     * @param setTo boolean, weather or not we are taking an attack action.
+     */
+    protected void setAttacking(boolean setTo){
+        this.attacking = setTo;
+    }
+
     /**
      * Checks if the players is attacking the enemy base
      * @return true if the players is attacking the enemy base, false otherwise
@@ -769,8 +781,10 @@ public class IntelligenceAgent {
                 }
             }
         }
-        return false;
+        return false || attacking;
     }
+
+
 
     /**
      * Checks if the players bases is being attacked

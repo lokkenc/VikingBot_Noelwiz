@@ -107,7 +107,7 @@ public class CombatAgent {
                 if(enemyBuildingMemory.iterator().hasNext()) {
                     myUnit.attack(enemyBuildingMemory.iterator().next());
                 } else {
-                    myUnit.attack(BWTA.getStartLocations().get(BWTA.getStartLocations().size()).getPosition());
+                    myUnit.attack(BWTA.getStartLocations().get( BWTA.getStartLocations().size() - 1).getPosition());
                 }
             }
         }

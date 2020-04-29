@@ -76,9 +76,9 @@ public class QueueComparator implements Comparator {
             if (a1name.equals(a2name)){
                 netdifference = 0; //no op
             } else if(a1name.endsWith("_pop")){
-                netdifference = 1;
-            } else if(a2name.endsWith("_pop")){
                 netdifference = -1;
+            } else if(a2name.endsWith("_pop")){
+                netdifference = +1;
             }
 
 
