@@ -12,9 +12,9 @@ import bwapi.*;
 import java.util.ArrayList;
 
 /**
- * This class is a skeleton of StrategyAgent that allows the ML model to train separately from the AI planning
+ * This class is a skeleton of StarCraftBotListener that allows the ML model to train separately from the AI planning
  */
-public class MlTrainingListener extends GameListener {
+public class MLTrainingListener extends GameListener {
     private Game game;
     private Player self;
 
@@ -26,10 +26,17 @@ public class MlTrainingListener extends GameListener {
     private int Epoch_Cycles = 0;
     private boolean skirmVal = false;
 
-    public MlTrainingListener(ListenerType type) {
+    /**
+     * Creates a new MlTrainingListener with the specified ListenerType.
+     * @param type the ListenerType used to create the listener.
+     */
+    public MLTrainingListener(ListenerType type) {
         super(type);
     }
 
+    /**
+     * Prepares the minimum number of agents needed to train the CombatAgent (IntelligenceAgent and CombatAgent).
+     */
     @Override
     public void onStart() {
         game = bwClient.getGame();
@@ -48,11 +55,18 @@ public class MlTrainingListener extends GameListener {
         skirmVal = false;
     }
 
+    /**
+     * Stores the machine learning models at the end of the game.
+     * @param isWinner is true if the bot won the game.
+     */
     @Override
     public void onEnd(boolean isWinner) {
         combat.storeModels();
     }
 
+    /**
+     * Updates the IntelligenceAgent, draws stats on screen, and has the CombatAgent train.
+     */
     @Override
     public void onFrame() {
         intel.tabulateUnits(self);
