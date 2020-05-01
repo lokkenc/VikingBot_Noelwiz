@@ -95,8 +95,6 @@ public class PlanningState implements HashableState, State {
         String key = variableKey.toString();
         Object result;
 
-
-
         //String implementation
         switch(key){
             case "numWorkers":
@@ -144,10 +142,18 @@ public class PlanningState implements HashableState, State {
             case "trainingCapacity":
                 result = trainingCapacity;
                 break;
+            case "populationCapacity":
+                result = populationCapacity;
+                break;
+            case "populationUsed":
+                result = populationUsed;
+                break;
+            case "unitMemory":
+                result = unitMemory;
+                break;
             default:
                 result = null;
         }
-
 
         return result;
     }
