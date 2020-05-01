@@ -92,7 +92,6 @@ public class StrategyAgent {
             //RETREEAT
             intel.setAttacking(false);
         }
-
     }
 
     /**
@@ -117,8 +116,6 @@ public class StrategyAgent {
         } else {
             System.err.println("attackEnemy passed empty army");
         }
-
-
     }
 
     /**
@@ -128,7 +125,7 @@ public class StrategyAgent {
      */
     private boolean canExecute(Action a){
         boolean result = false;
-        int availMinerals = self.minerals() -  intel.getOrderedMineralUse();
+        int availMinerals = self.minerals() - intel.getOrderedMineralUse();
 
         switch (ActionParserHelper.GetActionType(a)){
             case UPGRADE:
