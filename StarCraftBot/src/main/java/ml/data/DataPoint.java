@@ -37,7 +37,7 @@ public class DataPoint implements Serializable {
 
     /**
      * Get the current State.
-     * @return returns the current State.
+     * @return The current State.
      */
     public State getCurrent() {
         return current;
@@ -45,7 +45,7 @@ public class DataPoint implements Serializable {
 
     /**
      * Get the Action executed in the current State.
-     * @return returns the Action executed in the current State.
+     * @return The Action executed in the current State.
      */
     public Action getAction() {
         return action;
@@ -53,7 +53,7 @@ public class DataPoint implements Serializable {
 
     /**
      * Gets the resulting next State from executing the Action in the current State.
-     * @return returns the resulting next State.
+     * @return The resulting next State.
      */
     public State getNext() {
         return next;
@@ -61,7 +61,7 @@ public class DataPoint implements Serializable {
 
     /**
      * Gets the reward given for executing the Action in the current State.
-     * @return returns a reward in the form of a double for executing the Action in the current State.
+     * @return A reward in the form of a double for executing the Action in the current State.
      */
     public double getReward() {
         return reward;
@@ -69,7 +69,7 @@ public class DataPoint implements Serializable {
 
     /**
      * Gets the Q-Value associated with the (State, Action, State, reward) tuple.
-     * @return returns the Q-Value for the (State, Action, State, reward) tuple.
+     * @return The Q-Value for the (State, Action, State, reward) tuple.
      */
     public double getQvalue() {
         return qvalue;

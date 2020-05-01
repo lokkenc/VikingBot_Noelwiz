@@ -29,7 +29,7 @@ public class Hp implements Serializable {
 
     /**
      *
-     * @return returns the range of the hp
+     * @return The range of the hp
      */
     public HpRange getRange() {
         return range;
@@ -45,7 +45,7 @@ public class Hp implements Serializable {
 
     /**
      *
-     * @return returns the integer value of the hp.
+     * @return The integer value of the hp.
      */
     public int getValue() {
         return value;

@@ -78,7 +78,7 @@ public class LearningManager implements Serializable {
     /**
      * Uses the GreedyActionChooser to get the action that should be executed in the current State.
      * @param state the current State.
-     * @return returns the Action that should be executed in the current State.
+     * @return The Action that should be executed in the current State.
      */
     public Action getNextAction(State state) {
         return greedyActionChooser.chooseAction(spaceManager, state, sarsa.getQTable());
@@ -86,13 +86,13 @@ public class LearningManager implements Serializable {
 
     /**
      * Gets the type of unit the LearningManager is managing.
-     * @return returns the classification of the unit being managed
+     * @return The classification of the unit being managed
      */
     public UnitClassification getUnitClassification() { return this.unitClass; }
 
     /**
      * Gets the DataManager being used by the LearningManager for collecting data points.
-     * @return returns the DataManager.
+     * @return The DataManager.
      */
     public DataManager getDataManager() {
         return sarsa.getDataManager();

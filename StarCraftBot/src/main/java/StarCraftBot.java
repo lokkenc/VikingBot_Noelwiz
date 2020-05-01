@@ -29,7 +29,7 @@ public enum StarCraftBot {
 
     /**
      * Get's the current GameListener being used to handle in-game events.
-     * @return returns the GameListener being used by the StarCraftBot instance.
+     * @return The GameListener being used by the StarCraftBot instance.
      */
     public GameListener getListener() {
         return listener;

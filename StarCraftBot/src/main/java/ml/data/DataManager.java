@@ -81,7 +81,7 @@ public class DataManager implements Serializable {
 
     /**
      * Gets an ArrayList of rewards from the collection of DataPoints.
-     * @return returns an ArrayList of doubles containing all of the rewards that have been received.
+     * @return An ArrayList of doubles containing all of the rewards that have been received.
      */
     public ArrayList<Double> getRewards() {
         ArrayList<Double> rewards = new ArrayList<>();
@@ -95,7 +95,7 @@ public class DataManager implements Serializable {
 
     /**
      * Gets the average of all of the rewards that have been collected.
-     * @return returns a double of the average over all collected rewards.
+     * @return A double of the average over all collected rewards.
      */
     public double getAverageReward() {
         double avg = 0;
@@ -114,7 +114,7 @@ public class DataManager implements Serializable {
     /**
      * Gets the average of all rewards given to a specific ActionType.
      * @param type the ActionType for filtering rewards.
-     * @return returns a double of the average over all collected rewards for the specified ActionType.
+     * @return A double of the average over all collected rewards for the specified ActionType.
      */
     public double getAverageReward(ActionType type) {
         double avg = 0;
@@ -134,7 +134,7 @@ public class DataManager implements Serializable {
 
     /**
      * Gets an ArrayList of Q-Values from the collection of DataPoints.
-     * @return returns an ArrayList of doubles containing all of the Q-Values that have been calculated.
+     * @return An ArrayList of doubles containing all of the Q-Values that have been calculated.
      */
     public ArrayList<Double> getQvalues() {
         ArrayList<Double> qvalues = new ArrayList<>();
@@ -149,7 +149,7 @@ public class DataManager implements Serializable {
     /**
      * Gets the integer frequency of a specific State.
      * @param state the State used to find the number of times that the State has been visited.
-     * @return returns an integer value representing the number of times that the State has been visited.
+     * @return An integer value representing the number of times that the State has been visited.
      */
     public int getFrequency(State state) {
         int frequency = 0;
@@ -163,7 +163,7 @@ public class DataManager implements Serializable {
 
     /**
      * Returns the largest frequency in the stateFrequency map.
-     * @return returns an integer value representing the maximum number of times any particular State has been visited.
+     * @return An integer value representing the maximum number of times any particular State has been visited.
      */
     public int getMaxFrequency() {
         return Collections.max(stateFrequency.values());
@@ -171,7 +171,7 @@ public class DataManager implements Serializable {
 
     /**
      * Gets the State that has the largest frequency.
-     * @return returns the State that has the maximum number of occurrences in the stateFrequency map.
+     * @return The State that has the maximum number of occurrences in the stateFrequency map.
      */
     public State getMaxFrequencyState() {
         return Collections.max(stateFrequency.entrySet(), HashMap.Entry.comparingByValue()).getKey();
@@ -179,7 +179,7 @@ public class DataManager implements Serializable {
 
     /**
      * Gets an ArrayList of all of the DataPoints that have been collected.
-     * @return returns an ArrayList of all collected DataPoints.
+     * @return An ArrayList of all collected DataPoints.
      */
     public ArrayList<DataPoint> getDataPoints() {
         return dataPoints;
@@ -187,7 +187,7 @@ public class DataManager implements Serializable {
 
     /**
      * Gets the stateFrequency map.
-     * @return returns a HashMap of State to int which represents how many times a unique state has been visited.
+     * @return A HashMap of State to int which represents how many times a unique state has been visited.
      */
     public HashMap<State, Integer> getStateFrequency() {
         return stateFrequency;
@@ -195,7 +195,7 @@ public class DataManager implements Serializable {
 
     /**
      * Gets the unitClassification of unit that the DataManager is collecting data on.
-     * @return returns the classification of the unit we are gathering data on
+     * @return The classification of the unit we are gathering data on
      */
     public UnitClassification getClassification() {
         return unitClass;

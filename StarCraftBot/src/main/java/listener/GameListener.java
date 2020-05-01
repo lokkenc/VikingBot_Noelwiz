@@ -43,7 +43,7 @@ public abstract class GameListener extends DefaultBWListener {
 
     /**
      * Get's the ListenerType of the GameListener.
-     * @return returns the GameListener's ListenerType.
+     * @return The GameListener's ListenerType.
      */
     public ListenerType getType() {
         return this.type;

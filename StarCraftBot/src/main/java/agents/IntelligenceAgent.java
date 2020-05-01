@@ -98,7 +98,6 @@ public class IntelligenceAgent {
         }
     }
 
-
     /**
      * Checks if player has units of type type
      * @param type UnitType to check for
@@ -239,7 +238,7 @@ public class IntelligenceAgent {
 
     /**
      * Returns the current enemyBuildingMemory
-     * @return returns the current enemyBuildingMemory
+     * @return The current enemyBuildingMemory
      */
     public HashSet<Position> getEnemyBuildingMemory() {
         return enemyBuildingMemory;
@@ -277,7 +276,7 @@ public class IntelligenceAgent {
      * Returns the total count of units of type
      * @param self Player assigned to the bot
      * @param type UnitType to get the count of
-     * @return returns the count of units of type
+     * @return The count of units of type
      */
     public int getUnitsOfType (Player self, UnitType type) {
         int numOfUnits = 0;
@@ -397,7 +396,7 @@ public class IntelligenceAgent {
      * @param target UnitType to use as the anchor for the radius
      * @param type UnitType to check radius for
      * @param radius Size of radius from the target unit
-     * @return returns a unit of type target with no units of type type in the radius
+     * @return A unit of type target with no units of type type in the radius
      */
     public Unit getUnitWithoutType (Game game, Player self, UnitType target, UnitType type, int radius) {
         for (Unit unit : self.getUnits()) {

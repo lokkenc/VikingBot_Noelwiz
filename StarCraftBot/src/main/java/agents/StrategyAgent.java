@@ -31,14 +31,11 @@ public class StrategyAgent {
         planner.Initalize(todo);
     }
 
-
-
     public void update() {
-        //use the planner
-        //if we can do the action
+        // use the planner
+        // if we can do the action
         if(canExecute(todo.Peek())){
-            //tell the planner to tell the enviorment to tell the bot
-            //to do the action.
+            // tell the planner to tell the enviorment to tell the bot to do the action
             lastAct = todo.Peek();
             planner.ExecuteAction();
         } else if(lastAct != null){
@@ -88,7 +85,6 @@ public class StrategyAgent {
             }
         }
 
-
         //retreat the army.
         //TODO: figure out when to take controll again, and if we can..
         if(numCombatUnits < retreatThreshold){
@@ -124,8 +120,6 @@ public class StrategyAgent {
 
 
     }
-
-
 
     /**
      * Checks if a given action can possibly be executed at the present time
@@ -216,9 +210,9 @@ public class StrategyAgent {
                 break;
         }
 
-
         if (planner.roomInQueue())
             return result;
+
         return false;
     }
 }
