@@ -28,6 +28,12 @@ TODO
 ## Replays
 A list of replays recorded at the end of each milestone
 
-### Milestone 1
- - [Protoss Bot Replay](https://youtu.be/cU012HAbHg4)
- - [Zerg Bot Replay](https://youtu.be/QTV64Ol-k4o)
+
+## Making the Bot Play Itself
+1. in intellij, compile the bot into a jar. (https://www.jetbrains.com/help/idea/compiling-applications.html#package_into_jar)
+2. Convert the jar to a .exe https://www.genuinecoder.com/convert-java-jar-to-exe/
+3. move the file to a place bwapi can find it (so basically into the bapi data folder)
+4. set up the config to work for multiple ai http://www.starcraftai.com/wiki/Multiple_instances_of_StarCraft
+5. use the Chaoslauncher - MultiInstance.exe rather than normal chaos launcher, launch it twice
+6. multiplayer -> local pc, and join the game (make sure the config is expecting protoss vs protoss)
+7. start the match and have fun tabbing between windows
