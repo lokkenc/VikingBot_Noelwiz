@@ -29,7 +29,7 @@ TODO
 A list of replays recorded at the end of each milestone
 
 
-#Making the Bot Play Itself
+## Making the Bot Play Itself
 1. in intellij, compile the bot into a jar. (https://www.jetbrains.com/help/idea/compiling-applications.html#package_into_jar)
 2. Convert the jar to a .exe https://www.genuinecoder.com/convert-java-jar-to-exe/
 3. move the file to a place bwapi can find it (so basically into the bapi data folder)
