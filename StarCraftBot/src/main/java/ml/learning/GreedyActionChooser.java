@@ -26,7 +26,7 @@ public class GreedyActionChooser {
      * or a random action if the sampled value is within the range [0, epsilon).
      * @param spMng the StateSpaceManager that is used select a valid action at random.
      * @param curState the current State to get the optimal Action from the QTable.
-     * @return returns an Action that is either randomly selected or the optimal Action for the current State.
+     * @return An Action that is either randomly selected or the optimal Action for the current State.
      */
     public Action chooseAction(StateSpaceManager spMng, State curState, QTable qtable) {
         double rand = random.nextDouble();

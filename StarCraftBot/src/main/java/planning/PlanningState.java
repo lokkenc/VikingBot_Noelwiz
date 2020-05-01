@@ -5,6 +5,7 @@ import burlap.statehashing.HashableState;
 import bwapi.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PlanningState implements HashableState, State {
@@ -24,6 +25,9 @@ public class PlanningState implements HashableState, State {
     private GameStatus gameStatus;
     private int[][] trainingCapacity; /*[ workers[used, avail] , ground[used, avail], combat air[used, avail],
                                             support air[used, avail]] */
+    private int populationCapacity;
+    private int populationUsed;
+    private HashMap<UnitType, Integer> unitMemory;
 
     private ArrayList<String> VariableKeys = new ArrayList<String>();
 
@@ -31,7 +35,8 @@ public class PlanningState implements HashableState, State {
     public PlanningState(int numWorkers, int mineralProductionRate, int gasProductionRate, int numBases,
                          int timeSinceLastScout, ArrayList<CombatUnitStatus> combatUnitStatuses, int numEnemyWorkers,
                          int numEnemyBases, UnitType mostCommonCombatUnit, Boolean attackingEnemyBase, Boolean beingAttacked,
-                         Race playerRace, Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity) {
+                         Race playerRace, Race enemyRace, GameStatus gameStatus, int[][] trainingCapacity,
+                         int populationCapacity, int populationUsed, HashMap<UnitType, Integer> unitMemory) {
         this.numWorkers = numWorkers;
         this.mineralProductionRate = mineralProductionRate;
         this.gasProductionRate = gasProductionRate;
@@ -47,6 +52,9 @@ public class PlanningState implements HashableState, State {
         this.enemyRace = enemyRace;
         this.gameStatus = gameStatus;
         this.trainingCapacity = trainingCapacity;
+        this.populationCapacity = populationCapacity;
+        this.populationUsed = populationUsed;
+        this.unitMemory = unitMemory;
 
         VariableKeys.add("numWorkers");
         VariableKeys.add("mineralProductionRate");
@@ -63,6 +71,9 @@ public class PlanningState implements HashableState, State {
         VariableKeys.add("enemyRace");
         VariableKeys.add("gameStatus");
         VariableKeys.add("trainingCapacity");
+        VariableKeys.add("populationCapacity");
+        VariableKeys.add("populationUsed");
+        VariableKeys.add("unitMemory");
     }
 
     /**
@@ -83,8 +94,6 @@ public class PlanningState implements HashableState, State {
         outputs: "words" so the lines below should be fine*/
         String key = variableKey.toString();
         Object result;
-
-
 
         //String implementation
         switch(key){
@@ -133,10 +142,18 @@ public class PlanningState implements HashableState, State {
             case "trainingCapacity":
                 result = trainingCapacity;
                 break;
+            case "populationCapacity":
+                result = populationCapacity;
+                break;
+            case "populationUsed":
+                result = populationUsed;
+                break;
+            case "unitMemory":
+                result = unitMemory;
+                break;
             default:
                 result = null;
         }
-
 
         return result;
     }
@@ -158,7 +175,7 @@ public class PlanningState implements HashableState, State {
         PlanningState copy = new PlanningState(this.numWorkers, this.mineralProductionRate,this.gasProductionRate,this.numBases,
                 this.timeSinceLastScout, this.combatUnitStatuses, this.numEnemyWorkers,this.numEnemyBases,
                 this.mostCommonCombatUnit,this.attackingEnemyBase,this.beingAttacked, this.playerRace, this.enemyRace, this.gameStatus,
-                this.trainingCapacity);
+                this.trainingCapacity, this.populationCapacity, this.populationUsed, this.unitMemory);
         return copy;
     }
 
@@ -231,6 +248,18 @@ public class PlanningState implements HashableState, State {
 
     public int[][] getTrainingCapacity() {
         return trainingCapacity;
+    }
+
+    public int getPopulationCapacity() {
+        return populationCapacity;
+    }
+
+    public int getPopulationUsed() {
+        return populationUsed;
+    }
+
+    public HashMap<UnitType, Integer> getUnitMemory() {
+        return unitMemory;
     }
 }
 

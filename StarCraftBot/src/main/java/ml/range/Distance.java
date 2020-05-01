@@ -29,7 +29,7 @@ public class Distance implements Serializable {
 
     /**
      *
-     * @return returns the range of the distance
+     * @return The range of the distance
      */
     public DistanceRange getRange() {
         return range;
@@ -45,7 +45,7 @@ public class Distance implements Serializable {
 
     /**
      *
-     * @return returns the integer value of the distance.
+     * @return The integer value of the distance.
      */
     public int getValue() {
         return value;

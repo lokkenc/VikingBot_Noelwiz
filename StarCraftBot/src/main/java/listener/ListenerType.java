@@ -19,7 +19,7 @@ public enum ListenerType {
 
     /**
      * Return the ListenerType's name as a String.
-     * @return returns the name of the ListenerType as a String.
+     * @return The name of the ListenerType as a String.
      */
     public String getName() {
         return name;

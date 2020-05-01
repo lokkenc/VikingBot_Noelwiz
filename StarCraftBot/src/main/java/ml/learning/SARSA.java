@@ -55,7 +55,7 @@ public class SARSA implements Serializable {
      * @param action the Action executed in the current State.
      * @param next the resulting next State from the (current, action) pair.
      * @param reward the reward produced from executing the current Action in the current State.
-     * @return returns a double which is the resulting Q-Value produced by the defined update function.
+     * @return A double which is the resulting Q-Value produced by the defined update function.
      */
     public double computerQValue(State current, Action action, State next, double reward) {
         double qvalue = qTable.get(current).get(action);
@@ -191,7 +191,7 @@ public class SARSA implements Serializable {
 
     /**
      * Gets the type of unit the SARSA learning algorithm is working with.
-     * @return returns the classification of the unit we are working with
+     * @return The classification of the unit we are working with
      */
     public UnitClassification getClassification() {
         return unitClass;
@@ -199,7 +199,7 @@ public class SARSA implements Serializable {
 
     /**
      * Gets the QTable being used by the SARSA learning algorithm.
-     * @return returns the QTable.
+     * @return The QTable.
      */
     public QTable getQTable() {
         return qTable;
@@ -207,7 +207,7 @@ public class SARSA implements Serializable {
 
     /**
      * Gets the StateSpaceManager being used by the SARSA learning algorithm.
-     * @return returns the StateSpaceManager.
+     * @return The StateSpaceManager.
      */
     public StateSpaceManager getSpaceManager() {
         return spaceManager;
@@ -215,7 +215,7 @@ public class SARSA implements Serializable {
 
     /**
      * Gets the DataManager being used by the SARSA learning algorithm.
-     * @return returns the DataManager.
+     * @return The DataManager.
      */
     public DataManager getDataManager() {
         return dataManager;

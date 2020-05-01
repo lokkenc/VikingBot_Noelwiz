@@ -62,6 +62,14 @@ public class IntelligenceAgent {
     }
 
     /**
+     *
+     * @return the HashMap of UnitTypes and number of Units of the respective UnitType.
+     */
+    public HashMap<UnitType, Integer> getUnitMemory() {
+        return unitMemory;
+    }
+
+    /**
      * Clears current unitMemory and uses {@link #updateUnitMemory} to add all trained units to hashmap
      * @param self Player assigned to the bot
      */
@@ -89,7 +97,6 @@ public class IntelligenceAgent {
             unitMemory.put(type, amount);
         }
     }
-
 
     /**
      * Checks if player has units of type type
@@ -231,7 +238,7 @@ public class IntelligenceAgent {
 
     /**
      * Returns the current enemyBuildingMemory
-     * @return returns the current enemyBuildingMemory
+     * @return The current enemyBuildingMemory
      */
     public HashSet<Position> getEnemyBuildingMemory() {
         return enemyBuildingMemory;
@@ -269,7 +276,7 @@ public class IntelligenceAgent {
      * Returns the total count of units of type
      * @param self Player assigned to the bot
      * @param type UnitType to get the count of
-     * @return returns the count of units of type
+     * @return The count of units of type
      */
     public int getUnitsOfType (Player self, UnitType type) {
         int numOfUnits = 0;
@@ -389,7 +396,7 @@ public class IntelligenceAgent {
      * @param target UnitType to use as the anchor for the radius
      * @param type UnitType to check radius for
      * @param radius Size of radius from the target unit
-     * @return returns a unit of type target with no units of type type in the radius
+     * @return A unit of type target with no units of type type in the radius
      */
     public Unit getUnitWithoutType (Game game, Player self, UnitType target, UnitType type, int radius) {
         for (Unit unit : self.getUnits()) {
@@ -903,6 +910,22 @@ public class IntelligenceAgent {
 
 
         return trainingCapacity;
+    }
+
+    /**
+     *
+     * @return the maximum number of units that can currently exist.
+     */
+    public int getPopulationCapacity() {
+        return self.supplyTotal();
+    }
+
+    /**
+     *
+     * @return the total number of units that currently exist.
+     */
+    public int getPopulationUsed() {
+        return self.supplyUsed();
     }
 
     /* * *Supporting Methods for getTrainingCapacity() * * */

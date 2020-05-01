@@ -22,7 +22,7 @@ public class StateSpaceManager {
 
     /**
      *
-     * @return returns a List of valid actions.
+     * @return A List of valid actions.
      */
     public List<Action> getValidActions() {
         return Arrays.asList(new Attack(), new Retreat(), new MoveTowards(), new GoHome());
@@ -30,7 +30,7 @@ public class StateSpaceManager {
 
     /**
      * Initializes the entire state space for every possible combination of State fields.
-     * @return returns a Set containing all possible states.
+     * @return A Set containing all possible states.
      */
     public Set<State> createStates() {
         Set<State> states = new HashSet<State>();
@@ -60,7 +60,7 @@ public class StateSpaceManager {
 
     /**
      *
-     * @return returns a List of the valid actions.
+     * @return A List of the valid actions.
      */
     public List<Action> getActionList() {
         return actionList;
@@ -68,7 +68,7 @@ public class StateSpaceManager {
 
     /**
      *
-     * @return returns the Set of all States.
+     * @return The Set of all States.
      */
     public Set<State> getStateSet() {
         return stateSet;

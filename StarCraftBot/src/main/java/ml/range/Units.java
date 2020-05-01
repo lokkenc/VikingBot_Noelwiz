@@ -29,7 +29,7 @@ public class Units implements Serializable {
 
     /**
      *
-     * @return returns the range of the number of units
+     * @return The range of the number of units
      */
     public UnitsRange getRange() {
         return range;
@@ -45,7 +45,7 @@ public class Units implements Serializable {
 
     /**
      *
-     * @return returns the value of the number of units.
+     * @return The value of the number of units.
      */
     public int getValue() {
         return value;

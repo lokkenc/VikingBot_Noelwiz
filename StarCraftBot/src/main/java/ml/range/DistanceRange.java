@@ -21,7 +21,7 @@ public enum DistanceRange {
     /**
      * Takes a value and returns the respective range.
      * @param value the real value to be converted into a range.
-     * @return returns the range that value is in.
+     * @return The range that value is in.
      */
     public static DistanceRange get(double value) {
         for (DistanceRange dist : values()) {
@@ -34,7 +34,7 @@ public enum DistanceRange {
     /**
      * Checks if a real value is in the range.
      * @param v real value to check.
-     * @return returns whether the value is in the range or not.
+     * @return Whether the value is in the range or not.
      */
     public boolean in(double v) {
         return v >= min && v <= max;

@@ -31,14 +31,11 @@ public class StrategyAgent {
         planner.Initalize(todo);
     }
 
-
-
     public void update() {
-        //use the planner
-        //if we can do the action
+        // use the planner
+        // if we can do the action
         if(canExecute(todo.Peek())){
-            //tell the planner to tell the enviorment to tell the bot
-            //to do the action.
+            // tell the planner to tell the enviorment to tell the bot to do the action
             lastAct = todo.Peek();
             planner.ExecuteAction();
         } else if(lastAct != null){
@@ -88,7 +85,6 @@ public class StrategyAgent {
             }
         }
 
-
         //retreat the army.
         //TODO: figure out when to take controll again, and if we can..
         if(numCombatUnits < retreatThreshold){
@@ -96,7 +92,6 @@ public class StrategyAgent {
             //RETREEAT
             intel.setAttacking(false);
         }
-
     }
 
     /**
@@ -121,11 +116,7 @@ public class StrategyAgent {
         } else {
             System.err.println("attackEnemy passed empty army");
         }
-
-
     }
-
-
 
     /**
      * Checks if a given action can possibly be executed at the present time
@@ -134,7 +125,7 @@ public class StrategyAgent {
      */
     private boolean canExecute(Action a){
         boolean result = false;
-        int availMinerals = self.minerals() -  intel.getOrderedMineralUse();
+        int availMinerals = self.minerals() - intel.getOrderedMineralUse();
 
         switch (ActionParserHelper.GetActionType(a)){
             case UPGRADE:
@@ -216,9 +207,9 @@ public class StrategyAgent {
                 break;
         }
 
-
         if (planner.roomInQueue())
             return result;
+
         return false;
     }
 }

@@ -21,7 +21,7 @@ public class StateAction {
 
     /**
      *
-     * @return returns the State in the pair.
+     * @return The State in the pair.
      */
     public State getState() {
         return state;
@@ -37,7 +37,7 @@ public class StateAction {
 
     /**
      *
-     * @return returns the Action in the pair.
+     * @return The Action in the pair.
      */
     public Action getAction() {
         return action;

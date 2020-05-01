@@ -44,7 +44,7 @@ public class State implements Serializable {
 
     /**
      *
-     * @return returns if the unit's weapon is on cool down.
+     * @return If the unit's weapon is on cool down.
      */
     public boolean isOnCoolDown() {
         return onCoolDown;
@@ -52,7 +52,7 @@ public class State implements Serializable {
 
     /**
      *
-     * @return returns the distance to the closest enemy.
+     * @return The distance to the closest enemy.
      */
     public Distance getClosestEnemy() {
         return closestEnemy;
@@ -60,7 +60,7 @@ public class State implements Serializable {
 
     /**
      *
-     * @return returns the number of enemy units nearby.
+     * @return The number of enemy units nearby.
      */
     public Units getNumberOfEnemies() {
         return numberOfEnemies;
@@ -68,7 +68,7 @@ public class State implements Serializable {
 
     /**
      *
-     * @return returns the number of friendly units nearby.
+     * @return The number of friendly units nearby.
      */
     public Units getNumberOfFriendlies() {
         return numberOfFriendlies;
@@ -76,7 +76,7 @@ public class State implements Serializable {
 
     /**
      *
-     * @return returns the total HP of nearby enemy units.
+     * @return The total HP of nearby enemy units.
      */
     public Hp getEnemyHp() {
         return enemyHp;
@@ -84,7 +84,7 @@ public class State implements Serializable {
 
     /**
      *
-     * @return returns the total HP of nearby friendly units.
+     * @return The total HP of nearby friendly units.
      */
     public Hp getFriendlyHp() {
         return friendlyHp;
@@ -92,13 +92,13 @@ public class State implements Serializable {
 
     /**
      *
-     * @return returns the value of the goHome command
+     * @return The value of the goHome command
      */
     public boolean getSkirmish() { return skirmish; }
 
     /**
      *
-     * @return returns the classification of the unit
+     * @return The classification of the unit
      */
     public UnitClassification getUnitClass() { return unitClass; }
 
@@ -141,7 +141,7 @@ public class State implements Serializable {
 
     /**
      * Creates a condensed version of the toString() method.
-     * @return returns a condensed version of the toString() method.
+     * @return A condensed version of the toString() method.
      */
     public String condensedString() {
         return "State{" +

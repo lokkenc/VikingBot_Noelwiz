@@ -14,7 +14,7 @@ public abstract class Action implements Serializable {
 
     /**
      * Get the type of the action
-     * @return returns the type of the action
+     * @return The type of the action
      */
     public abstract ActionType getType();
 
