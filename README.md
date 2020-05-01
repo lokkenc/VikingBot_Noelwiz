@@ -10,13 +10,14 @@ A bot that uses AI Planning for general strategy management and Reinforcement ML
 Refer to [SSCAI Tutorial](https://sscaitournament.com/index.php?action=tutorial) for a full setup guide
 
 ## Resources
-One Tutorial: https://github.com/JavaBWAPI/Java-BWAPI-Tutorial/wiki/Setup 
-Another Tutorial: https://sscaitournament.com/index.php?action=tutorial
-Starcraft AI Page: http://www.starcraftai.com/wiki/Main_Page
-The Java implementation we use: https://github.com/JavaBWAPI/JBWAPI
-It's Documentation: https://javabwapi.github.io/JBWAPI/
-The AI Planner Library we used: http://burlap.cs.brown.edu/
-ALSO, we have generated java docs for the project you can read.
+* One Tutorial: https://github.com/JavaBWAPI/Java-BWAPI-Tutorial/wiki/Setup 
+* Another Tutorial: https://sscaitournament.com/index.php?action=tutorial
+* Starcraft AI Page: http://www.starcraftai.com/wiki/Main_Page
+* The Java implementation we use: https://github.com/JavaBWAPI/JBWAPI
+* It's Documentation: https://javabwapi.github.io/JBWAPI/
+* The AI Planner Library we used: http://burlap.cs.brown.edu/
+* ALSO, we have generated java docs for the project you can read.
+
 
 ## Components
 TODO
