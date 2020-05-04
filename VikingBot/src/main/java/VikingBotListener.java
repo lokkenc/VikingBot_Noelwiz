@@ -13,7 +13,7 @@ import listener.ListenerType;
 /**
  * The main GameListener used for initializing the agents and updating them every frame.
  */
-public class StarCraftBotListener extends GameListener {
+public class VikingBotListener extends GameListener {
     private Game game;
     private Player self;
 
@@ -23,10 +23,10 @@ public class StarCraftBotListener extends GameListener {
     private StrategyAgent strategy;
 
     /**
-     * Creates a new StarCraftBotListener given a specified ListenerType.
+     * Creates a new VikingBotListener given a specified ListenerType.
      * @param type the type of GameListener to be used.
      */
-    public StarCraftBotListener(ListenerType type) {
+    public VikingBotListener(ListenerType type) {
         super(type);
     }
 
@@ -72,7 +72,7 @@ public class StarCraftBotListener extends GameListener {
     @Override
     public void onFrame() {
         // Display information on screen
-        game.drawTextScreen(10, 10, StarCraftBot.NAME + "v" + StarCraftBot.VERSION + " SCv" + StarCraftBot.SC_VERSION);
+        game.drawTextScreen(10, 10, VikingBot.NAME + "v" + VikingBot.VERSION + " SCv" + VikingBot.SC_VERSION);
 
         // Update the Agents
         intel.tabulateUnits(self);
