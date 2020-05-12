@@ -12,7 +12,7 @@ import bwapi.*;
 import java.util.ArrayList;
 
 /**
- * This class is a skeleton of StarCraftBotListener that allows the ML model to train separately from the AI planning
+ * This class is a skeleton of VikingBotListener that allows the ML model to train separately from the AI planning
  */
 public class MLTrainingListener extends GameListener {
     private Game game;

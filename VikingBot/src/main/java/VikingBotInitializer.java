@@ -1,9 +1,9 @@
 import listener.ListenerType;
 
 /**
- * Parses command line arguments and initializes the main StarCraftBot instance.
+ * Parses command line arguments and initializes the main VikingBot instance.
  */
-public class StarCraftBotInitializer {
+public class VikingBotInitializer {
     private static boolean initialized;
 
     /**
@@ -23,18 +23,18 @@ public class StarCraftBotInitializer {
         }
 
         if(initialized) {
-            throw new RuntimeException("StarCraftBotInitializer.initialize() ran twice!");
+            throw new RuntimeException("VikingBotInitializer.initialize() ran twice!");
         }
 
         initialize(type);
     }
 
     /**
-     * Initializes the main StarCraftBot instance with the specified ListenerType.
+     * Initializes the main VikingBot instance with the specified ListenerType.
      * @param type
      */
     private static void initialize(ListenerType type) {
-        StarCraftBot.INSTANCE.initialize(type);
+        VikingBot.INSTANCE.initialize(type);
         initialized = true;
     }
 }

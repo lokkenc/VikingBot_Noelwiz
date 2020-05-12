@@ -366,7 +366,7 @@ public class IntelligenceAgent {
     /**
      * Get the current combat units that exist to attack with.
      * @param self the Player
-     * @return a List of fighting <Units>s.
+     * @return a List of fighting Units.
      */
     public List<Unit> getCombatUnits(Player self){
         UnitFilter filter = new UnitFilter() {
