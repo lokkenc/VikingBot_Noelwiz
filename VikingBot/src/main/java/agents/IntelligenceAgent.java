@@ -372,8 +372,8 @@ public class IntelligenceAgent {
         UnitFilter filter = new UnitFilter() {
             @Override
             public boolean test(Unit unit) {
-                return (!(unit.isBeingConstructed() && unit.getType().isWorker() &&
-                        unit.getType().isBuilding()) && unit.canAttack());
+                return !(unit.isBeingConstructed() || unit.getType().isWorker() || unit.getType().isBuilding())
+                        && unit.canAttack();
             }
         };
 
