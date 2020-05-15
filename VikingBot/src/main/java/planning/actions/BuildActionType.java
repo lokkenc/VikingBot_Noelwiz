@@ -54,10 +54,11 @@ public class BuildActionType implements ActionType {
      */
     @Override
     public List<Action> allApplicableActions(State state) {
-        List<Action> actions = new ArrayList<Action>(3);
-        actions.add(new BuildAction("_research")); //a building for upgrade researching
+        List<Action> actions = new ArrayList<Action>(4);
+        actions.add(new BuildAction("_research")); //a building for upgrade researching, cybernetics core for now
         actions.add(new BuildAction("_pop")); //building (or unit) that adds population
         actions.add(new BuildAction("_train")); //building to train units eg hive, or warp gate
+        actions.add(new BuildAction("_gas")); //building to train units eg hive, or warp gate
         //actions.add(new BuildAction()); //commented out because it will likely not be parsed, nor applicable yet.
         return actions;
     }
