@@ -1,4 +1,4 @@
-package planning.actions;
+package planning.actions.helpers;
 
 import burlap.mdp.core.action.Action;
 
