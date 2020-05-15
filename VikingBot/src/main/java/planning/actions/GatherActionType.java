@@ -41,15 +41,16 @@ public class GatherActionType implements ActionType {
     @Override
     public List<Action> allApplicableActions(State s) {
         List<Action> allowedActions = new ArrayList<Action>(2);
-        //if we have at least one worker
+        if ((int) s.get("numWorkers") > 0){
+            //if we have at least one worker
 
-        //if we own an extractor, add gather gas
+            //if we own an extractor, add gather gas
 
-        //always able to gather minerals, so add to list
-        //maybe not when map is out of minerals but that would be an extreme edge
-        //case not represented in the state.
-        allowedActions.add(new GatherAction(GatherAction.targets[0]));
-
+            //always able to gather minerals, so add to list
+            //maybe not when map is out of minerals but that would be an extreme edge
+            //case not represented in the state.
+            allowedActions.add(new GatherAction(GatherAction.targets[0]));
+        }
         return allowedActions;
     }
 }

@@ -3,7 +3,7 @@ package planning.actions;
 import burlap.mdp.core.action.Action;
 
 public class GatherAction implements Action {
-    private static final String BaseActionName = "GatherAction";
+        private static final String BaseActionName = "GatherAction";
     protected static final String[] targets = {"minerals","gas"};
     private String ActionName;
 
