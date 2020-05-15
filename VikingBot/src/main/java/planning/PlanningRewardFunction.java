@@ -144,15 +144,24 @@ public class PlanningRewardFunction implements RewardFunction {
     }*/
 
     private double earlyGameReward(State s, Action a, State sprime) {
+        //casting the state once.
+        PlanningState ps = (PlanningState) s;
+        //state parts taken out
+        int populationCap = ps.getPopulationCapacity();
+
+        //tarets
         int targetNumWorkers = 12 * (int) s.get("numBases");
         int targetMineralProduction = 500; //500 minerals per minute
         int targetGasProduction = 250; //250 units per minute
+        int targetMilitaryTrainingCapacity = 4;
         //8 because the planner will consistantly get to 8 units
         int targetArmySize = 8;
         int maxTimeSinceLastScout = 3600;
+
+        //planing stuff
         int incentiveMultiplier = 100;
-        int populationCap = 9; //POSSIBLE VARIABLE IN STATE ???
         double reward = 0.0;
+
         ActionParserHelper aph = new ActionParserHelper();
         switch(aph.GetActionType(a)) {
             case ATTACK :
@@ -185,18 +194,22 @@ public class PlanningRewardFunction implements RewardFunction {
                 Random rand = new Random();
                 String toBuild = ((BuildAction) a).getUnitToBuild();
                 if (toBuild.equals("pop")) {
-                    reward += 50;
+                    if(populationCap - (int) s.get("populationUsed") < 4)
+                    reward += 100;
                     if ((int) s.get("numWorkers") == populationCap)
                         reward += 75;
                     if (rand.nextInt(10) == 2)
                         reward += 50;
                 } else if (toBuild.equals("train")) {
-                    reward += 50;
+                    int[][] capacity = ps.getTrainingCapacity();
+                    if (capacity[1][0] + capacity[1][1] <= targetMilitaryTrainingCapacity)
+                        reward += 50;
                     if ((int) s.get("numWorkers") > targetNumWorkers) {
                         reward += 75;
                     }
-                    /*if (rand.nextInt(10) == 2)
-                        reward += 50;*/
+                } else if(toBuild.equals("gas") && ps.getGasProductionRate() == 0){
+                    //will eventually build a gas
+                    reward += 1;
                 } else {
                     reward -= 50;
                 }
@@ -240,6 +253,24 @@ public class PlanningRewardFunction implements RewardFunction {
                 break;
             case UPGRADE:
                 reward -= 100;
+                break;
+
+            case GATHER:
+                //assuming is either gas or minerals
+                if(a.actionName().endsWith("gas")){
+                    if( (int) s.get("gasProductionRate") > 0){
+                        reward -= 100;
+                    }else {
+                        reward += 100;
+                    }
+                }else {
+                    if( (int) s.get("mineralProductionRate") <= 0){
+                        reward += 100;
+                    } else {
+                        reward -= 100;
+                    }
+
+                }
                 break;
         }
         return reward;
