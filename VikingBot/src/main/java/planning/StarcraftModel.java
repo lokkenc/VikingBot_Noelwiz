@@ -4,7 +4,7 @@ import knowledge.GeneralRaceProductionKnowledge;
 import knowledge.ProtossGeneralKnowledge;
 import knowledge.TerrenGeneralKnowledge;
 import knowledge.ZergGeneralKnowledge;
-import planning.actions.ActionParserHelper;
+import planning.actions.helpers.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
@@ -271,6 +271,23 @@ public class StarcraftModel implements FullModel {
                 AllProbabilities.add(new TransitionProb(1, defaultoutcome));
 
                 break;
+
+            case GATHER:
+                int mineralGatherRate = (int) state.get("mineralProductionRate");
+                mineralGatherRate -= 5;
+                int gasGatherRate = (int) state.get("gasProductionRate");
+                gasGatherRate += 5;
+
+
+                baseNextState = new PlanningState( (int) state.get("numWorkers"), mineralGatherRate,
+                        gasGatherRate, (int) state.get("numBases"), newtimesincelastscout,
+                        (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
+                        (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
+                        (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
+                        capacity, (int) state.get("populationCapacity"), (int) state.get("populationUsed"), (HashMap<UnitType, Integer>) state.get("unitMemory"));
+
+                defaultoutcome = new EnvironmentOutcome(state, action,baseNextState, rewardFunction.reward(state,action,baseNextState),terminal(baseNextState));
+
             case UNKNOWN:
                 baseNextState = state.copy();
 
