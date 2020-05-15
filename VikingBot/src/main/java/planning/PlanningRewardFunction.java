@@ -1,14 +1,14 @@
 package planning;
 
-import planning.actions.ActionParserHelper;
-import planning.actions.BuildAction;
-import planning.actions.TrainAction;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
+import bwapi.UnitType;
+import planning.actions.BuildAction;
+import planning.actions.TrainAction;
+import planning.actions.helpers.ActionParserHelper;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class PlanningRewardFunction implements RewardFunction {
     private GameStatus gameStatus;
@@ -189,27 +189,43 @@ public class PlanningRewardFunction implements RewardFunction {
                     reward -= 500;
                 }
                 break;
+
             case BUILD:
                 //Get information of what is being built?
-                Random rand = new Random();
                 String toBuild = ((BuildAction) a).getUnitToBuild();
                 if (toBuild.equals("pop")) {
                     if(populationCap - (int) s.get("populationUsed") < 4)
-                    reward += 100;
-                    if ((int) s.get("numWorkers") == populationCap)
+                    reward += 175;
+                    if ((int) s.get("numWorkers") == populationCap) {
                         reward += 75;
-                    if (rand.nextInt(10) == 2)
-                        reward += 50;
+                    } else {
+                        reward += 25;
+                    }
+
                 } else if (toBuild.equals("train")) {
                     int[][] capacity = ps.getTrainingCapacity();
-                    if (capacity[1][0] + capacity[1][1] <= targetMilitaryTrainingCapacity)
+                    if (capacity[1][0] + capacity[1][1] <= targetMilitaryTrainingCapacity){
                         reward += 50;
-                    if ((int) s.get("numWorkers") > targetNumWorkers) {
-                        reward += 75;
                     }
-                } else if(toBuild.equals("gas") && ps.getGasProductionRate() == 0){
+
+                    if ((int) s.get("numWorkers") < targetNumWorkers) {
+                        reward -= 25;
+                    }
+
+                } else if(toBuild.equals("gas") && ps.getGasProductionRate() == 0) {
                     //will eventually build a gas
-                    reward += 1;
+                    if(ps.getUnitMemory().getOrDefault(UnitType.Protoss_Assimilator,0) < 1){
+                        reward += 100;
+                    } else {
+                        reward -= 25;
+                    }
+
+                } else if(toBuild.equals("research")){
+                    if(ps.getUnitMemory().getOrDefault(UnitType.Protoss_Cybernetics_Core,0) < 1){
+                        reward += 50;
+                    }else {
+                        reward -= 200;
+                    }
                 } else {
                     reward -= 50;
                 }
