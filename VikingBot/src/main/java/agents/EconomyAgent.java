@@ -12,6 +12,32 @@ public class EconomyAgent {
         intel = IntelligenceAgent.getInstance(game);
     }
 
+    /**
+     * tell a worker to go gather gas at the closest gas local
+     *
+     * NOTE: this assumes protoss right now, will not work for zerg.
+     * @param game the current game
+     * @param worker a worker, presumed probe.
+     */
+    protected void gatherGas(Game game, Unit worker){
+       List<Unit> gasLocals = intel.getUnitsListOfType(UnitType.Protoss_Assimilator);
+       if(gasLocals.size() > 0){
+           Unit closest = gasLocals.get(0);
+           int Shortestdistance = worker.getDistance(closest);
+
+           for(Unit gas : gasLocals){
+                if(worker.getDistance(gas) < Shortestdistance){
+                    Shortestdistance = worker.getDistance(gas);
+                    closest = gas;
+                }
+           }
+
+           worker.gather(closest);
+       } else {
+           System.err.println("No Extractors to gather from.");
+       }
+    }
+
 
     /**
      * Sends a worker to get the closest mineral to the specified base
@@ -19,7 +45,7 @@ public class EconomyAgent {
      * @param worker Unit to send to gather minerals
      * @param base Base to gather minerals near
      */
-    public void gatherMinerals (Game game, Unit worker, Unit base) {
+    protected void gatherMinerals (Game game, Unit worker, Unit base) {
         Unit closestMineral = null;
 
         //find the closest mineral
