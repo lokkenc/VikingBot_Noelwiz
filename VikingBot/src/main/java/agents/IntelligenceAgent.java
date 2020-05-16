@@ -430,12 +430,19 @@ public class IntelligenceAgent {
      */
     public Unit getAvailableWorker(Player self) {
         // Find an available worker
-        for (Unit unit : self.getUnits()) {
-            if (unit.getType().isWorker() && !scouts.contains(unit.getID())) {
-                return unit;
+        Unit AvailbleWorker = null;
+        for (Unit unit : getUnitsListOfType(UnitType.Protoss_Probe)) {
+            //prioratize non-building workers
+            if(unit.isConstructing()){
+                AvailbleWorker = unit;
+            } else{
+                if (!scouts.contains(unit.getID())) {
+                    return unit;
+                }
             }
+
         }
-        return null;
+        return AvailbleWorker;
     }
 
     /**

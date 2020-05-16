@@ -69,12 +69,17 @@ public class EconomyAgent {
      * @param worker Unit to send to gather minerals
      */
     public void gatherMinerals (Game game, Unit worker) {
+        assert(worker != null);
         Unit closestMineral = null;
 
         //find the closest mineral
         for (Unit neutralUnit : game.neutral().getUnits()) {
             if (neutralUnit.getType().isMineralField()) {
-                if (closestMineral == null || worker.getDistance(neutralUnit) < worker.getDistance(closestMineral)) {
+                if(closestMineral == null){
+                    closestMineral = neutralUnit;
+                }
+
+                if (worker.getDistance(neutralUnit) < worker.getDistance(closestMineral)) {
                     closestMineral = neutralUnit;
                 }
             }
@@ -122,10 +127,34 @@ public class EconomyAgent {
         assert type.isBuilding() : "Must Build Buildings.";
 
         if((worker != null)) {
-            TilePosition buildTile = game.getBuildLocation(type, self.getStartLocation());
-            if(buildTile != null) {
-                worker.build(type, buildTile);
+            TilePosition buildTile;
+            if(type != UnitType.Protoss_Assimilator){
+                buildTile = game.getBuildLocation(type, self.getStartLocation());
+                if(buildTile != null) {
+                    worker.build(type, buildTile);
+                }
+            } else {
+                List<Unit> locals = game.getGeysers();
+
+                int mindist = 10000000;
+                int currentdist = 0;
+                Unit final_location = worker;
+                for(Unit loc : locals){
+                    currentdist = worker.getDistance(loc);
+                    if(currentdist < mindist){
+                        final_location = loc;
+                        mindist = currentdist;
+                    }
+                }
+
+                buildTile = game.getBuildLocation(type, final_location.getTilePosition());
+                if(buildTile != null) {
+                    worker.build(type, buildTile);
+                }
+
             }
+
+
         }
     }
 
@@ -166,14 +195,25 @@ public class EconomyAgent {
      */
     public void trainCombatUnit() {
         List<Unit> Gateways = intel.getUnitsListOfType(UnitType.Protoss_Gateway);
+        assert Gateways.size() > 0: "must have a gateway to train.";
+
+        if(  intel.getSelf().minerals() - intel.getOrderedMineralUse()  < 200){
+            System.err.println("Not enough minerals.");
+            return;
+        }
+
+
         if(Gateways != null && Gateways.size() != 0){
             Unit minTrainingGateway = Gateways.get(0);
-            int minTraingingQueueLength = minTrainingGateway.getTrainingQueue().size();
+
+            int minTrainingQueueLength = 4;
+
             for (Unit gateway: Gateways) {
-                List<UnitType> trainingQueue = gateway.getTrainingQueue();
-                if (trainingQueue.size() < minTraingingQueueLength) {
+                int currentsize = gateway.getTrainingQueue().size();
+
+                if (currentsize < minTrainingQueueLength) {
                     minTrainingGateway = gateway;
-                    minTraingingQueueLength = trainingQueue.size();
+                    minTrainingQueueLength = currentsize;
                 }
             }
 

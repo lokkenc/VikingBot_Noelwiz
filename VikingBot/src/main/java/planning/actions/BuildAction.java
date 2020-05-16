@@ -17,6 +17,8 @@ import burlap.mdp.core.action.Action;
  *      *            - population, something that increases the population capacity
  *      *         "train"
  *      *            - a building that trains or enables the training for zerg of units
+ *      *          "gas"
+ *      *            - a building that enables gas gathering
  *
  * How to add an option:
  *      1) If more options are needed the current what to build should be made to "what=unitname"

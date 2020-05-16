@@ -35,9 +35,11 @@ public class StrategyAgent {
     public void update() {
         // use the planner
         // if we can do the action
-        if(canExecute(todo.Peek())){
+        Action next = todo.Peek();
+        game.drawTextScreen(100,100,"Next in queue:"+next.actionName());
+        if(canExecute(next)){
             // tell the planner to tell the enviorment to tell the bot to do the action
-            lastAct = todo.Peek();
+            lastAct = next;
             planner.ExecuteAction();
         } else if(lastAct != null){
             lastAct = null;
@@ -193,7 +195,7 @@ public class StrategyAgent {
                     String what = a.actionName().split("_")[1];
                     //check cost of building
                     UnitType whatUnit = ProtossBuildingParserHelper.translateBuilding(what);
-                    if(what.equals("pop") && availMinerals > whatUnit.mineralPrice()){
+                    if(what.equals("pop") || what.equals("gas") && availMinerals > whatUnit.mineralPrice()){
                         result = true;
                         //TODO: MORE general function to test if there's a space to build on
                     } else if(intel.getUnitsOfType(self, UnitType.Protoss_Pylon) > 1){
@@ -246,8 +248,10 @@ public class StrategyAgent {
     public void executeGatherAction(boolean isMinerals){
         Unit worker = intel.getAvailableWorkerNotGathering(self, isMinerals);
 
-        if(isMinerals){
-            economy.gatherMinerals(game, worker);
+        if(isMinerals && intel.getBuildingUnitsOfType(self, UnitType.Protoss_Nexus) > 0){
+            //economy.gatherMinerals(game, worker);
+            Unit base = intel.getUnitsListOfType(UnitType.Protoss_Nexus).get(0);
+            economy.gatherMinerals(game, worker, base);
         } else {
             economy.gatherGas(game, worker);
         }

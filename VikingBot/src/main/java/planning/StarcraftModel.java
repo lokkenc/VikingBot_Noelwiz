@@ -1,10 +1,5 @@
 package planning;
 
-import knowledge.GeneralRaceProductionKnowledge;
-import knowledge.ProtossGeneralKnowledge;
-import knowledge.TerrenGeneralKnowledge;
-import knowledge.ZergGeneralKnowledge;
-import planning.actions.helpers.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
@@ -13,6 +8,12 @@ import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.mdp.singleagent.model.TransitionProb;
 import bwapi.Race;
 import bwapi.UnitType;
+import knowledge.GeneralRaceProductionKnowledge;
+import knowledge.ProtossGeneralKnowledge;
+import knowledge.TerrenGeneralKnowledge;
+import knowledge.ZergGeneralKnowledge;
+import planning.actions.helpers.ActionParserHelper;
+import planning.actions.helpers.ProtossBuildingParserHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,6 +149,15 @@ public class StarcraftModel implements FullModel {
             case BUILD:
                 numworkers = (int) state.get("numWorkers");
                 mineralproduction = (int) state.get("mineralProductionRate");
+                UnitType what = ProtossBuildingParserHelper.translateBuilding(action.actionName());
+                int popcapchange = 0;
+                if(what == UnitType.Protoss_Pylon){
+                    popcapchange += 8;
+                }
+
+                if(what == UnitType.Protoss_Gateway){
+                    capacity[1][1] += 1;
+                }
 
                 //TODO: also consider the reduction in resource production temporarily
                 //reduce the output of mineral or gas production by the amount one unit normally produces.
@@ -157,14 +167,14 @@ public class StarcraftModel implements FullModel {
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
-                            capacity, (int) state.get("populationCapacity"), (int) state.get("populationUsed"), (HashMap<UnitType, Integer>) state.get("unitMemory"));
+                            capacity, (int) state.get("populationCapacity") + popcapchange, (int) state.get("populationUsed"), (HashMap<UnitType, Integer>) state.get("unitMemory"));
                 } else {
                     baseNextState = new PlanningState( numworkers, mineralproduction,
                             (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
-                            capacity, (int) state.get("populationCapacity"), (int) state.get("populationUsed"), (HashMap<UnitType, Integer>) state.get("unitMemory"));
+                            capacity, (int) state.get("populationCapacity") + popcapchange, (int) state.get("populationUsed"), (HashMap<UnitType, Integer>) state.get("unitMemory"));
                 }
 
 
@@ -238,10 +248,15 @@ public class StarcraftModel implements FullModel {
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"), (boolean) state.get("beingAttacked"), ourrace,(Race) state.get("enemyRace"),(GameStatus) state.get("gameStatus"),
-                            capacity, (int) state.get("populationCapacity"), (int) state.get("populationUsed"), (HashMap<UnitType, Integer>) state.get("unitMemory"));
+                            capacity, (int) state.get("populationCapacity"), (int) state.get("populationUsed") + 2, (HashMap<UnitType, Integer>) state.get("unitMemory"));
                 } else {
                     //if we can train combat units, and rng thiks we're training combat units
                     //say we are
+                    int workerchange = 0;
+                    if(actionstr.contains("_what=worker")){
+                        workerchange++;
+                    }
+
                     if(capacity[1][1] > 0 && rng.nextBoolean()){
                         capacity[1][0] += 1;
                         capacity[1][1] -= 1;
@@ -250,12 +265,12 @@ public class StarcraftModel implements FullModel {
                         capacity[0][1] -= 1;
                     }
 
-                    baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
+                    baseNextState = new PlanningState( (int) state.get("numWorkers") + workerchange, (int) state.get("mineralProductionRate") + 5,
                             (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
                             (ArrayList<CombatUnitStatus>)state.get("combatUnitStatuses"), (int) state.get("numEnemyWorkers"),
                             (int)state.get("numEnemyBases"), (UnitType)state.get("mostCommonCombatUnit"),
                             (boolean) state.get("attackingEnemyBase"),(boolean) state.get("beingAttacked"), (Race) state.get("playerRace"),(Race) state.get("enemyRace"),(GameStatus)state.get("gameStatus"),
-                            capacity, (int) state.get("populationCapacity"), (int) state.get("populationUsed"), (HashMap<UnitType, Integer>) state.get("unitMemory"));
+                            capacity, (int) state.get("populationCapacity"), (int) state.get("populationUsed") + 2, (HashMap<UnitType, Integer>) state.get("unitMemory"));
                 }
 
 

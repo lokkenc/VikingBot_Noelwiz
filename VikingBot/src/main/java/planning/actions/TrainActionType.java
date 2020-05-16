@@ -3,6 +3,7 @@ package planning.actions;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.state.State;
+import planning.PlanningState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,18 +41,20 @@ public class TrainActionType implements ActionType {
 
     @Override
     public List<Action> allApplicableActions(State state) {
+        PlanningState ps = (PlanningState) state;
         List<Action> actions = new ArrayList<Action>(3);
-        int[][] currentCapacity = (int[][]) state.get("trainingCapacity");
+        int[][] currentCapacity = ps.getTrainingCapacity();
+        int availablepop = ps.getPopulationCapacity()-ps.getPopulationUsed();
 
         //TODO: once the state is parsed, allow the planner to pass a command
         //      to train multiple units at once based on remaining capacity
         //if we have the capacity to train workers.
-        if(currentCapacity[0][1] > 0){
+        if(currentCapacity[0][1] > 0 && availablepop >= 1){
             actions.add(new TrainAction("_what=worker_amount=1"));
         }
 
         //if we have the capacity to train combat units
-        if(currentCapacity[1][1] > 0 || currentCapacity[2][1] > 0){
+        if((currentCapacity[1][1] > 0 || currentCapacity[2][1] > 0) && availablepop >= 2){
             actions.add(new TrainAction("_what=combatUnit_amount=1"));
         }
 
