@@ -172,8 +172,11 @@ public class StrategyAgent {
                 }
                 break;
             case SCOUT:
-                //TODO: implement scout.
-                result = false;
+                if(intel.getTimeSinceLastScout() > 90 * 30 && intel.getAvailableWorker(self) != null) {
+                    result = true;
+                } else {
+                    result = false;
+                }
                 break;
             case EXPAND:
                 if(self.minerals() > 400){

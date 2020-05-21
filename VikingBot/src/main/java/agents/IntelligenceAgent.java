@@ -26,7 +26,7 @@ public class IntelligenceAgent {
     private HashMap<UnitType, Integer> enemyUnitMemory = new HashMap<UnitType, java.lang.Integer>();
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
-    private int scoutTimer;
+    private int scoutTimer = 0;
     private boolean attacking = false;
 
     private IntelligenceAgent(Player self, Game game) {
