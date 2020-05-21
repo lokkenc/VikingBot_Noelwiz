@@ -9,6 +9,11 @@ public class ScoutAction implements Action {
     private String actionName;
     private static final String BaseActionName = "ScoutAction";
 
+    /**
+     * Name of the unit to be used for scouting. defaults to the empty string if no valid unit was given.
+     */
+    private String unitToScout = "";
+
     public ScoutAction(){
         actionName = BaseActionName;
     }
@@ -44,6 +49,7 @@ public class ScoutAction implements Action {
             if (validOption){
                 name.append('_');
                 name.append(inputOptionsList[i]);
+                unitToScout = inputOptionsList[i];
             }
             //said for loop would end here
 
@@ -60,5 +66,9 @@ public class ScoutAction implements Action {
     @Override
     public Action copy() {
         return new ScoutAction(actionName.substring(BaseActionName.length()));
+    }
+
+    public String getUnitToScout() {
+        return unitToScout;
     }
 }

@@ -477,7 +477,7 @@ public class IntelligenceAgent {
         return numberOfBuildingUnits;
     }
 
-    public Position nextBaseLocationToCheck(Game game) {
+    public Position nextBaseLocationToCheck() {
        Iterator<TilePosition> startLoc = game.getStartLocations().iterator();
        for(int i = 0; i < baseLoc; i++) {
            startLoc.next();

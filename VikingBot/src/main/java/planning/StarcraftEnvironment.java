@@ -8,12 +8,10 @@ import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import burlap.mdp.singleagent.model.RewardFunction;
-import bwapi.Game;
-import bwapi.Player;
-import bwapi.Race;
-import bwapi.UnitType;
+import bwapi.*;
 import planning.actions.ActionParserHelper;
 import planning.actions.BuildAction;
+import planning.actions.ScoutAction;
 import planning.actions.TrainAction;
 
 import java.util.ArrayList;
@@ -177,7 +175,11 @@ public class StarcraftEnvironment implements Environment {
                 }
                 break;
             case SCOUT:
-
+                ScoutAction scoutAction = (ScoutAction) action;
+                if (scoutAction.getUnitToScout().equalsIgnoreCase("worker")) {
+                    Unit scout = intelligenceAgent.getAvailableWorker(self);
+                    strategyAgent.scoutEnemy(scout);
+                }
                 break;
             case UPGRADE:
 
