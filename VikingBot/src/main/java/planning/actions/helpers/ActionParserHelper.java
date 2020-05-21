@@ -1,4 +1,4 @@
-package planning.actions;
+package planning.actions.helpers;
 
 import burlap.mdp.core.action.Action;
 
@@ -18,7 +18,7 @@ public class ActionParserHelper {
      * can be parsed easily.
      */
     public enum ActionEnum{
-        UPGRADE, TRAIN, SCOUT, EXPAND, BUILD, ATTACK, UNKNOWN
+        UPGRADE, TRAIN, SCOUT, EXPAND, BUILD, ATTACK, GATHER, UNKNOWN
     }
 
     /**
@@ -70,6 +70,8 @@ public class ActionParserHelper {
                 break;
             case "ExpandAction":
                 result = ActionEnum.EXPAND;
+            case "GatherAction":
+                result = ActionEnum.GATHER;
             default:
                 //RESULT defualts to UNKNONW.
                 break;

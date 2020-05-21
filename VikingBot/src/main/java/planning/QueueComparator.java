@@ -1,7 +1,7 @@
 package planning;
 
 
-import planning.actions.ActionParserHelper;
+import planning.actions.helpers.ActionParserHelper;
 import burlap.mdp.core.action.Action;
 
 import java.util.Comparator;
@@ -91,6 +91,7 @@ public class QueueComparator implements Comparator {
 
     /**
      * Assigns a priority to an action given its type.
+     * NOTE: a lower value means a higher priority.
      * @param atype an Action Type Enumerator from the ActionParserHelper class.
      * @return an integer representing the priority of the action for the starcraft bot
      *         to do.
@@ -102,22 +103,24 @@ public class QueueComparator implements Comparator {
                 value = 80;
                 break;
             case TRAIN:
-                value = 60;
+                value = 50;
                 break;
             case SCOUT:
-                value = 90;
+                value = 20;
                 break;
             case EXPAND:
-                value = 65;
+                value = 45;
                 break;
             case BUILD:
-                value = 70;
+                value = 40;
                 break;
             case ATTACK:
-                value = 100;
+                value = 10;
                 break;
+            case GATHER:
+                value = 30;
             case UNKNOWN:
-                value = 0;
+                value = 10000;
                 break;
         }
 

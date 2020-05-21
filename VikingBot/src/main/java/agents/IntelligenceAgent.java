@@ -332,9 +332,7 @@ public class IntelligenceAgent {
         List<Unit> probes = getUnitsListOfType(UnitType.Protoss_Probe);
         for(Unit probe : probes){
             if(probe.isConstructing()){
-                //TODO: see if there's a way to figure out what will be constructed.
-                // Orders are not helpful apparently
-                mineralsUsed+=100; //generic number
+                mineralsUsed += probe.getBuildType().mineralPrice();
             }
         }
 
@@ -432,12 +430,75 @@ public class IntelligenceAgent {
      */
     public Unit getAvailableWorker(Player self) {
         // Find an available worker
-        for (Unit unit : self.getUnits()) {
-            if (unit.getType().isWorker() && !scouts.contains(unit.getID())) {
-                return unit;
+        Unit AvailbleWorker = null;
+        for (Unit unit : getUnitsListOfType(UnitType.Protoss_Probe)) {
+            //prioratize non-building workers
+            if(unit.isConstructing()){
+                AvailbleWorker = unit;
+            } else{
+                if (!scouts.contains(unit.getID())) {
+                    return unit;
+                }
+            }
+
+        }
+        return AvailbleWorker;
+    }
+
+    /**
+     * Returns a worker that is not a scout
+     * @param self Player assigned to the bot
+     * @param notGatheringMinerals true, will exclude a unit that is not gathering minerals, else will exclude
+     *                        one not gathering gas
+     * @return Available worker unit
+     */
+    public Unit getAvailableWorkerNotGathering(Player self, boolean notGatheringMinerals) {
+        // Find an available worker
+        Unit chosen = null;
+        Unit backup = null;
+        List<Unit> workers;
+        switch (self.getRace()){
+            case Protoss:
+                workers = getUnitsListOfType(UnitType.Protoss_Probe);
+            case Zerg:
+                workers = getUnitsListOfType(UnitType.Zerg_Drone);
+            case Terran:
+                workers = getUnitsListOfType(UnitType.Terran_SCV);
+            default:
+                workers = new ArrayList<>();
+        }
+
+
+        Unit current;
+        for(int i = 0; i < workers.size() && chosen==null; i++){
+            current = workers.get(i);
+
+            //incase all workers are gathering gas or working
+            if(current.isConstructing()){
+                backup = current;
+            }
+
+            if(notGatheringMinerals){
+                if(!current.isConstructing() && !current.isGatheringMinerals()){
+                    chosen = current;
+                }
+            } else {
+                if(!current.isConstructing() && !current.isGatheringGas()){
+                    chosen = current;
+                }
             }
         }
-        return null;
+
+
+        if(chosen == null){
+            if( backup == null && workers.size()>0){
+                chosen = workers.get(0);
+            } else {
+                chosen = backup;
+            }
+        }
+
+        return chosen;
     }
 
     /**
