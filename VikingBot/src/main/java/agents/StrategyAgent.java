@@ -191,15 +191,8 @@ public class StrategyAgent {
                 }
                 break;
 
-            //TODO: implement scout.
             case SCOUT:
-                result = false;
-            case SCOUT:
-                if(intel.getTimeSinceLastScout() > 120 * 30 && intel.getAvailableWorker(self) != null) {
-                    result = true;
-                } else {
-                    result = false;
-                }
+                result = intel.getTimeSinceLastScout() > 120 * 30 && intel.getAvailableWorker(self) != null;
                 break;
 
             //TODO: implement expand.

@@ -29,7 +29,7 @@ import java.util.List;
  * implement the Action class ourselves.
  */
 public class ScoutActionType implements ActionType {
-    private final static String name = "Scouttype";
+    private final static String name = "ScoutActionType";
     private final static String action_name = "ScoutAction";
     private static SimpleAction ScoutAction = new SimpleAction(action_name);
 
