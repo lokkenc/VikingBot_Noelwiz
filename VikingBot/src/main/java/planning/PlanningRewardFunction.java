@@ -1,14 +1,14 @@
 package planning;
 
-import planning.actions.ActionParserHelper;
-import planning.actions.BuildAction;
-import planning.actions.TrainAction;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
+import bwapi.UnitType;
+import planning.actions.BuildAction;
+import planning.actions.TrainAction;
+import planning.actions.helpers.ActionParserHelper;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class PlanningRewardFunction implements RewardFunction {
     private GameStatus gameStatus;
@@ -144,15 +144,24 @@ public class PlanningRewardFunction implements RewardFunction {
     }*/
 
     private double earlyGameReward(State s, Action a, State sprime) {
+        //casting the state once.
+        PlanningState ps = (PlanningState) s;
+        //state parts taken out
+        int populationCap = ps.getPopulationCapacity();
+
+        //tarets
         int targetNumWorkers = 12 * (int) s.get("numBases");
         int targetMineralProduction = 500; //500 minerals per minute
         int targetGasProduction = 250; //250 units per minute
+        int targetMilitaryTrainingCapacity = 4;
         //8 because the planner will consistantly get to 8 units
         int targetArmySize = 8;
         int maxTimeSinceLastScout = 3600;
+
+        //planing stuff
         int incentiveMultiplier = 100;
-        int populationCap = 9; //POSSIBLE VARIABLE IN STATE ???
         double reward = 0.0;
+
         ActionParserHelper aph = new ActionParserHelper();
         switch(aph.GetActionType(a)) {
             case ATTACK :
@@ -180,30 +189,56 @@ public class PlanningRewardFunction implements RewardFunction {
                     reward -= 500;
                 }
                 break;
+
             case BUILD:
                 //Get information of what is being built?
-                Random rand = new Random();
                 String toBuild = ((BuildAction) a).getUnitToBuild();
                 if (toBuild.equals("pop")) {
-                    reward += 50;
-                    if ((int) s.get("numWorkers") == populationCap)
-                        reward += 75;
-                    if (rand.nextInt(10) == 2)
-                        reward += 50;
-                } else if (toBuild.equals("train")) {
-                    reward += 50;
-                    if ((int) s.get("numWorkers") > targetNumWorkers) {
-                        reward += 75;
+                    int popreamaining = populationCap - (int) s.get("populationUsed");
+
+                    if( popreamaining/populationCap < 0.25){
+                        reward += 15;
                     }
-                    /*if (rand.nextInt(10) == 2)
-                        reward += 50;*/
+
+                    if(popreamaining <= 4){
+                        reward += 85;
+                    }
+
+                    if ((int) s.get("numWorkers") == populationCap) {
+                        reward += 75;
+                    } else {
+                        reward += 25;
+                    }
+
+                } else if (toBuild.equals("train")) {
+                    int[][] capacity = ps.getTrainingCapacity();
+                    if (capacity[1][0] + capacity[1][1] <= targetMilitaryTrainingCapacity){
+                        reward += 50;
+                    }
+
+                    if ((int) s.get("numWorkers") < targetNumWorkers) {
+                        reward -= 25;
+                    }
+
+                } else if(toBuild.equals("gas") && ps.getGasProductionRate() == 0) {
+                    //will eventually build a gas
+                    if(ps.getUnitMemory().getOrDefault(UnitType.Protoss_Assimilator,0) < 1){
+                        reward += 50;
+                    } else {
+                        reward -= 25;
+                    }
+
+                } else if(toBuild.equals("research")){
+                    if(ps.getUnitMemory().getOrDefault(UnitType.Protoss_Cybernetics_Core,0) < 1){
+                        reward += 30;
+                    }else {
+                        reward -= 200;
+                    }
                 } else {
                     reward -= 50;
                 }
-
-
-                //PLACEHOLDER REWARD
                 break;
+
             case EXPAND:
                 if ((int) s.get("numBases") < 2) {
                     //Give reward if preconditions for expanding are met
@@ -216,7 +251,11 @@ public class PlanningRewardFunction implements RewardFunction {
                     }
                 } else {
                     reward -= 500;
-                } break;
+                }
+
+                //stop the planner from enqueuing this?
+                //reward -= 1000;
+                break;
             case SCOUT :
                 //Checks the last time scouted and gives reward based on that
                 if ((int) s.get("timeSinceLastScout") > maxTimeSinceLastScout) {
@@ -229,17 +268,39 @@ public class PlanningRewardFunction implements RewardFunction {
                 //TEMPORARY REWARD
                 String toTrain = ((TrainAction) a).getUnitToTrain();
                 if (toTrain.equals("worker")) {
-                    if ((int) s.get("numWorkers") < targetNumWorkers)
-                        reward += 50;
+                    if (ps.getNumWorkers() < targetNumWorkers)
+                        reward += 75;
                     reward += 50;
                 } else if (toTrain.equals("combatUnit")) {
                     if ((int) s.get("numWorkers") >= targetNumWorkers) {
+                        reward += 150;
+                    }
+
+                    if(ps.getArmySize() < targetArmySize){
                         reward += 150;
                     }
                 }
                 break;
             case UPGRADE:
                 reward -= 100;
+                break;
+
+            case GATHER:
+                //assuming is either gas or minerals
+                if(a.actionName().endsWith("gas")){
+                    if( (int) s.get("gasProductionRate") > 0){
+                        reward -= 100;
+                    }else {
+                        reward += 40;
+                    }
+                }else {
+                    if( (int) s.get("mineralProductionRate") <= 0){
+                        reward += 10;
+                    } else {
+                        reward -= 100;
+                    }
+
+                }
                 break;
         }
         return reward;

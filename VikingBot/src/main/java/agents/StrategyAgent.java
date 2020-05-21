@@ -4,7 +4,8 @@ import burlap.mdp.core.action.Action;
 import bwapi.*;
 import planning.SharedPriorityQueue;
 import planning.StarcraftPlanner;
-import planning.actions.ActionParserHelper;
+import planning.actions.helpers.ActionParserHelper;
+import planning.actions.helpers.ProtossBuildingParserHelper;
 
 import java.util.List;
 
@@ -38,9 +39,11 @@ public class StrategyAgent {
     public void update() {
         // use the planner
         // if we can do the action
-        if(canExecute(todo.Peek())){
+        Action next = todo.Peek();
+        game.drawTextScreen(100,100,"Next in queue:"+next.actionName());
+        if(canExecute(next)){
             // tell the planner to tell the enviorment to tell the bot to do the action
-            lastAct = todo.Peek();
+            lastAct = next;
             planner.ExecuteAction();
         } else if(lastAct != null){
             lastAct = null;
@@ -138,16 +141,19 @@ public class StrategyAgent {
      */
     private boolean canExecute(Action a){
         boolean result = false;
+
+        //the minerals used and about to be used.
         int availMinerals = self.minerals() - intel.getOrderedMineralUse();
 
         switch (ActionParserHelper.GetActionType(a)){
+            //TODO: IMPLEMENT THIS ACTION, RETURN true when possible
             case UPGRADE:
-                //TODO: check cost of upgrade + implement
+                //TODO: check cost of upgrade
                 if(availMinerals > 200 ){
-                    //TODO: CHANGE THIS TO TRUE WHEN implemented
                     result = false;
                 }
                 break;
+
             case TRAIN:
                 int numUnits  = 1;
 
@@ -179,11 +185,15 @@ public class StrategyAgent {
 
                     //TODO: check cost of unit in action
                     if(whatUnit != UnitType.Unknown){
-                        result = numUnits * whatUnit.mineralPrice() <= self.minerals()
+                        result = numUnits * whatUnit.mineralPrice() <= availMinerals
                         && self.supplyTotal() > self.supplyUsed()+ + whatUnit.supplyRequired();
                     }
                 }
                 break;
+
+            //TODO: implement scout.
+            case SCOUT:
+                result = false;
             case SCOUT:
                 if(intel.getTimeSinceLastScout() > 120 * 30 && intel.getAvailableWorker(self) != null) {
                     result = true;
@@ -191,9 +201,10 @@ public class StrategyAgent {
                     result = false;
                 }
                 break;
+
+            //TODO: implement expand.
             case EXPAND:
-                if(self.minerals() > 400){
-                    //TODO: implement expand.
+                if(availMinerals > 400){
                     result = false;
                 }
                 break;
@@ -202,12 +213,12 @@ public class StrategyAgent {
                 if(intel.getUnitsOfType(self, UnitType.Protoss_Probe) > 0){
                     String what = a.actionName().split("_")[1];
                     //check cost of building
-                    if(what.equals("pop") && availMinerals > 100){
+                    UnitType whatUnit = ProtossBuildingParserHelper.translateBuilding(what);
+                    if(what.equals("pop") || what.equals("gas") && availMinerals > whatUnit.mineralPrice()){
                         result = true;
-                        //TODO: MORE general function to test if there's a space to biold on
-
+                        //TODO: MORE general function to test if there's a space to build on
                     } else if(intel.getUnitsOfType(self, UnitType.Protoss_Pylon) > 1){
-                        if(what.equals("train") && availMinerals > 150){
+                        if(availMinerals > whatUnit.mineralPrice()){
                             result = true;
                         }
                     }
@@ -216,6 +227,23 @@ public class StrategyAgent {
             case ATTACK:
                 if(intel.getUnitsListOfType(UnitType.Protoss_Zealot).size() > 0) {
                     result = true;
+                }
+                break;
+
+            case GATHER:
+                //if we have probes
+                if(intel.getUnitsOfType(self, UnitType.Protoss_Probe) > 0){
+                    //check if we have the ability to get gass.
+                    if(a.actionName().endsWith("gas")){
+                        if(intel.getUnitsOfType(self, UnitType.Protoss_Assimilator) > 0){
+                            return true;
+                        }
+                    } else {
+                        //ASSUMING that this is gathering minerals
+                        result = true;
+                    }
+                } else {
+                    result = false;
                 }
                 break;
             case UNKNOWN:
@@ -227,5 +255,24 @@ public class StrategyAgent {
             return result;
 
         return false;
+    }
+
+
+    /**
+     * Tell the economy agent to gather.
+     *
+     * placed here because the economy has trouble getting units.
+     * @param isMinerals is this order to gather minerals (true) or gather gas (false)
+     */
+    public void executeGatherAction(boolean isMinerals){
+        Unit worker = intel.getAvailableWorkerNotGathering(self, isMinerals);
+
+        if(isMinerals && intel.getBuildingUnitsOfType(self, UnitType.Protoss_Nexus) > 0){
+            //economy.gatherMinerals(game, worker);
+            Unit base = intel.getUnitsListOfType(UnitType.Protoss_Nexus).get(0);
+            economy.gatherMinerals(game, worker, base);
+        } else {
+            economy.gatherGas(game, worker);
+        }
     }
 }

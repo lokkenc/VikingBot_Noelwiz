@@ -18,6 +18,12 @@ class BuildActionTest {
         assertEquals("BuildAction_pop", new BuildAction("_pop").actionName(),
                 "_pop is a valid option.");
 
+        assertEquals("BuildAction_gas", new BuildAction("gas").actionName(),
+                "gas is a valid option.");
+
+        assertEquals("BuildAction_gas", new BuildAction("_gas").actionName(),
+                "_gas is a valid option.");
+
         assertEquals("BuildAction_pop", new BuildAction("BuildAction_pop").actionName(),
                 "A previous build action's name is a valid option.");
 
@@ -32,6 +38,19 @@ class BuildActionTest {
 
         assertEquals(control.actionName(), new BuildAction("").actionName(),
                 "The empty string defaults to the base action name.");
+    }
+
+    @Test
+    void testGetUnitToTrain(){
+        assertEquals("pop", new BuildAction("pop").getUnitToBuild(), "Expected pop");
+
+        assertEquals("pop", new BuildAction("_pop").getUnitToBuild(), "Expected pop without underscore");
+
+        assertEquals("research", new BuildAction("research").getUnitToBuild(), "Expected research");
+
+        assertEquals("research", new BuildAction("_research").getUnitToBuild(), "_Expected research");
+
+        assertEquals("gas", new BuildAction("gas").getUnitToBuild(), "Expected gas");
     }
 
 }

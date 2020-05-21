@@ -41,6 +41,7 @@ public class SharedPriorityQueue {
 
 
     public Action Peek(){
+        ActionQueue.peek();
         return ActionQueue.peek();
     }
 

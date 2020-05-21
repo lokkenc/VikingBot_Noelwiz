@@ -17,6 +17,8 @@ import burlap.mdp.core.action.Action;
  *      *            - population, something that increases the population capacity
  *      *         "train"
  *      *            - a building that trains or enables the training for zerg of units
+ *      *          "gas"
+ *      *            - a building that enables gas gathering
  *
  * How to add an option:
  *      1) If more options are needed the current what to build should be made to "what=unitname"
@@ -42,7 +44,7 @@ public class BuildAction implements Action {
     /**
      * Current list of building types.
      */
-    private static final String[] buildOptions = new String[]{"research", "pop", "train"};
+    private static final String[] buildOptions = new String[]{"research", "pop", "train", "gas"};
     private String unitToBuild;
 
     /**
@@ -54,11 +56,13 @@ public class BuildAction implements Action {
      * @param options A string consisting, containing the name of the general type of building from the
      *                options listed bellow.
      *         "research"
-     *            - a building that enables research.
+     *            - a building that enables research. Currently a Cybernetics core for protoss
      *         "pop"
      *            - population, something that increases the population capacity
      *         "train"
      *            - a building that trains or enables the training for zerg of units
+     *         "gas"
+     *            - a building that is required for gas mining
      * @return a new build actions with the given options. Any invalid options are dropped.
      */
     public BuildAction(String options) {
