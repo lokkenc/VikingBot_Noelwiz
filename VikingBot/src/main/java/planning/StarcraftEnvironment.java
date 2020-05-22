@@ -182,6 +182,11 @@ public class StarcraftEnvironment implements Environment {
                     Unit scout = intelligenceAgent.getAvailableWorker(self);
                     strategyAgent.scoutEnemy(scout);
                 }
+                else if (scoutAction.getUnitToScout().equalsIgnoreCase("combatUnit")) {
+                    UnitType mostCommonCombatUnit = intelligenceAgent.getMostCommonCombatUnit();
+                    Unit scout = intelligenceAgent.getAvailableUnit(self, mostCommonCombatUnit);
+                    strategyAgent.scoutEnemy(scout);
+                }
                 break;
 
             case GATHER:
