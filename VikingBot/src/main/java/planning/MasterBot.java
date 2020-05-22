@@ -11,6 +11,4 @@ public class MasterBot {
     CombatAgent combatAgent;
     StrategyAgent strategyAgent;
     StarcraftPlanner starcraftPlanner;
-
-
 }
