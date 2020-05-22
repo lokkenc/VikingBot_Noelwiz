@@ -16,10 +16,9 @@ public class EconomyAgent {
      * tell a worker to go gather gas at the closest gas local
      *
      * NOTE: this assumes protoss right now, will not work for zerg.
-     * @param game the current game
      * @param worker a worker, presumed probe.
      */
-    protected void gatherGas(Game game, Unit worker){
+    protected void gatherGas(Unit worker){
        List<Unit> gasLocals = intel.getUnitsListOfType(UnitType.Protoss_Assimilator);
        if(gasLocals.size() > 0){
            Unit closest = gasLocals.get(0);
@@ -41,11 +40,11 @@ public class EconomyAgent {
 
     /**
      * Sends a worker to get the closest mineral to the specified base
-     * @param game Game value created on game start
      * @param worker Unit to send to gather minerals
      * @param base Base to gather minerals near
      */
-    protected void gatherMinerals (Game game, Unit worker, Unit base) {
+    protected void gatherMinerals (Unit worker, Unit base) {
+        Game game = intel.getGame();
         Unit closestMineral = null;
 
         //find the closest mineral
@@ -65,11 +64,11 @@ public class EconomyAgent {
 
     /**
      * Sends a worker to gather minerals that are closest to it
-     * @param game Game value created on game start
      * @param worker Unit to send to gather minerals
      */
-    public void gatherMinerals (Game game, Unit worker) {
+    public void gatherMinerals (Unit worker) {
         assert(worker != null);
+        Game game = intel.getGame();
         Unit closestMineral = null;
 
         //find the closest mineral
@@ -93,10 +92,10 @@ public class EconomyAgent {
 
     /**
      * If player is Zerg morph a larva into an overlord. If player is Protoss build a pylon
-     * @param self Player assigned to the bot
-     * @param game Game value created on game start
      */
-    public void expandPopulationCapacity(Player self, Game game) {
+    public void expandPopulationCapacity() {
+        Player self = intel.getSelf();
+        Game game = intel.getGame();
         if(self.getRace() == Race.Zerg) {
             Unit larva = intel.getAvailableUnit(self, UnitType.Zerg_Larva);
             if (larva != null) {
@@ -117,12 +116,12 @@ public class EconomyAgent {
 
     /**
      * Builds a building of type in a suitable position
-     * @param game Game value created on game start
-     * @param self Player assigned to the bot
      * @param type Building to be created
      */
-    public void createBuildingOfType(Game game, Player self, UnitType type) {
-        Unit worker = intel.getAvailableWorker(self);
+    public void createBuildingOfType(UnitType type) {
+        Game game = intel.getGame();
+        Player self = intel.getSelf();
+        Unit worker = intel.getAvailableWorker();
 
         assert type.isBuilding() : "Must Build Buildings.";
 
@@ -151,23 +150,19 @@ public class EconomyAgent {
                 if(buildTile != null) {
                     worker.build(type, buildTile);
                 }
-
             }
-
-
         }
     }
 
     /**
      * Builds a building of type in a suitable position determined by the anchor and maxDistance
-     * @param game Game value created on game start
-     * @param self Player assigned to the bot
      * @param type Building to be created
      * @param anchor Unit that serves as the anchor for the build position
      * @param maxDistance maximum distance that building can be built from the anchor
      */
-    public void createBuildingOfTypeWithAnchor(Game game, Player self, UnitType type, Unit anchor, int maxDistance) {
-        Unit worker = intel.getAvailableWorker(self);
+    public void createBuildingOfTypeWithAnchor(UnitType type, Unit anchor, int maxDistance) {
+        Game game = intel.getGame();
+        Unit worker = intel.getAvailableWorker();
 
         assert type.isBuilding() : "Must Build Buildings.";
 
@@ -219,5 +214,10 @@ public class EconomyAgent {
 
             minTrainingGateway.train(UnitType.Protoss_Zealot);
         }
+    }
+
+    public void expandToNewBase() {
+        //TODO: THIS!!!
+        int ourbaseloc = intel.getBaseLoc();
     }
 }

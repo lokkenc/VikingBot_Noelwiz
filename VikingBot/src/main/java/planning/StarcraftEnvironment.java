@@ -159,11 +159,10 @@ public class StarcraftEnvironment implements Environment {
                 break;
             case BUILD:
                 BuildAction buildAction = (BuildAction) action;
-                economyAgent.createBuildingOfType(game, self,
-                        ProtossBuildingParserHelper.translateBuilding(buildAction));
+                economyAgent.createBuildingOfType(ProtossBuildingParserHelper.translateBuilding(buildAction));
                 break;
             case EXPAND:
-
+                economyAgent.expandToNewBase();
                 break;
             case TRAIN:
                 TrainAction trainAction = (TrainAction) action;
