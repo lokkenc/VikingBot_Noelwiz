@@ -91,18 +91,19 @@ public class StrategyAgent {
      * @param unit the unit completed
      */
     public void useCompletedUnit(Unit unit){
-        //todo, check if defending too.
-        if(intel.isAttackingEnemy()){
-            ArrayList<Unit> newunit = new ArrayList<>(1);
-            newunit.add(unit);
-            CombatAgent.getInstance(game).controlArmy(game, newunit);
-        } else {
-            Position gotoposition = BWTA.getNearestChokepoint(unit.getPosition()).getCenter();
-            if(BWTA.isConnected(unit.getTilePosition(), gotoposition.toTilePosition())){
-                unit.move(gotoposition);
+        if(!(unit.canGather() && unit.getType().isBuilding())){
+            //todo, check if defending too.
+            if(intel.isAttackingEnemy()){
+                ArrayList<Unit> newunit = new ArrayList<>(1);
+                newunit.add(unit);
+                CombatAgent.getInstance(game).controlArmy(game, newunit);
+            } else {
+                Position gotoposition = BWTA.getNearestChokepoint(unit.getPosition()).getCenter();
+                if(BWTA.isConnected(unit.getTilePosition(), gotoposition.toTilePosition())){
+                    unit.move(gotoposition);
+                }
             }
         }
-
     }
 
     /**
