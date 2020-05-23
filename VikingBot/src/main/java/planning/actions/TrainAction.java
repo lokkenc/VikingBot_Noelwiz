@@ -1,6 +1,7 @@
 package planning.actions;
 
 import burlap.mdp.core.action.Action;
+import com.sun.istack.internal.NotNull;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -66,7 +67,7 @@ public class TrainAction implements Action {
      * How it works: if options are provided, checks all of them to make sure they are
      *               valid given the rules above.
      */
-    public TrainAction(String options){
+    public TrainAction(@NotNull String options ){
         if(options == null || options.isEmpty()){
             actionName = BaseActionName.concat(options);
 
