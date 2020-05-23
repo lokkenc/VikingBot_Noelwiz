@@ -5,6 +5,7 @@ import bwapi.*;
 import bwta.BWTA;
 import planning.SharedPriorityQueue;
 import planning.StarcraftPlanner;
+import planning.actions.BuildAction;
 import planning.actions.helpers.ActionParserHelper;
 import planning.actions.helpers.ProtossBuildingParserHelper;
 
@@ -42,11 +43,14 @@ public class StrategyAgent {
         // if we can do the action
         Action next = todo.Peek();
         game.drawTextScreen(100,100,"Next in queue:"+next.actionName());
-        if(canExecute(next)){
-            // tell the planner to tell the enviorment to tell the bot to do the action
+        game.drawTextScreen(100,90,"Current Minerals:"+self.minerals());
+        game.drawTextScreen(100,80,"Minerals to Spend minerals:"+intel.getOrderedMineralUse());
+        if(canExecute(next) && lastAct != next /* slightly reduce spam*/){
+            // tell the planner to tell the environment to tell the bot to do the action
             lastAct = next;
             planner.ExecuteAction();
         } else if(lastAct != null){
+            //reset last act after a frame has passed.
             lastAct = null;
         }
 
@@ -183,6 +187,9 @@ public class StrategyAgent {
                         result = numUnits * whatUnit.mineralPrice() <= availMinerals
                         && self.supplyTotal() > self.supplyUsed()+ + whatUnit.supplyRequired();
                     }
+                } else {
+                    //TODO fix root issue rather than use this.
+                    todo.EnQueue(new BuildAction("pop"));
                 }
                 break;
 
@@ -192,7 +199,7 @@ public class StrategyAgent {
                 break;
 
             case EXPAND:
-                if(availMinerals > 400){
+                if(availMinerals >= 400 && intel.getUnitCountOfType(self, UnitType.Protoss_Probe) > 0){
                     result = true;
                 }
                 break;
@@ -202,7 +209,7 @@ public class StrategyAgent {
                     String what = a.actionName().split("_")[1];
                     //check cost of building
                     UnitType whatUnit = ProtossBuildingParserHelper.translateBuilding(what);
-                    if(what.equals("pop") || what.equals("gas") && availMinerals > whatUnit.mineralPrice()){
+                    if((what.equals("pop") || what.equals("gas") ) && availMinerals > whatUnit.mineralPrice()){
                         result = true;
                         //TODO: MORE general function to test if there's a space to build on
                     } else if(intel.getUnitCountOfType(self, UnitType.Protoss_Pylon) > 1){

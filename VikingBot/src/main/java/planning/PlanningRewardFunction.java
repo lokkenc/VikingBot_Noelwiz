@@ -181,7 +181,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     }
                 }
 
-                if( ((boolean) s.get("beingAttacked")) && target.equals("defend") ){
+                if(ps.getBeingAttacked() && target.equals("defend")){
                     reward += 1000;
                 } else if ((Boolean) sprime.get("attackingEnemyBase") == false && this.calcArmySize(s) >= targetArmySize){
                     reward += 750;
@@ -240,11 +240,15 @@ public class PlanningRewardFunction implements RewardFunction {
                 break;
 
             case EXPAND:
+                //todo remove
+                targetNumWorkers = 8;
                 if ((int) s.get("numBases") < 2) {
                     //Give reward if preconditions for expanding are met
-                    if ((int) s.get("numWorkers") >= targetNumWorkers && (int) s.get("mineralProductionRate") >= targetMineralProduction
+                    if ( ps.getNumWorkers() >= targetNumWorkers && ps.getMineralProductionRate() >= targetMineralProduction
                             && (int) s.get("gasProductionRate") >= targetGasProduction) {
-                        reward += 500;
+                        reward += 250;
+                    } else if((int) s.get("numWorkers") >= targetNumWorkers - 3){
+                        reward += 100;
                     }
                     else {
                         reward -= 500;
@@ -252,9 +256,6 @@ public class PlanningRewardFunction implements RewardFunction {
                 } else {
                     reward -= 500;
                 }
-
-                //stop the planner from enqueuing this?
-                //reward -= 1000;
                 break;
             case SCOUT :
                 //Checks the last time scouted and gives reward based on that

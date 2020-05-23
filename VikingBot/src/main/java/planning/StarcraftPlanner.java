@@ -2,20 +2,17 @@ package planning;
 
 import agents.IntelligenceAgent;
 import agents.StrategyAgent;
-import planning.actions.*;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
-import burlap.behavior.singleagent.Episode;
 import burlap.behavior.singleagent.planning.stochastic.sparsesampling.SparseSampling;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.statehashing.HashableStateFactory;
 import burlap.statehashing.ReflectiveHashableStateFactory;
+import planning.actions.*;
 
 public class StarcraftPlanner {
-    private Episode ep = new Episode();
-
     private SparseSampling sparsePlanner;
     private StarcraftEnvironment game;
     private Policy sparcePolicy;
@@ -49,7 +46,6 @@ public class StarcraftPlanner {
 
         RewardFunction initalreward = new PlanningRewardFunction(GameStatus.EARLY);
 
-
         StarcraftModel model = new StarcraftModel(initalreward);
         domain.setModel(model);
 
@@ -80,7 +76,7 @@ public class StarcraftPlanner {
      */
     public void SparsePlanStep(){
         if (roomInQueue()) {
-            Action todo = sparcePolicy.action(game.currentObservation()); //ERROR HERE: INFINITE LOOP OF ACTIONS
+            Action todo = sparcePolicy.action(game.currentObservation());
             Actions.EnQueue(todo);
         }
     }
@@ -101,8 +97,6 @@ public class StarcraftPlanner {
     }
 
     public Boolean roomInQueue() {
-        if (Actions.size() > 10)
-            return false;
-        return true;
+        return Actions.size() <= 10;
     }
 }

@@ -413,6 +413,33 @@ public class IntelligenceAgent {
         return military;
     }
 
+
+
+    /**
+     * Get the current buildings units that exist and are owned by specified player..
+     * @param self the Player who we want a list of combat units from
+     * @return a List of buildings.
+     */
+    public List<Unit> getBuildingsOwnedBy(Player self){
+        UnitFilter filter = new UnitFilter() {
+            @Override
+            public boolean test(Unit unit) {
+                return (unit.getType().isBuilding());
+            }
+        };
+
+        List<Unit> buildings = new LinkedList<Unit>();
+
+        for (Unit unit : self.getUnits()) {
+            if(filter.test(unit)){
+                buildings.add(unit);
+            }
+
+        }
+
+        return buildings;
+    }
+
     /**
      * Returns a unit of type target that has no units of type type in the specified radius
      * @param self Player assigned to the bot
@@ -455,18 +482,28 @@ public class IntelligenceAgent {
     public Unit getAvailableWorker() {
         // Find an available worker
         Unit AvailbleWorker = null;
-        for (Unit unit : getUnitsListOfType(UnitType.Protoss_Probe)) {
-            //prioratize non-building workers
-            if(unit.isConstructing()){
-                AvailbleWorker = unit;
-            } else{
-                if (!scouts.contains(unit.getID())) {
-                    return unit;
-                }
-            }
 
+        List<Unit> workers = getUnitsListOfType(UnitType.Protoss_Probe);
+        if(workers.isEmpty()){
+            System.out.println("WARNING: no workers owned by bot.");
+            return null;
+        } else {
+            for (Unit unit : workers) {
+                //prioratize non-building workers
+                if(unit.isConstructing()){
+                    AvailbleWorker = unit;
+                } else{
+                    if (!scouts.contains(unit.getID())) {
+                        return unit;
+                    }
+                }
+
+            }
+            if(AvailbleWorker == null)
+                return workers.get(0);
+            else
+                return AvailbleWorker;
         }
-        return AvailbleWorker;
     }
 
     /**
@@ -727,6 +764,7 @@ public class IntelligenceAgent {
                 break;
             case Protoss:
                 numBases = unitMemory.get(UnitType.Protoss_Nexus);
+                numBases = this.getUnitCountOfType(self, UnitType.Protoss_Nexus);
                 break;
         }
 
@@ -879,51 +917,15 @@ public class IntelligenceAgent {
 
 
     /**
-     * Checks if the players bases is being attacked
+     * Checks if the players buildings are being attacked
      * @return true if the player's base is being attacked, false otherwise
      */
     public Boolean beingAttacked() {
-        UnitType baseType;
-        UnitType creepOrPower = null;
-        UnitType train;
-        switch (enemyRace) {
-            case Terran:
-                baseType = UnitType.Terran_Command_Center;
-                train = UnitType.Terran_Academy;
-                creepOrPower = UnitType.Terran_Bunker;
-                break;
-            case Zerg:
-                baseType = UnitType.Zerg_Hatchery;
-                train = UnitType.Zerg_Spawning_Pool;
-                break;
-            default:
-                baseType = UnitType.Protoss_Nexus;
-                train = UnitType.Protoss_Gateway;
-                creepOrPower = UnitType.Protoss_Pylon;
-                break;
-        }
-
-        //For each base, check if we are being attacked there
-        for (Unit base: getUnitsListOfType(baseType)) {
-            if(base.isUnderAttack()){
+        for(Unit building : getBuildingsOwnedBy(self)){
+            if(building.isUnderAttack()){
                 return true;
             }
         }
-
-        //For each base, check if we are being attacked there
-        for (Unit pop: getUnitsListOfType(creepOrPower)) {
-            if(pop.isUnderAttack()){
-                return true;
-            }
-        }
-
-        //For each base, check if we are being attacked there
-        for (Unit base: getUnitsListOfType(train)) {
-            if(base.isUnderAttack()){
-                return true;
-            }
-        }
-
 
         return false;
     }
@@ -939,6 +941,10 @@ public class IntelligenceAgent {
      * @return the enemy's race
      */
     public Race getEnemyRace() {
+        if(enemyRace == Race.Unknown || enemyRace == Race.Random){
+            //hopefully if we scout, this will update the enemy's race.
+            enemyRace = game.enemy().getRace();
+        }
         return enemyRace;
     }
 

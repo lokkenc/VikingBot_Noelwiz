@@ -190,15 +190,32 @@ public class EconomyAgent {
     public void createBuildingOfTypeWithAnchor(UnitType type, TilePosition anchor, int maxDistance) {
         Game game = intel.getGame();
         Unit worker = intel.getAvailableWorker();
-
         assert type.isBuilding() : "Must Build Buildings.";
 
-        if ((worker != null)) {
-            TilePosition buildTile = game.getBuildLocation(type, anchor, maxDistance);
 
-            if (buildTile != null) {
+        if ((worker != null)) {
+            TilePosition buildTile = null;
+            buildTile = game.getBuildLocation(type, anchor, maxDistance, false);
+            if (buildTile != null && game.canBuildHere(buildTile, type,worker,true)) {
+                worker.move(buildTile.toPosition(),true);
                 worker.build(type, buildTile);
+            } else {
+                System.out.println("cannot find suitable build location.");
             }
+
+            /*
+            maxDistance -= 100;
+            while (!(buildTile != null && game.canBuildHere(buildTile, type,worker))){
+                maxDistance += 100;
+                buildTile = game.getBuildLocation(type, anchor, maxDistance, false);
+                if (buildTile != null && game.canBuildHere(buildTile, type,worker)) {
+                    worker.move(buildTile.toPosition(),true);
+                    worker.build(type, buildTile);
+                } else {
+                    System.out.println("cannot find suitable build local, looking farther away.");
+                }
+            }
+        */
         }
     }
 
@@ -295,6 +312,24 @@ public class EconomyAgent {
         //remove the occupied or otherwise invalid locations.
         //can still check if a position is a island and remove that too.
         canidateExpansions.removeAll(toremove);
+
+
+
+        /*
+        for(BaseLocation blc : BWTA.getBaseLocations()){
+            if(!blc.isIsland() && !blc.isStartLocation()){
+                if(!toremove.contains(blc)){
+                    canidateExpansions.add(blc);
+                }
+            }
+        }
+        */
+
+
+        if(canidateExpansions.isEmpty()){
+            System.err.println("Warning: no remaining valid expansions.");
+        }
+
 
         Iterator<BaseLocation> l = canidateExpansions.iterator();
         TilePosition closest = l.next().getTilePosition();
