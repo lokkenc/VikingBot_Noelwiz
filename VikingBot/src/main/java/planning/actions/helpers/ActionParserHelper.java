@@ -70,8 +70,10 @@ public class ActionParserHelper {
                 break;
             case "ExpandAction":
                 result = ActionEnum.EXPAND;
+                break;
             case "GatherAction":
                 result = ActionEnum.GATHER;
+                break;
             default:
                 //RESULT defualts to UNKNONW.
                 break;
