@@ -2,11 +2,13 @@ package agents;
 
 import burlap.mdp.core.action.Action;
 import bwapi.*;
+import bwta.BWTA;
 import planning.SharedPriorityQueue;
 import planning.StarcraftPlanner;
 import planning.actions.helpers.ActionParserHelper;
 import planning.actions.helpers.ProtossBuildingParserHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StrategyAgent {
@@ -36,6 +38,9 @@ public class StrategyAgent {
         planner.Initalize(todo);
     }
 
+    /**
+     * Called every frame by the listener
+     */
     public void update() {
         // use the planner
         // if we can do the action
@@ -50,27 +55,11 @@ public class StrategyAgent {
         }
 
 
-        /*
-            if(intel.getBaseLoc() < BWTA.getStartLocations().size()) {
-                Unit scout = intel.getAvailableWorker(self);
-                intel.findEnemyBase(scout, BWTA.getStartLocations().get(intel.getBaseLoc()));
-                intel.addScout(scout.getID());
-                intel.changeBaseLoc(intel.getBaseLoc() + 1);
-            }
-        }
-        */
-
         int numCombatUnits = 0;
         UnitType currentUnitType;
-        //iterate through my units
+        //iterate through our units
         for (Unit myUnit : self.getUnits()) {
             currentUnitType = myUnit.getType();
-
-            /*
-            if (myUnit.getType() == UnitType.Protoss_Nexus && myUnit.isUnderAttack()) {
-                combat.attackPosition(self, UnitType.Protoss_Zealot, myUnit.getPosition());
-            }
-            */
 
             //if it's a worker and it's idle, send it to the closest mineral patch
             if (currentUnitType.isWorker() && myUnit.isIdle()) {
@@ -96,9 +85,28 @@ public class StrategyAgent {
         //TODO: figure out when to take controll again, and if we can..
         if(numCombatUnits < retreatThreshold){
             CombatAgent.getInstance(game).setSkirmish(true);
-            //RETREEAT
             intel.setAttacking(false);
         }
+    }
+
+
+    /**
+     * called by the listener's onUnitComplete function
+     * @param unit the unit completed
+     */
+    public void useCompletedUnit(Unit unit){
+        //todo, check if defending too.
+        if(intel.isAttackingEnemy()){
+            ArrayList<Unit> newunit = new ArrayList<>(1);
+            newunit.add(unit);
+            CombatAgent.getInstance(game).controlArmy(game, newunit);
+        } else {
+            Position gotoposition = BWTA.getNearestChokepoint(unit.getPosition()).getCenter();
+            if(BWTA.isConnected(unit.getTilePosition(), gotoposition.toTilePosition())){
+                unit.move(gotoposition);
+            }
+        }
+
     }
 
     /**
@@ -183,7 +191,6 @@ public class StrategyAgent {
                         }
                     }
 
-                    //TODO: check cost of unit in action
                     if(whatUnit != UnitType.Unknown){
                         result = numUnits * whatUnit.mineralPrice() <= availMinerals
                         && self.supplyTotal() > self.supplyUsed()+ + whatUnit.supplyRequired();
@@ -195,10 +202,9 @@ public class StrategyAgent {
                 result = intel.getTimeSinceLastScout() > 30 && intel.getAvailableWorker(self) != null;
                 break;
 
-            //TODO: implement expand.
             case EXPAND:
                 if(availMinerals > 400){
-                    result = false;
+                    result = true;
                 }
                 break;
             case BUILD:
@@ -229,7 +235,7 @@ public class StrategyAgent {
                     //check if we have the ability to get gass.
                     if(a.actionName().endsWith("gas")){
                         if(intel.getUnitCountOfType(self, UnitType.Protoss_Assimilator) > 0){
-                            return true;
+                            result = true;
                         }
                     } else {
                         //ASSUMING that this is gathering minerals
@@ -246,8 +252,9 @@ public class StrategyAgent {
 
         if (planner.roomInQueue())
             return result;
-
-        return false;
+        else{
+            return false;
+        }
     }
 
 

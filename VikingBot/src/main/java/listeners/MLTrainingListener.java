@@ -70,7 +70,7 @@ public class MLTrainingListener extends GameListener {
     @Override
     public void onFrame() {
         intel.tabulateUnits(self);
-        intel.updateEnemyBuildingMemory(game);
+        intel.updateEnemyBuildingMemory();
 
         DataManager dm = combat.getDataManagers().get(0);
         //game.setTextSize(10);

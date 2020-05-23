@@ -160,7 +160,7 @@ public class IntelligenceAgent {
     }
 
     /**
-     * Updates hashset of enemy building locations.
+     * Updates hash set of enemy building locations.
      */
     public void updateEnemyBuildingMemory () {
         // update the hashset of enemy building positions
@@ -200,12 +200,20 @@ public class IntelligenceAgent {
     }
 
 
+    /**
+     * remove a unit from memory upon destruction. Not currently used.
+     * @param unit the unit destroyed
+     */
     public void onUnitDestroy(Unit unit) {
         if(unit.isVisible(self) && !unit.getPlayer().equals(self)){
             updateEnemyUnitMemory(unit.getType(), -1);
         }
     }
 
+    /**
+     * to be called when a unit is distroyed by the listener. Not currently used.
+     * @param unit
+     */
     public void onUnitShow(Unit unit){
         if(unit.isVisible(self) && !unit.getPlayer().equals(self)){
             updateEnemyUnitMemory(unit.getType(), 1);
@@ -292,7 +300,7 @@ public class IntelligenceAgent {
     }
 
     /**
-     * Returns a list of units of type
+     * Returns a list of units of type. Only looks through units owned by the bot.
      * @param type UnitType to get the list of
      * @return Returns a list of all units of type type
      */
@@ -301,6 +309,24 @@ public class IntelligenceAgent {
 
         for (Unit unit : self.getUnits()) {
             if (unit.getType() == type) {
+                unitsList.add(unit);
+            }
+        }
+
+        return unitsList;
+    }
+
+    /**
+     * Returns a list of units of type.
+     * @param who the player who's unit's to look through.
+     * @param type UnitType to get the list of
+     * @return Returns a list of all units of type type
+     */
+    public List<Unit> getUnitsListOfType(UnitType type, Player who){
+        List<Unit> unitsList = new ArrayList<Unit>(4);
+
+        for (Unit unit : who.getUnits()) {
+            if (unit.getType() == type && unit.exists()) {
                 unitsList.add(unit);
             }
         }
@@ -819,7 +845,7 @@ public class IntelligenceAgent {
      * Checks if the players is attacking the enemy base
      * @return true if the players is attacking the enemy base, false otherwise
      */
-    public Boolean attackingEnemyBase() {
+    public Boolean isAttackingEnemy() {
         ArrayList<Unit> enemyBases = new ArrayList<>();
         UnitType baseType;
         switch (enemyRace) {
@@ -857,7 +883,6 @@ public class IntelligenceAgent {
      * @return true if the player's base is being attacked, false otherwise
      */
     public Boolean beingAttacked() {
-        ArrayList<Unit> bases = new ArrayList<>();
         UnitType baseType;
         UnitType creepOrPower = null;
         UnitType train;

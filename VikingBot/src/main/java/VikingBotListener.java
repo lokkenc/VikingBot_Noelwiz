@@ -2,10 +2,7 @@ import agents.CombatAgent;
 import agents.EconomyAgent;
 import agents.IntelligenceAgent;
 import agents.StrategyAgent;
-import bwapi.Game;
-import bwapi.Player;
-import bwapi.Unit;
-import bwapi.UnitType;
+import bwapi.*;
 import bwta.BWTA;
 import listener.GameListener;
 import listener.ListenerType;
@@ -76,7 +73,7 @@ public class VikingBotListener extends GameListener {
 
         // Update the Agents
         intel.tabulateUnits(self);
-        intel.updateEnemyBuildingMemory(game);
+        intel.updateEnemyBuildingMemory();
 
         strategy.update();
     }
@@ -100,6 +97,20 @@ public class VikingBotListener extends GameListener {
 
         //could send the scout back once we show the enemy base
     }
+
+    @Override
+    public void onNukeDetect(Position position) {
+        super.onNukeDetect(position);
+        game.drawTextScreen(100,100,"nuke detected, no response programmed.");
+    }
+
+
+    @Override
+    public void onUnitComplete(Unit unit) {
+        super.onUnitComplete(unit);
+        strategy.useCompletedUnit(unit);
+    }
+
 
     /**
      * Draws various information about the bot on screen.

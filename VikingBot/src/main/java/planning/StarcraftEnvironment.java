@@ -78,7 +78,7 @@ public class StarcraftEnvironment implements Environment {
         int numEnemyWorkers = intelligenceAgent.getNumEnemyWorkers();
         int numEnemyBases = intelligenceAgent.getNumEnemyBases();
         UnitType mostCommonCombatUnit = intelligenceAgent.getMostCommonCombatUnit();
-        Boolean attackingEnemyBase = intelligenceAgent.attackingEnemyBase();
+        Boolean attackingEnemyBase = intelligenceAgent.isAttackingEnemy();
         Boolean beingAttacked = intelligenceAgent.beingAttacked();
         Race enemyRace = intelligenceAgent.getEnemyRace();
         GameStatus gameStatus = intelligenceAgent.getGameStatus();
