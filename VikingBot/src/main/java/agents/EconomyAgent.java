@@ -1,8 +1,10 @@
 package agents;
 
 import bwapi.*;
+import bwta.BWTA;
+import bwta.BaseLocation;
 
-import java.util.List;
+import java.util.*;
 
 public class EconomyAgent {
 
@@ -13,13 +15,26 @@ public class EconomyAgent {
     }
 
     /**
-     * tell a worker to go gather gas at the closest gas local
-     *
-     * NOTE: this assumes protoss right now, will not work for zerg.
+     * Tell a worker to go gather gas at the closest gas local
      * @param worker a worker, presumed probe.
      */
     protected void gatherGas(Unit worker){
-       List<Unit> gasLocals = intel.getUnitsListOfType(UnitType.Protoss_Assimilator);
+       List<Unit> gasLocals;
+       switch (intel.getPlayerRace()){
+           case Protoss:
+               gasLocals = intel.getUnitsListOfType(UnitType.Protoss_Assimilator);
+               break;
+           case Terran:
+                gasLocals = intel.getUnitsListOfType(UnitType.Terran_Refinery);
+                break;
+           case Zerg:
+               gasLocals = intel.getUnitsListOfType(UnitType.Zerg_Extractor);
+               break;
+           default:
+               gasLocals = new ArrayList<>();
+           break;
+       }
+
        if(gasLocals.size() > 0){
            Unit closest = gasLocals.get(0);
            int Shortestdistance = worker.getDistance(closest);
@@ -156,18 +171,30 @@ public class EconomyAgent {
 
     /**
      * Builds a building of type in a suitable position determined by the anchor and maxDistance
+     * Calls the variation of this that's anchored off of a TilePosition to minimize code repetition.
      * @param type Building to be created
      * @param anchor Unit that serves as the anchor for the build position
      * @param maxDistance maximum distance that building can be built from the anchor
      */
     public void createBuildingOfTypeWithAnchor(UnitType type, Unit anchor, int maxDistance) {
+        createBuildingOfTypeWithAnchor(type, anchor.getTilePosition(), maxDistance);
+    }
+
+
+    /**
+     * Builds a building of type in a suitable position determined by the anchor and maxDistance
+     * @param type Building to be created
+     * @param anchor TilePosition that serves as the anchor for the build position
+     * @param maxDistance maximum distance that building can be built from the anchor
+     */
+    public void createBuildingOfTypeWithAnchor(UnitType type, TilePosition anchor, int maxDistance) {
         Game game = intel.getGame();
         Unit worker = intel.getAvailableWorker();
 
         assert type.isBuilding() : "Must Build Buildings.";
 
         if ((worker != null)) {
-            TilePosition buildTile = game.getBuildLocation(type, anchor.getTilePosition(), maxDistance);
+            TilePosition buildTile = game.getBuildLocation(type, anchor, maxDistance);
 
             if (buildTile != null) {
                 worker.build(type, buildTile);
@@ -216,8 +243,77 @@ public class EconomyAgent {
         }
     }
 
+    /**
+     * 1) finds the closest unoccupied base location
+     * 2) orders a base built there
+     */
     public void expandToNewBase() {
-        //TODO: THIS!!!
-        int ourbaseloc = intel.getBaseLoc();
+        Game game = intel.getGame();
+        TilePosition self_local = intel.getSelf().getStartLocation();
+
+        Set<BaseLocation> canidateExpansions = new LinkedHashSet<>(10);
+        canidateExpansions.addAll( BWTA.getBaseLocations());
+
+        List<BaseLocation> toremove = new ArrayList<BaseLocation>(4);
+
+        //prepare to remove locations occupied by us
+        for(Unit b : intel.getUnitsListOfType(UnitType.Protoss_Nexus)){
+            toremove.add(BWTA.getNearestBaseLocation(b.getTilePosition()));
+        }
+
+        //prepare to remove locations occupied by our opponent
+        switch (intel.getEnemyRace()){
+            case Zerg:
+                //TODO: if possible, optimize this. Maybe a function to just give a list
+                //      of unit types rather than three loops.
+                for(Unit b : intel.getUnitsListOfType(UnitType.Zerg_Hive, game.enemy())){
+                    toremove.add(BWTA.getNearestBaseLocation(b.getTilePosition()));
+                }
+                for(Unit b : intel.getUnitsListOfType(UnitType.Zerg_Lair, game.enemy())){
+                    toremove.add(BWTA.getNearestBaseLocation(b.getTilePosition()));
+                }
+                for(Unit b : intel.getUnitsListOfType(UnitType.Zerg_Hatchery, game.enemy())){
+                    toremove.add(BWTA.getNearestBaseLocation(b.getTilePosition()));
+                }
+                break;
+            case Terran:
+                for(Unit b : intel.getUnitsListOfType(UnitType.Terran_Command_Center, game.enemy())){
+                    toremove.add(BWTA.getNearestBaseLocation(b.getTilePosition()));
+                }
+                break;
+            case Protoss:
+                for(Unit b : intel.getUnitsListOfType(UnitType.Protoss_Nexus, game.enemy())){
+                    toremove.add(BWTA.getNearestBaseLocation(b.getTilePosition()));
+                }
+                break;
+            case Unknown:
+                break;
+        }
+        //prepare to remove start locations incase we haven't scouted.
+        toremove.addAll(BWTA.getStartLocations());
+
+        //remove the occupied or otherwise invalid locations.
+        //can still check if a position is a island and remove that too.
+        canidateExpansions.removeAll(toremove);
+
+        Iterator<BaseLocation> l = canidateExpansions.iterator();
+        TilePosition closest = l.next().getTilePosition();
+        while (l.hasNext()){
+            TilePosition current = l.next().getTilePosition();
+
+            if(BWTA.getGroundDistance(current, self_local) < BWTA.getGroundDistance(closest, self_local)){
+                closest = current;
+            }
+        }
+
+        switch (intel.getPlayerRace()){
+            case Protoss:
+                this.createBuildingOfTypeWithAnchor(UnitType.Protoss_Nexus, closest, 50);
+                break;
+            case Zerg:
+                this.createBuildingOfTypeWithAnchor(UnitType.Zerg_Hatchery, closest, 50);
+                break;
+            //case Terran
+        }
     }
 }
