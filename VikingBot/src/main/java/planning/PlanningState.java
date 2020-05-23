@@ -234,6 +234,8 @@ public class PlanningState implements HashableState, State {
         return attackingEnemyBase;
     }
 
+    public boolean getBeingAttacked() { return beingAttacked;}
+
     public Race getPlayerRace() {
         return playerRace;
     }

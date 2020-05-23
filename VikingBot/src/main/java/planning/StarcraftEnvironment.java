@@ -153,7 +153,6 @@ public class StarcraftEnvironment implements Environment {
                 }
 
                 strategyAgent.attackEnemy(IntelligenceAgent.getInstance(game).getCombatUnits(self));
-
                 break;
 
             case BUILD:
@@ -200,9 +199,6 @@ public class StarcraftEnvironment implements Environment {
 
 
         }
-
-
-        //TODO: SEND COMMANDS TO BOT BASED ON THE ACTION.
 
         //observe results
         State currentstate = currentObservation();
