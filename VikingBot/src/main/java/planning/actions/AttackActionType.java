@@ -4,6 +4,7 @@ import planning.CombatUnitStatus;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.state.State;
+import planning.PlanningState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,13 +67,14 @@ public class AttackActionType implements ActionType {
      * @return A List of attack actions that may be taken.
      */
     public List<Action> allApplicableActions(State state) {
+        PlanningState ps = (PlanningState) state;
         List<Action> attackActions = new ArrayList<Action>();
         attackActions.add(new AttackAction());
         String[] optionset;
-        ArrayList<CombatUnitStatus> combatStatus = (ArrayList<CombatUnitStatus>) state.get("combatUnitStatuses");
+        ArrayList<CombatUnitStatus> combatStatus = ps.getCombatUnitStatuses();
 
         //enumarate all valid attack actions
-        if (!(boolean) state.get("attackingEnemyBase") && HaveCombatUnits(combatStatus)){
+        if (!(boolean) state.get("attackingEnemyBase") && ps.getArmySize() > 0){
             for (String whatOption : whatOptions) {
                 String whatOptStr = "what=".concat(whatOption);
 
@@ -89,13 +91,11 @@ public class AttackActionType implements ActionType {
             }
         }
 
-        //when there is an indication of us being attacked added to the states, add that here
-        //TODO: check if the state says we're being attacked.
-        if(true){
+
+        if(ps.getBeingAttacked()){
             //let the bot bring the entire army back to defend
             attackActions.add( new AttackAction( "what=defend_unit=all" ) );
         }
-
         return attackActions;
     }
 
