@@ -12,10 +12,7 @@ import bwta.*;
 import ml.learning.LearningManager;
 import ml.range.Units;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Main Class for Combat control. This Class has some hard coded functions to allow simple combat actions to be taken but
@@ -241,5 +238,26 @@ public class CombatAgent {
         }
 
         return managers;
+    }
+
+    /**
+     * Send the scout to find enemy's base, buildings, and units
+     * @param scout the unit to be sent scouting
+     */
+    public void sendScout(Unit scout) {
+        Position scoutPosition;
+        HashSet<Position> enemyBuildingMemory = intel.getEnemyBuildingMemory();
+        Iterator<Position> enemyBuildingItr = enemyBuildingMemory.iterator();
+
+        intel.addScout(scout.getID());
+        intel.setScoutTimer();
+
+        if(enemyBuildingItr.hasNext()) {
+            scoutPosition = enemyBuildingItr.next();
+        } else {
+            scoutPosition = intel.nextBaseLocationToCheck();
+        }
+
+        scout.move(scoutPosition);
     }
 }

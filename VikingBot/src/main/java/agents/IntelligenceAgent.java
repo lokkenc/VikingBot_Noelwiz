@@ -26,7 +26,7 @@ public class IntelligenceAgent {
     private HashMap<UnitType, Integer> enemyUnitMemory = new HashMap<UnitType, java.lang.Integer>();
     private HashSet<Position> enemyBuildingMemory = new HashSet<Position>();
     private ArrayList<Chokepoint> watched = new ArrayList<Chokepoint>(3);
-    private int scoutTimer;
+    private int scoutTimer = 0;
     private boolean attacking = false;
 
     private IntelligenceAgent(Player self, Game game) {
@@ -370,8 +370,8 @@ public class IntelligenceAgent {
         UnitFilter filter = new UnitFilter() {
             @Override
             public boolean test(Unit unit) {
-                return (!(unit.isBeingConstructed() && unit.getType().isWorker() &&
-                        unit.getType().isBuilding()) && unit.canAttack());
+                return !(unit.isBeingConstructed() || unit.getType().isWorker() || unit.getType().isBuilding())
+                        && unit.canAttack();
             }
         };
 
@@ -538,7 +538,7 @@ public class IntelligenceAgent {
         return numberOfBuildingUnits;
     }
 
-    public Position nextBaseLocationToCheck(Game game) {
+    public Position nextBaseLocationToCheck() {
        Iterator<TilePosition> startLoc = game.getStartLocations().iterator();
        for(int i = 0; i < baseLoc; i++) {
            startLoc.next();

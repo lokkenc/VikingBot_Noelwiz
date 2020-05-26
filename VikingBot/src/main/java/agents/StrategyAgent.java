@@ -18,6 +18,7 @@ public class StrategyAgent {
 
     private IntelligenceAgent intel;
     private EconomyAgent economy;
+    private CombatAgent combat;
     private StarcraftPlanner planner;
     private SharedPriorityQueue todo;
     private Action lastAct = null;
@@ -25,8 +26,11 @@ public class StrategyAgent {
     public StrategyAgent(Game game) {
         this.game = game;
         this.self = game.self();
+
         this.intel = IntelligenceAgent.getInstance(game);
         this.economy = new EconomyAgent(game);
+        this.combat = CombatAgent.getInstance(game);
+
         planner = new StarcraftPlanner(intel, this);
         todo = new SharedPriorityQueue(planner);
         planner.Initalize(todo);
@@ -103,21 +107,30 @@ public class StrategyAgent {
      */
     public void attackEnemy(List<Unit> army){
         if(army != null){
-            CombatAgent ca = CombatAgent.getInstance(game);
-            ca.setSkirmish(false);
+            combat.setSkirmish(false);
             //retreat when we only have 1/8 units remaining
             retreatThreshold = army.size()/8;
+
             //attacK
             intel.setAttacking(true);
-            ca.controlArmy(game, army);
+            combat.controlArmy(game, army);
+
             if(self.getRace() == Race.Protoss){
-                ca.attackEnemyBase(self, UnitType.Protoss_Zealot);
+                combat.attackEnemyBase(self, UnitType.Protoss_Zealot);
             } else if (self.getRace() == Race.Zerg) {
-                ca.attackEnemyBase(self, UnitType.Zerg_Zergling);
+                combat.attackEnemyBase(self, UnitType.Zerg_Zergling);
             }
 
         } else {
             System.err.println("attackEnemy passed empty army");
+        }
+    }
+
+    public void scoutEnemy(Unit scout) {
+        if(scout != null) {
+            combat.sendScout(scout);
+        } else {
+            System.err.println("scoutEnemy passed null scout");
         }
     }
 
@@ -178,9 +191,8 @@ public class StrategyAgent {
                 }
                 break;
 
-            //TODO: implement scout.
             case SCOUT:
-                result = false;
+                result = intel.getTimeSinceLastScout() > 30 && intel.getAvailableWorker(self) != null;
                 break;
 
             //TODO: implement expand.

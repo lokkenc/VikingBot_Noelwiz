@@ -42,7 +42,7 @@ public class StarcraftPlanner {
         domain.addActionType(new AttackActionType());
         domain.addActionType(new BuildActionType());
         domain.addActionType(new ExpandActionType());
-        //domain.addActionType(new ScoutActionType());
+        domain.addActionType(new ScoutActionType());
         domain.addActionType(new TrainActionType());
         //domain.addActionType(new UpgradeActionType());
         domain.addActionTypes(new GatherActionType());

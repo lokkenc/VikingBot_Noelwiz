@@ -256,6 +256,7 @@ public class PlanningRewardFunction implements RewardFunction {
                 //stop the planner from enqueuing this?
                 //reward -= 1000;
                 break;
+
             case SCOUT :
                 //Checks the last time scouted and gives reward based on that
                 if ((int) s.get("timeSinceLastScout") > maxTimeSinceLastScout) {
@@ -264,6 +265,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     reward -= (int) s.get("timeSinceLastScout") / 100;
                 }
                 break;
+
             case TRAIN:
                 //TEMPORARY REWARD
                 String toTrain = ((TrainAction) a).getUnitToTrain();
@@ -281,6 +283,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     }
                 }
                 break;
+
             case UPGRADE:
                 reward -= 100;
                 break;

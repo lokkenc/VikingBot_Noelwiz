@@ -4,6 +4,7 @@ import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.action.SimpleAction;
 import burlap.mdp.core.state.State;
+import planning.PlanningState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
  * implement the Action class ourselves.
  */
 public class ScoutActionType implements ActionType {
-    private final static String name = "Scouttype";
+    private final static String name = "ScoutActionType";
     private final static String action_name = "ScoutAction";
     private static SimpleAction ScoutAction = new SimpleAction(action_name);
 
@@ -61,8 +62,25 @@ public class ScoutActionType implements ActionType {
      *         smart choices
      */
     public List<Action> allApplicableActions(State state) {
-        ArrayList<Action> list = new ArrayList<Action>(1);
-        list.add(ScoutAction);
-        return list;
+        PlanningState ps = (PlanningState) state;
+        List<Action> actions = new ArrayList<Action>(3);
+        int numWorkers = ps.getNumWorkers();
+        int armySize = ps.getArmySize();
+
+        //TODO: once the state is parsed, allow the planner to pass a command
+        //      to scout multiple units at once based on remaining capacity
+        //if we have the capacity to scout with workers.
+        if(numWorkers > 0){
+            actions.add(new ScoutAction("_what=worker"));
+        }
+
+        //if we have the capacity to scout with combat units
+        if(armySize > 0){
+            actions.add(new ScoutAction("_what=combatUnit"));
+        }
+
+        //TODO: support scouting with air units.
+
+        return actions;
     }
 }
