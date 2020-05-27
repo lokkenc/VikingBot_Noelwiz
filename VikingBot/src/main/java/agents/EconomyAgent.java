@@ -122,7 +122,7 @@ public class EconomyAgent {
      * @param type Building to be created
      */
     public void createBuildingOfType(Game game, Player self, UnitType type) {
-        Unit worker = intel.getAvailableWorker(self);
+        Unit worker = intel.getAvailableWorker();
 
         assert type.isBuilding() : "Must Build Buildings.";
 
@@ -167,7 +167,7 @@ public class EconomyAgent {
      * @param maxDistance maximum distance that building can be built from the anchor
      */
     public void createBuildingOfTypeWithAnchor(Game game, Player self, UnitType type, Unit anchor, int maxDistance) {
-        Unit worker = intel.getAvailableWorker(self);
+        Unit worker = intel.getAvailableWorker();
 
         assert type.isBuilding() : "Must Build Buildings.";
 

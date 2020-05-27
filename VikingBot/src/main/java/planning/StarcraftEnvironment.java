@@ -179,7 +179,7 @@ public class StarcraftEnvironment implements Environment {
             case SCOUT:
                 ScoutAction scoutAction = (ScoutAction) action;
                 if (scoutAction.getUnitToScout().equalsIgnoreCase("worker")) {
-                    Unit scout = intelligenceAgent.getAvailableWorker(self);
+                    Unit scout = intelligenceAgent.getAvailableWorker();
                     strategyAgent.scoutEnemy(scout);
                 }
                 else if (scoutAction.getUnitToScout().equalsIgnoreCase("combatUnit")) {

@@ -100,7 +100,7 @@ public class StarcraftModel implements FullModel {
                 //to represent that the scout is on the way. idk. 0 is probably fine,
                 //just tell the helper functions for the possibility of a new enemy base,
                 //and new enemy workers.
-                newtimesincelastscout = 0;
+                //newtimesincelastscout = 0;
 
                 baseNextState = new PlanningState( (int) state.get("numWorkers"), (int) state.get("mineralProductionRate"),
                         (int) state.get("gasProductionRate"), (int) state.get("numBases"), newtimesincelastscout,
