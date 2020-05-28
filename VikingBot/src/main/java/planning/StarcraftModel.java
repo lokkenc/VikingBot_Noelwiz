@@ -89,7 +89,7 @@ public class StarcraftModel implements FullModel {
 
         //aproximates time passing in an actual match between planing steps
         int newtimesincelastscout = (int) state.get("timeSinceLastScout");
-        newtimesincelastscout += Math.round(rng.nextFloat() * 30 * 600);
+        //newtimesincelastscout += Math.round(rng.nextFloat() * 30 * 600);
 
 
         /* * * start account for action specific changes * * */
