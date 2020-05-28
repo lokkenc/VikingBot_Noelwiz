@@ -8,10 +8,12 @@ import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import burlap.mdp.singleagent.model.RewardFunction;
-import bwapi.*;
+import bwapi.Game;
+import bwapi.Player;
+import bwapi.Race;
+import bwapi.UnitType;
 import planning.actions.helpers.ActionParserHelper;
 import planning.actions.BuildAction;
-import planning.actions.ScoutAction;
 import planning.actions.TrainAction;
 import planning.actions.helpers.ProtossBuildingParserHelper;
 
@@ -153,17 +155,15 @@ public class StarcraftEnvironment implements Environment {
                 }
 
                 strategyAgent.attackEnemy(IntelligenceAgent.getInstance(game).getCombatUnits(self));
-                break;
 
+                break;
             case BUILD:
                 BuildAction buildAction = (BuildAction) action;
                 economyAgent.createBuildingOfType(ProtossBuildingParserHelper.translateBuilding(buildAction));
                 break;
-
             case EXPAND:
-                economyAgent.expandToNewBase();
-                break;
 
+                break;
             case TRAIN:
                 TrainAction trainAction = (TrainAction) action;
                 if (trainAction.getUnitToTrain().equalsIgnoreCase("worker")) {
@@ -173,18 +173,8 @@ public class StarcraftEnvironment implements Environment {
                     economyAgent.trainCombatUnit();
                 }
                 break;
-
             case SCOUT:
-                ScoutAction scoutAction = (ScoutAction) action;
-                if (scoutAction.getUnitToScout().equalsIgnoreCase("worker")) {
-                    Unit scout = intelligenceAgent.getAvailableWorker(self);
-                    strategyAgent.scoutEnemy(scout);
-                }
-                else if (scoutAction.getUnitToScout().equalsIgnoreCase("combatUnit")) {
-                    UnitType mostCommonCombatUnit = intelligenceAgent.getMostCommonCombatUnit();
-                    Unit scout = intelligenceAgent.getAvailableUnit(self, mostCommonCombatUnit);
-                    strategyAgent.scoutEnemy(scout);
-                }
+
                 break;
 
             case GATHER:
@@ -192,13 +182,15 @@ public class StarcraftEnvironment implements Environment {
                 //gas is shorter to check, but the functions ask if it's minerals
                 strategyAgent.executeGatherAction(!gas);
                 break;
-
             case UPGRADE:
 
             default:
 
 
         }
+
+
+        //TODO: SEND COMMANDS TO BOT BASED ON THE ACTION.
 
         //observe results
         State currentstate = currentObservation();
