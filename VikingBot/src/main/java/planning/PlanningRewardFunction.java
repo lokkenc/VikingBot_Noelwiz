@@ -240,7 +240,6 @@ public class PlanningRewardFunction implements RewardFunction {
                 break;
 
             case EXPAND:
-                //todo remove
                 targetNumWorkers = 8;
                 if ((int) s.get("numBases") < 2) {
                     //Give reward if preconditions for expanding are met

@@ -207,7 +207,7 @@ public class StrategyAgent {
                 break;
 
             case SCOUT:
-                result = intel.getTimeSinceLastScout() > 30 && intel.getAvailableWorker(self) != null;
+                result = intel.getTimeSinceLastScout() > 30 && intel.getAvailableWorker() != null;
                 break;
 
             case EXPAND:
