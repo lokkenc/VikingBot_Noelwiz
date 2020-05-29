@@ -3,6 +3,7 @@ package agents;
 import bwapi.*;
 import bwta.BWTA;
 import bwta.BaseLocation;
+import com.sun.istack.internal.NotNull;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class EconomyAgent {
      * tell a worker to go gather gas at the closest gas local
      * @param worker a worker, presumed probe.
      */
-    protected void gatherGas(Unit worker){
+    protected void gatherGas(@NotNull Unit worker){
        List<Unit> gasLocals;
        switch (intel.getPlayerRace()){
            case Protoss:
@@ -177,13 +178,24 @@ public class EconomyAgent {
      * @param maxDistance maximum distance that building can be built from the anchor
      */
     public void createBuildingOfTypeWithAnchor(UnitType type, Unit anchor, int maxDistance) {
+        createBuildingOfTypeWithAnchor(type, anchor.getTilePosition(), maxDistance);
+    }
+
+    /**
+     * Builds a building of type in a suitable position determined by the anchor and maxDistance
+     * Calls the variation of this that's anchored off of a TilePosition to minimize code repetition.
+     * @param type Building to be created
+     * @param anchor Unit that serves as the anchor for the build position
+     * @param maxDistance maximum distance that building can be built from the anchor
+     */
+    public void createBuildingOfTypeWithAnchor(UnitType type, TilePosition anchor, int maxDistance) {
         Game game = intel.getGame();
         Unit worker = intel.getAvailableWorker();
 
         assert type.isBuilding() : "Must Build Buildings.";
 
         if ((worker != null)) {
-            TilePosition buildTile = game.getBuildLocation(type, anchor.getTilePosition(), maxDistance);
+            TilePosition buildTile = game.getBuildLocation(type, anchor, maxDistance);
 
             if (buildTile != null && game.canBuildHere(buildTile, type,worker,true)) {
                 worker.move(buildTile.toPosition(),true);
@@ -211,35 +223,39 @@ public class EconomyAgent {
         List<Unit> Gateways = intel.getUnitsListOfType(UnitType.Protoss_Gateway);
         assert Gateways.size() > 0: "must have a gateway to train.";
 
-        if(  intel.getSelf().minerals() - intel.getOrderedMineralUse()  < 200){
+        if(intel.getSelf().minerals() - intel.getOrderedMineralUse() < UnitType.Protoss_Zealot.mineralPrice()){
             System.err.println("Not enough minerals.");
             return;
         }
 
 
         if(Gateways != null && Gateways.size() != 0){
-            Unit minTrainingGateway = Gateways.get(0);
+            boolean foundTrainer = false;
+            Unit hasRoom = null;
 
-            int minTrainingQueueLength = 4;
-
-            for (Unit gateway: Gateways) {
-                int currentsize = gateway.getTrainingQueue().size();
-
-                if (currentsize < minTrainingQueueLength) {
-                    minTrainingGateway = gateway;
-                    minTrainingQueueLength = currentsize;
+            for(Unit gw: Gateways){
+                if(!foundTrainer && gw.getTrainingQueue().size() < 1){
+                    foundTrainer = true;
+                    gw.train(UnitType.Protoss_Zealot);
+                } else if(gw.getTrainingQueue().size() < 5){
+                    hasRoom = gw;
                 }
             }
 
-            minTrainingGateway.train(UnitType.Protoss_Zealot);
+            if(!foundTrainer && hasRoom != null){
+                hasRoom.train(UnitType.Protoss_Zealot);
+            } else {
+                System.err.println("No gateway with room to train unit.");
+            }
         }
     }
 
     /**
-     * 1) finds the closest unoccupied base location
-     * 2) orders a base built there
+     * get a tile position for the next expansion.
+     * used to scout so it can be built, and by the expandToNewBase function
+     * @return
      */
-    public void expandToNewBase() {
+    public TilePosition getNextExpansionLocation(){
         Game game = intel.getGame();
         TilePosition self_local = intel.getSelf().getStartLocation();
 
@@ -284,37 +300,41 @@ public class EconomyAgent {
         //prepare to remove start locations incase we haven't scouted.
         toremove.addAll(BWTA.getStartLocations());
 
+        //remove islands
+        for(BaseLocation bl : canidateExpansions){
+            if(bl.isIsland()){
+                toremove.add(bl);
+            }
+        }
+
         //remove the occupied or otherwise invalid locations.
         //can still check if a position is a island and remove that too.
         canidateExpansions.removeAll(toremove);
-
-
-
-        /*
-        for(BaseLocation blc : BWTA.getBaseLocations()){
-            if(!blc.isIsland() && !blc.isStartLocation()){
-                if(!toremove.contains(blc)){
-                    canidateExpansions.add(blc);
-                }
-            }
-        }
-        */
 
 
         if(canidateExpansions.isEmpty()){
             System.err.println("Warning: no remaining valid expansions.");
         }
 
-
         Iterator<BaseLocation> l = canidateExpansions.iterator();
-        TilePosition closest = l.next().getTilePosition();
+        TilePosition nextExpandLoc = l.next().getTilePosition();
         while (l.hasNext()){
             TilePosition current = l.next().getTilePosition();
 
-            if(BWTA.getGroundDistance(current, self_local) < BWTA.getGroundDistance(closest, self_local)){
-                closest = current;
+            if(BWTA.getGroundDistance(current, self_local) < BWTA.getGroundDistance(nextExpandLoc, self_local)){
+                nextExpandLoc = current;
             }
         }
+        return nextExpandLoc;
+    }
+
+    /**
+     * 1) finds the closest unoccupied base location
+     *      using getNextExpandLocation()
+     * 2) orders a base built there
+     */
+    public void expandToNewBase() {
+        TilePosition closest = getNextExpansionLocation();
 
         switch (intel.getPlayerRace()){
             case Protoss:

@@ -26,6 +26,13 @@ public class StrategyAgent {
     private SharedPriorityQueue todo;
     private Action lastAct = null;
 
+
+    //expansion hack
+    private canExpand expandVisionState = canExpand.NeedScouting;
+    private int scoutID = -1;
+    private enum canExpand{NeedScouting, ScouttingExpand, ExpandScouted};
+
+
     public StrategyAgent(Game game) {
         this.game = game;
         this.self = game.self();
@@ -43,6 +50,34 @@ public class StrategyAgent {
      * Called every frame by the listener
      */
     public void update() {
+
+        int numCombatUnits = 0;
+        UnitType currentUnitType;
+        //iterate through our units
+        for (Unit myUnit : self.getUnits()) {
+            currentUnitType = myUnit.getType();
+
+            //if it's a worker and it's idle, send it to the closest mineral patch
+            if (currentUnitType.isWorker() && myUnit.isIdle() && !intel.isScout(myUnit.getID())) {
+                if(intel.isScout(myUnit.getID())) {
+                    if(!intel.getEnemyBuildingMemory().isEmpty()) {
+                        //get a base to gather minerals at
+                        for(Unit unit: self.getUnits()) {
+                            if(unit.getType() == UnitType.Protoss_Nexus) {
+                                economy.gatherMinerals(myUnit, unit);
+                            }
+                        }
+                    }
+                } else {
+                    economy.gatherMinerals(myUnit);
+                }
+                //count number of combat units to decide if to retreat
+            } else if (!currentUnitType.isBuilding() && currentUnitType.canAttack() && !currentUnitType.isWorker()){
+                numCombatUnits++;
+            }
+        }
+
+
         // use the planner
         // if we can do the action
         Action next = todo.Peek();
@@ -59,31 +94,61 @@ public class StrategyAgent {
         }
 
 
-        int numCombatUnits = 0;
-        UnitType currentUnitType;
-        //iterate through our units
-        for (Unit myUnit : self.getUnits()) {
-            currentUnitType = myUnit.getType();
-
-            //if it's a worker and it's idle, send it to the closest mineral patch
-            if (currentUnitType.isWorker() && myUnit.isIdle()) {
-                if(intel.isScout(myUnit.getID())) {
-                    if(!intel.getEnemyBuildingMemory().isEmpty()) {
-                        //get a base to gather minerals at
-                        for(Unit unit: self.getUnits()) {
-                            if(unit.getType() == UnitType.Protoss_Nexus) {
-                                economy.gatherMinerals(myUnit, unit);
-                            }
-                        }
-                    }
+        game.drawTextScreen(100,70,"expansion scout state:"+expandVisionState.name());
+        TilePosition nextBaseLoc = economy.getNextExpansionLocation();
+        switch (expandVisionState){
+            case NeedScouting:
+                game.drawCircleMap(nextBaseLoc.toPosition(), 100 ,Color.Red, true);
+                Unit peekingWorker = intel.getAvailableWorker();
+                scoutID = peekingWorker.getID();
+                intel.addScout(scoutID);
+                peekingWorker.getOrder();
+                if(peekingWorker.isGatheringGas()){
+                    Unit resourcenode = peekingWorker.getTarget();
+                    peekingWorker.move(nextBaseLoc.toPosition(),true);
+                    peekingWorker.gather(resourcenode,true);
                 } else {
-                    economy.gatherMinerals(myUnit);
+                    //else just move it back here
+                    peekingWorker.move(nextBaseLoc.toPosition(),false);
                 }
-                //count number of combat units to decide if to retreat
-            } else if (!myUnit.getType().isBuilding() && myUnit.getType().canAttack()){
-                numCombatUnits++;
-            }
+                expandVisionState = canExpand.ScouttingExpand;
+                break;
+            case ScouttingExpand:
+                game.drawCircleMap(nextBaseLoc.toPosition(), 100 ,Color.Yellow, true);
+                if(game.isVisible(nextBaseLoc)){
+                    expandVisionState = canExpand.ExpandScouted;
+                }
+
+                peekingWorker = game.getUnit(scoutID);
+                Position nearestchoke = BWTA.getNearestChokepoint(nextBaseLoc).getCenter();
+                if(peekingWorker.isIdle() || peekingWorker.isGatheringGas() || peekingWorker.isGatheringMinerals()){
+                    peekingWorker.move( nextBaseLoc.toPosition());
+                    /*
+                    //if the dist to the chokepoint is more less than dist to base loc, go to base.
+                    if(BWTA.getGroundDistance(peekingWorker.getTilePosition(), nearestchoke.toTilePosition())
+                            <= BWTA.getGroundDistance(nearestchoke.toTilePosition(), nextBaseLoc) ){
+                        peekingWorker.move( nextBaseLoc.toPosition());
+                    } else {
+                        //else go to chokepoint first
+                        peekingWorker.move( nearestchoke);
+                    }
+                    */
+                }
+                break;
+            case ExpandScouted:
+                game.drawCircleMap(nextBaseLoc.toPosition(), 100 ,Color.Green);
+                if(game.getUnit(scoutID).isIdle()){
+                    intel.removeScout(scoutID);
+                }
+
+                if(!game.isBuildable(nextBaseLoc)){
+                    expandVisionState = canExpand.NeedScouting;
+                }
+                break;
         }
+
+
+
 
         //retreat the army.
         //TODO: figure out when to take controll again, and if we can..
@@ -99,7 +164,7 @@ public class StrategyAgent {
      * @param unit the unit completed
      */
     public void useCompletedUnit(Unit unit){
-        if(!(unit.canGather() && unit.getType().isBuilding())){
+        if(!(unit.getType().isWorker() && unit.getType().isBuilding()) ){
             //todo, check if defending too.
             if(intel.isAttackingEnemy()){
                 ArrayList<Unit> newunit = new ArrayList<>(1);
@@ -107,7 +172,9 @@ public class StrategyAgent {
                 CombatAgent.getInstance(game).controlArmy(game, newunit);
             } else {
                 Position gotoposition = BWTA.getNearestChokepoint(unit.getPosition()).getCenter();
-                if(BWTA.isConnected(unit.getTilePosition(), gotoposition.toTilePosition())){
+                if(gotoposition == null){
+                    System.err.println("No chokepoint to station unit at.");
+                }else if(game.hasPath(unit.getPosition(), gotoposition)){
                     unit.move(gotoposition);
                 }
             }
@@ -211,7 +278,8 @@ public class StrategyAgent {
                 break;
 
             case EXPAND:
-                if(availMinerals >= 400 && intel.getUnitCountOfType(self, UnitType.Protoss_Probe) > 0){
+                if(availMinerals >= 400 && intel.getUnitCountOfType(self, UnitType.Protoss_Probe) > 0
+                        && expandVisionState == canExpand.ExpandScouted){
                     result = true;
                 }
                 break;
@@ -273,7 +341,8 @@ public class StrategyAgent {
      * @param isMinerals is this order to gather minerals (true) or gather gas (false)
      */
     public void executeGatherAction(boolean isMinerals){
-        Unit worker = intel.getAvailableWorkerNotGathering(isMinerals);
+        //Unit worker = intel.getAvailableWorkerNotGathering(isMinerals);
+        Unit worker = intel.getAvailableWorker();
 
         if(isMinerals && intel.getBuildingUnitsOfType(self, UnitType.Protoss_Nexus) > 0){
             //economy.gatherMinerals(game, worker);

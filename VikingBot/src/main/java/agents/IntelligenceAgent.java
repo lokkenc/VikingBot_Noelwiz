@@ -72,16 +72,12 @@ public class IntelligenceAgent {
     }
 
     /**
-     * Clears current unitMemory and uses {@link #updateUnitMemory} to add all trained units to hashmap
-     * @param self Player assigned to the bot
+     * Clears current unitMemory and uses {@link #updateUnitMemory} to add all units owned by the bot to hashmap
+     * NOTE: includes units still being trained (probably)
      */
-    public void tabulateUnits (Player self) {
+    public void tabulateUnits () {
         unitMemory.clear();
         for (Unit unit : self.getUnits()) {
-            /*if (!unit.isCompleted()) {
-                continue;
-            }*/
-
             updateUnitMemory(unit.getType(), 1);
         }
     }
@@ -141,6 +137,18 @@ public class IntelligenceAgent {
      */
     public void addScout(int unitID) {
         scouts.add(unitID);
+    }
+
+    /**
+     * This function removes a unit to the scout list
+     * @param unitID ID number of the unit to add
+     */
+    public void removeScout(int unitID) {
+        for(int i = scouts.size() - 1; i > -1; i--){
+            if(scouts.get(i) == unitID){
+                scouts.remove(i);
+            }
+        }
     }
 
     /**
@@ -300,14 +308,24 @@ public class IntelligenceAgent {
     }
 
     /**
-     * Returns a list of units of type
+     * Returns a list of units of type belonging to the bot
      * @param type UnitType to get the list of
      * @return Returns a list of all units of type type
      */
     public List<Unit> getUnitsListOfType(UnitType type){
+        return getUnitsListOfType(type, self);
+    }
+
+
+    /**
+     * Returns a list of units of type belonging to the specified player
+     * @param type UnitType to get the list of
+     * @return Returns a list of all units of type type
+     */
+    public List<Unit> getUnitsListOfType(UnitType type, Player unitOwner){
         List<Unit> unitsList = new ArrayList<Unit>(4);
 
-        for (Unit unit : self.getUnits()) {
+        for (Unit unit : unitOwner.getUnits()) {
             if (unit.getType() == type) {
                 unitsList.add(unit);
             }
@@ -364,7 +382,6 @@ public class IntelligenceAgent {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -398,10 +415,10 @@ public class IntelligenceAgent {
 
     /**
      * Get the current buildings units that exist and are owned by specified player..
-     * @param self the Player who we want a list of combat units from
+     * @param buildingOwner the Player who we want a list of combat units from
      * @return a List of buildings.
      */
-    public List<Unit> getBuildingsOwnedBy(Player self){
+    public List<Unit> getBuildingsOwnedBy(Player buildingOwner){
         UnitFilter filter = new UnitFilter() {
             @Override
             public boolean test(Unit unit) {
@@ -411,7 +428,7 @@ public class IntelligenceAgent {
 
         List<Unit> buildings = new LinkedList<Unit>();
 
-        for (Unit unit : self.getUnits()) {
+        for (Unit unit : buildingOwner.getUnits()) {
             if(filter.test(unit)){
                 buildings.add(unit);
             }
@@ -540,13 +557,13 @@ public class IntelligenceAgent {
     }
 
     /**
-     * Returns a Unit
-     * @param self Player who owns the unit.
+     * Get a unit of a specific type owned by a specific player
+     * @param unitOwner Player who owns the unit.
      * @param type UnitType to search for
-     * @return Unit of type type
+     * @return Unit of UnitType type
      */
-    public Unit getUnit(Player self, UnitType type) {
-        for (Unit unit : self.getUnits()) {
+    public Unit getUnit(Player unitOwner, UnitType type) {
+        for (Unit unit : unitOwner.getUnits()) {
             if (unit.getType() == type) {
                 // Other checks in here?
                 return unit;
@@ -699,7 +716,7 @@ public class IntelligenceAgent {
                 numBases = unitMemory.get(UnitType.Terran_Command_Center);
                 numWorkers = new int[numBases];
                 for (int i = 0; i < numBases; i++) {
-                    numWorkers[i] = getNumWorkersGatheringGas() / numBases;
+                    numWorkers[i] = getNumWorkersGatheringGas() / numBases ;
                 }
                 TerrenGeneralKnowledge tgk= new TerrenGeneralKnowledge();
                 productionRate= tgk.AverageMineralProductionRate(numWorkers);
@@ -717,7 +734,8 @@ public class IntelligenceAgent {
                 numBases = unitMemory.get(UnitType.Protoss_Nexus);
                 numWorkers = new int[numBases];
                 for (int i = 0; i < numBases; i++) {
-                    numWorkers[i] = getNumWorkersGatheringGas() / numBases;
+                    //;
+                    numWorkers[i] = getNumWorkersGatheringGas() / unitMemory.getOrDefault(UnitType.Protoss_Assimilator, 1);
                 }
                 ProtossGeneralKnowledge pgk= new ProtossGeneralKnowledge();
                 productionRate= pgk.AverageMineralProductionRate(numWorkers);
@@ -983,6 +1001,7 @@ public class IntelligenceAgent {
      * @return the maximum number of units that can currently exist.
      */
     public int getPopulationCapacity() {
+
         return self.supplyTotal();
     }
 

@@ -3,6 +3,7 @@ import agents.EconomyAgent;
 import agents.IntelligenceAgent;
 import agents.StrategyAgent;
 import bwapi.*;
+import bwem.BWEM;
 import bwta.BWTA;
 import listener.GameListener;
 import listener.ListenerType;
@@ -38,13 +39,15 @@ public class VikingBotListener extends GameListener {
 
         // Analyze the map
         System.out.println("Analyzing map...");
+        BWEM bwem = new BWEM(game);
+        bwem.initialize();
         BWTA.readMap(game);
         BWTA.analyze();
         System.out.println("Map data ready");
 
         // Initialize the Agents
         intel = IntelligenceAgent.getInstance(game);
-        intel.tabulateUnits(self);
+        intel.tabulateUnits();
         combat = CombatAgent.getInstance(game);
         economy = new EconomyAgent(game);
         strategy = new StrategyAgent(game);
@@ -72,7 +75,7 @@ public class VikingBotListener extends GameListener {
         game.drawTextScreen(10, 10, VikingBot.NAME + "v" + VikingBot.VERSION + " SCv" + VikingBot.SC_VERSION);
 
         // Update the Agents
-        intel.tabulateUnits(self);
+        intel.tabulateUnits();
         intel.updateEnemyBuildingMemory();
 
         strategy.update();
