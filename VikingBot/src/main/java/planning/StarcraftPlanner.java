@@ -69,6 +69,8 @@ public class StarcraftPlanner {
         SparsePlanStep();
         SparsePlanStep();
         SparsePlanStep();
+        SparsePlanStep();
+        SparsePlanStep();
     }
 
     /**
