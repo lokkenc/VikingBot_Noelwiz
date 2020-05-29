@@ -425,24 +425,24 @@ public class IntelligenceAgent {
 
     /**
      * Returns a worker that is not a scout
-     * @param self Player assigned to the bot
      * @return Available worker unit
      */
-    public Unit getAvailableWorker(Player self) {
+    public Unit getAvailableWorker() {
         // Find an available worker
-        Unit AvailbleWorker = null;
+        Unit availableWorker = null;
+
         for (Unit unit : getUnitsListOfType(UnitType.Protoss_Probe)) {
-            //prioratize non-building workers
+            // Prioritize non-building workers
             if(unit.isConstructing()){
-                AvailbleWorker = unit;
-            } else{
+                availableWorker = unit;
+            } else {
                 if (!scouts.contains(unit.getID())) {
                     return unit;
                 }
             }
-
         }
-        return AvailbleWorker;
+
+        return availableWorker;
     }
 
     /**

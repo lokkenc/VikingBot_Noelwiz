@@ -156,7 +156,7 @@ public class PlanningRewardFunction implements RewardFunction {
         int targetMilitaryTrainingCapacity = 4;
         //8 because the planner will consistantly get to 8 units
         int targetArmySize = 8;
-        int maxTimeSinceLastScout = 3600;
+        int maxTimeSinceLastScout = 1200;
 
         //planing stuff
         int incentiveMultiplier = 100;
@@ -260,9 +260,13 @@ public class PlanningRewardFunction implements RewardFunction {
             case SCOUT :
                 //Checks the last time scouted and gives reward based on that
                 if ((int) s.get("timeSinceLastScout") > maxTimeSinceLastScout) {
-                    reward += (int) s.get("timeSinceLastScout") / 100;
+                    reward += (int) s.get("timeSinceLastScout") / 100 + 100;
                 } else {
-                    reward -= (int) s.get("timeSinceLastScout") / 100;
+                    if ((int) s.get("timeSinceLastScout") == 0) {
+                        reward -= maxTimeSinceLastScout;
+                    } else {
+                        reward -= (maxTimeSinceLastScout / (int) s.get("timeSinceLastScout")) * 10;
+                    }
                 }
                 break;
 

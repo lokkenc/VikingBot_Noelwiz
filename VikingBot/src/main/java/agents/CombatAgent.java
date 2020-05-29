@@ -249,9 +249,6 @@ public class CombatAgent {
         HashSet<Position> enemyBuildingMemory = intel.getEnemyBuildingMemory();
         Iterator<Position> enemyBuildingItr = enemyBuildingMemory.iterator();
 
-        intel.addScout(scout.getID());
-        intel.setScoutTimer();
-
         if(enemyBuildingItr.hasNext()) {
             scoutPosition = enemyBuildingItr.next();
         } else {
