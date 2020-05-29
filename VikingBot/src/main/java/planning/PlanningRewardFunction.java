@@ -259,20 +259,15 @@ public class PlanningRewardFunction implements RewardFunction {
 
             case SCOUT :
                 //Checks the last time scouted and gives reward based on that
-                System.out.println("##############");
-                System.out.println("timeSinceLastScout: " + s.get("timeSinceLastScout"));
-                System.out.println("maxTimeSinceLastScout: " + maxTimeSinceLastScout);
                 if ((int) s.get("timeSinceLastScout") > maxTimeSinceLastScout) {
                     reward += (int) s.get("timeSinceLastScout") / 100 + 100;
                 } else {
                     if ((int) s.get("timeSinceLastScout") == 0) {
                         reward -= maxTimeSinceLastScout;
                     } else {
-                        reward -= maxTimeSinceLastScout / (int) s.get("timeSinceLastScout");
+                        reward -= (maxTimeSinceLastScout / (int) s.get("timeSinceLastScout")) * 10;
                     }
                 }
-                System.out.println("reward: " + reward);
-                System.out.println("##############");
                 break;
 
             case TRAIN:

@@ -39,13 +39,13 @@ public class StarcraftPlanner {
 
         SADomain domain = new SADomain();
         //add actions to the domain
-        //domain.addActionType(new AttackActionType());
+        domain.addActionType(new AttackActionType());
         domain.addActionType(new BuildActionType());
-        //domain.addActionType(new ExpandActionType());
+        domain.addActionType(new ExpandActionType());
         domain.addActionType(new ScoutActionType());
         domain.addActionType(new TrainActionType());
         //domain.addActionType(new UpgradeActionType());
-        //domain.addActionTypes(new GatherActionType());
+        domain.addActionTypes(new GatherActionType());
 
         RewardFunction initalreward = new PlanningRewardFunction(GameStatus.EARLY);
 

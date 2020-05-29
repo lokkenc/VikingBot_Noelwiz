@@ -69,17 +69,20 @@ public class ScoutActionType implements ActionType {
 
         //TODO: once the state is parsed, allow the planner to pass a command
         //      to scout multiple units at once based on remaining capacity
-        //if we have the capacity to scout with workers.
-        if(numWorkers > 0){
-            actions.add(new ScoutAction("_what=worker"));
-        }
 
-        //if we have the capacity to scout with combat units
-        if(armySize > 0){
-            actions.add(new ScoutAction("_what=combatUnit"));
-        }
+        if(ps.getTimeSinceLastScout() > 0) {
+            //if we have the capacity to scout with workers.
+            if (numWorkers > 0) {
+                actions.add(new ScoutAction("_what=worker"));
+            }
 
-        //TODO: support scouting with air units.
+            //if we have the capacity to scout with combat units
+            if (armySize > 0) {
+                actions.add(new ScoutAction("_what=combatUnit"));
+            }
+
+            //TODO: support scouting with air units.
+        }
 
         return actions;
     }
