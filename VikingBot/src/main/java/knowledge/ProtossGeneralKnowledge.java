@@ -5,8 +5,8 @@ public class ProtossGeneralKnowledge implements GeneralRaceProductionKnowledge {
     // https://tl.net/forum/brood-war/89939-ideal-mining-thoughts
     private static float gatherrate = 1.055f;
     private static float gasRatePerWorker = 103f;
-    //per minute, so per 30*60 frames        0   3   6   9   12     15    18
-    private static float[] ratePerWorkder = {0, 65f,65f,65f,58.5f, 54.6f, 51.7f, 50.1f, 28.6f, 47.6f, 44f};
+    //per minute, so per 30*60 frames        0   3   6   9   12     15    18                              | made up #s ->
+    private static float[] ratePerWorkder = {0, 65f,65f,65f,58.5f, 54.6f, 51.7f, 50.1f, 28.6f, 47.6f, 44f, 41, 37, 36,34, 33, 32};
 
     //apparently asusmes 9 things of minerals per patch
     /***
@@ -19,8 +19,8 @@ public class ProtossGeneralKnowledge implements GeneralRaceProductionKnowledge {
         float production = 0;
 
         //good candidate for loop unrolling maybe, if used frequently
-        for (int patch = 0; patch < NumWorkers.length; patch++){
-            production += NumWorkers[patch] * ratePerWorkder[Math.round(NumWorkers[patch]/3)]  ;
+        for (int patch = 0; patch < NumWorkers.length && patch < ratePerWorkder.length; patch++){
+            production += NumWorkers[patch] * ratePerWorkder[ (int) Math.ceil(NumWorkers[patch]/3)]  ;
         }
 
         production = production * gatherrate;

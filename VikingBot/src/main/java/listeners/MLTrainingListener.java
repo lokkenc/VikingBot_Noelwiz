@@ -69,8 +69,8 @@ public class MLTrainingListener extends GameListener {
      */
     @Override
     public void onFrame() {
-        intel.tabulateUnits(self);
-        intel.updateEnemyBuildingMemory(game);
+        intel.tabulateUnits();
+        intel.updateEnemyBuildingMemory();
 
         DataManager dm = combat.getDataManagers().get(0);
         //game.setTextSize(10);
@@ -88,7 +88,7 @@ public class MLTrainingListener extends GameListener {
         }
         game.drawTextScreen(10, 230, "Resources: " + self.minerals() + " minerals,  " + self.gas() + " gas, " + (self.supplyUsed() / 2) + "/" + (self.supplyTotal() / 2) + " psi");
 
-        intel.tabulateUnits(self);
+        intel.tabulateUnits();
 
         if(frameCount % epoch == 0) {
             frameCount = 0;

@@ -155,7 +155,7 @@ public class PlanningRewardFunction implements RewardFunction {
         int targetGasProduction = 250; //250 units per minute
         int targetMilitaryTrainingCapacity = 4;
         //8 because the planner will consistantly get to 8 units
-        int targetArmySize = 8;
+        int targetArmySize = 15;
         int maxTimeSinceLastScout = 1200;
 
         //planing stuff
@@ -181,7 +181,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     }
                 }
 
-                if( ((boolean) s.get("beingAttacked")) && target.equals("defend") ){
+                if(ps.getBeingAttacked() && target.equals("defend")){
                     reward += 1000;
                 } else if ((Boolean) sprime.get("attackingEnemyBase") == false && this.calcArmySize(s) >= targetArmySize){
                     reward += 750;
@@ -194,22 +194,41 @@ public class PlanningRewardFunction implements RewardFunction {
                 //Get information of what is being built?
                 String toBuild = ((BuildAction) a).getUnitToBuild();
                 if (toBuild.equals("pop")) {
-                    int popreamaining = populationCap - (int) s.get("populationUsed");
 
-                    if( popreamaining/populationCap < 0.25){
-                        reward += 15;
-                    }
-
-                    if(popreamaining <= 4){
-                        reward += 85;
-                    }
-
-                    if ((int) s.get("numWorkers") == populationCap) {
-                        reward += 75;
+                    if(populationCap >= 199){
+                        reward -= 100;
                     } else {
-                        reward += 25;
-                    }
+                        int popreamaining = populationCap - ps.getPopulationUsed();
 
+                        if(populationCap >= targetNumWorkers){
+                            reward -= 10;
+                        }
+
+                        if(populationCap >= targetNumWorkers + targetArmySize){
+                            reward -= 50;
+                        }
+
+                        if( popreamaining/populationCap < 0.25){
+                            reward += 15;
+                        }
+                        if( popreamaining/populationCap < 0.1){
+                            reward += 5;
+                        }
+
+                        if( popreamaining/populationCap < 0.05){
+                            reward += 20;
+                        }
+
+                        if(popreamaining <= 4){
+                            reward += 80;
+                        }
+
+                        if ((int) s.get("numWorkers") == populationCap) {
+                            reward += 75;
+                        } else {
+                            reward += 25;
+                        }
+                    }
                 } else if (toBuild.equals("train")) {
                     int[][] capacity = ps.getTrainingCapacity();
                     if (capacity[1][0] + capacity[1][1] <= targetMilitaryTrainingCapacity){
@@ -240,11 +259,18 @@ public class PlanningRewardFunction implements RewardFunction {
                 break;
 
             case EXPAND:
+                if(ps.getTrainingCapacity()[1][1]+ ps.getTrainingCapacity()[1][0] < 1){
+                    reward -= 75;
+                }
+
+
                 if ((int) s.get("numBases") < 2) {
                     //Give reward if preconditions for expanding are met
-                    if ((int) s.get("numWorkers") >= targetNumWorkers && (int) s.get("mineralProductionRate") >= targetMineralProduction
+                    if ( ps.getNumWorkers() >= targetNumWorkers && ps.getMineralProductionRate() >= targetMineralProduction
                             && (int) s.get("gasProductionRate") >= targetGasProduction) {
-                        reward += 500;
+                        reward += 275;
+                    } else if((int) s.get("numWorkers") >= targetNumWorkers - 3){
+                        reward += 75;
                     }
                     else {
                         reward -= 500;
@@ -252,9 +278,6 @@ public class PlanningRewardFunction implements RewardFunction {
                 } else {
                     reward -= 500;
                 }
-
-                //stop the planner from enqueuing this?
-                //reward -= 1000;
                 break;
 
             case SCOUT :
@@ -274,8 +297,12 @@ public class PlanningRewardFunction implements RewardFunction {
                 //TEMPORARY REWARD
                 String toTrain = ((TrainAction) a).getUnitToTrain();
                 if (toTrain.equals("worker")) {
-                    if (ps.getNumWorkers() < targetNumWorkers)
-                        reward += 75;
+                    if (ps.getNumWorkers() < targetNumWorkers){
+                        float multiplyer = 1.0f;
+                        if( (targetNumWorkers - 4 * ps.getNumBases()) <= ps.getNumWorkers())
+                            multiplyer = 1 - (ps.getNumWorkers()/targetNumWorkers);
+                        reward += 75 * multiplyer;
+                    }
                     reward += 50;
                 } else if (toTrain.equals("combatUnit")) {
                     if ((int) s.get("numWorkers") >= targetNumWorkers) {
@@ -298,7 +325,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     if( (int) s.get("gasProductionRate") > 0){
                         reward -= 100;
                     }else {
-                        reward += 40;
+                        reward += 25;
                     }
                 }else {
                     if( (int) s.get("mineralProductionRate") <= 0){

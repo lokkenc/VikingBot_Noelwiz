@@ -100,25 +100,26 @@ public class QueueComparator implements Comparator {
         int value = 0;
         switch (atype){
             case UPGRADE:
-                value = 80;
-                break;
-            case TRAIN:
-                value = 50;
-                break;
-            case SCOUT:
                 value = 20;
                 break;
+            case TRAIN:
+                value = 20;
+                break;
+            case SCOUT:
+                value = 11;
+                break;
             case EXPAND:
-                value = 45;
+                value = 19;
                 break;
             case BUILD:
-                value = 40;
+                value = 19;
                 break;
             case ATTACK:
                 value = 10;
                 break;
             case GATHER:
-                value = 30;
+                value = 11;
+                break;
             case UNKNOWN:
                 value = 10000;
                 break;

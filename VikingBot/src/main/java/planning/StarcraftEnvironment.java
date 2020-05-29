@@ -78,7 +78,7 @@ public class StarcraftEnvironment implements Environment {
         int numEnemyWorkers = intelligenceAgent.getNumEnemyWorkers();
         int numEnemyBases = intelligenceAgent.getNumEnemyBases();
         UnitType mostCommonCombatUnit = intelligenceAgent.getMostCommonCombatUnit();
-        Boolean attackingEnemyBase = intelligenceAgent.attackingEnemyBase();
+        Boolean attackingEnemyBase = intelligenceAgent.isAttackingEnemy();
         Boolean beingAttacked = intelligenceAgent.beingAttacked();
         Race enemyRace = intelligenceAgent.getEnemyRace();
         GameStatus gameStatus = intelligenceAgent.getGameStatus();
@@ -158,12 +158,11 @@ public class StarcraftEnvironment implements Environment {
 
             case BUILD:
                 BuildAction buildAction = (BuildAction) action;
-                economyAgent.createBuildingOfType(game, self,
-                        ProtossBuildingParserHelper.translateBuilding(buildAction));
+                economyAgent.createBuildingOfType(ProtossBuildingParserHelper.translateBuilding(buildAction));
                 break;
 
             case EXPAND:
-
+                economyAgent.expandToNewBase();
                 break;
 
             case TRAIN:
@@ -205,9 +204,6 @@ public class StarcraftEnvironment implements Environment {
 
 
         }
-
-
-        //TODO: SEND COMMANDS TO BOT BASED ON THE ACTION.
 
         //observe results
         State currentstate = currentObservation();
