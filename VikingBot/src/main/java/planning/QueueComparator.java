@@ -109,7 +109,7 @@ public class QueueComparator implements Comparator {
                 value = 11;
                 break;
             case EXPAND:
-                value = 20;
+                value = 19;
                 break;
             case BUILD:
                 value = 19;
