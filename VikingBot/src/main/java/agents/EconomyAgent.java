@@ -15,7 +15,7 @@ public class EconomyAgent {
     }
 
     /**
-     * Tell a worker to go gather gas at the closest gas local
+     * tell a worker to go gather gas at the closest gas local
      * @param worker a worker, presumed probe.
      */
     protected void gatherGas(Unit worker){
@@ -177,45 +177,20 @@ public class EconomyAgent {
      * @param maxDistance maximum distance that building can be built from the anchor
      */
     public void createBuildingOfTypeWithAnchor(UnitType type, Unit anchor, int maxDistance) {
-        createBuildingOfTypeWithAnchor(type, anchor.getTilePosition(), maxDistance);
-    }
-
-
-    /**
-     * Builds a building of type in a suitable position determined by the anchor and maxDistance
-     * @param type Building to be created
-     * @param anchor TilePosition that serves as the anchor for the build position
-     * @param maxDistance maximum distance that building can be built from the anchor
-     */
-    public void createBuildingOfTypeWithAnchor(UnitType type, TilePosition anchor, int maxDistance) {
         Game game = intel.getGame();
         Unit worker = intel.getAvailableWorker();
+
         assert type.isBuilding() : "Must Build Buildings.";
 
-
         if ((worker != null)) {
-            TilePosition buildTile = null;
-            buildTile = game.getBuildLocation(type, anchor, maxDistance, false);
+            TilePosition buildTile = game.getBuildLocation(type, anchor.getTilePosition(), maxDistance);
+
             if (buildTile != null && game.canBuildHere(buildTile, type,worker,true)) {
                 worker.move(buildTile.toPosition(),true);
                 worker.build(type, buildTile);
             } else {
                 System.out.println("cannot find suitable build location.");
             }
-
-            /*
-            maxDistance -= 100;
-            while (!(buildTile != null && game.canBuildHere(buildTile, type,worker))){
-                maxDistance += 100;
-                buildTile = game.getBuildLocation(type, anchor, maxDistance, false);
-                if (buildTile != null && game.canBuildHere(buildTile, type,worker)) {
-                    worker.move(buildTile.toPosition(),true);
-                    worker.build(type, buildTile);
-                } else {
-                    System.out.println("cannot find suitable build local, looking farther away.");
-                }
-            }
-        */
         }
     }
 

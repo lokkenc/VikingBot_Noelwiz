@@ -300,7 +300,7 @@ public class IntelligenceAgent {
     }
 
     /**
-     * Returns a list of units of type. Only looks through units owned by the bot.
+     * Returns a list of units of type
      * @param type UnitType to get the list of
      * @return Returns a list of all units of type type
      */
@@ -309,24 +309,6 @@ public class IntelligenceAgent {
 
         for (Unit unit : self.getUnits()) {
             if (unit.getType() == type) {
-                unitsList.add(unit);
-            }
-        }
-
-        return unitsList;
-    }
-
-    /**
-     * Returns a list of units of type.
-     * @param who the player who's unit's to look through.
-     * @param type UnitType to get the list of
-     * @return Returns a list of all units of type type
-     */
-    public List<Unit> getUnitsListOfType(UnitType type, Player who){
-        List<Unit> unitsList = new ArrayList<Unit>(4);
-
-        for (Unit unit : who.getUnits()) {
-            if (unit.getType() == type && unit.exists()) {
                 unitsList.add(unit);
             }
         }
@@ -389,10 +371,10 @@ public class IntelligenceAgent {
 
     /**
      * Get the current combat units that exist to attack with.
-     * @param self the Player who we want a list of combat units from
+     * @param unitOwner the Player who we want a list of combat units from
      * @return a List of fighting Units.
      */
-    public List<Unit> getCombatUnits(Player self){
+    public List<Unit> getCombatUnits(Player unitOwner){
         UnitFilter filter = new UnitFilter() {
             @Override
             public boolean test(Unit unit) {
@@ -403,11 +385,10 @@ public class IntelligenceAgent {
 
         List<Unit> military = new LinkedList<Unit>();
 
-        for (Unit unit : self.getUnits()) {
+        for (Unit unit : unitOwner.getUnits()) {
             if(filter.test(unit)){
                 military.add(unit);
             }
-
         }
 
         return military;
@@ -442,14 +423,14 @@ public class IntelligenceAgent {
 
     /**
      * Returns a unit of type target that has no units of type type in the specified radius
-     * @param self Player assigned to the bot
+     * @param unitOwner Player assigned to the bot
      * @param target UnitType to use as the anchor for the radius
      * @param type UnitType to check radius for
      * @param radius Size of radius from the target unit
      * @return A unit of type target with no units of type type in the radius
      */
-    public Unit getUnitWithoutType (Player self, UnitType target, UnitType type, int radius) {
-        for (Unit unit : self.getUnits()) {
+    public Unit getUnitWithoutType (Player unitOwner, UnitType target, UnitType type, int radius) {
+        for (Unit unit : unitOwner.getUnits()) {
             if (unit.getType() == target) {
                 if (!isUnitInRadius(unit.getPosition(), radius, type)) {
                     return unit;
@@ -477,6 +458,8 @@ public class IntelligenceAgent {
 
     /**
      * Returns a worker that is not a scout, owned by the player, and idle.
+     * May return a unit that is constructing if no other non-scouting units
+     * are available.
      * @return Available worker unit
      */
     public Unit getAvailableWorker() {
@@ -486,24 +469,19 @@ public class IntelligenceAgent {
         List<Unit> workers = getUnitsListOfType(UnitType.Protoss_Probe);
         if(workers.isEmpty()){
             System.out.println("WARNING: no workers owned by bot.");
-            return null;
         } else {
             for (Unit unit : workers) {
                 //prioratize non-building workers
                 if(unit.isConstructing()){
                     AvailbleWorker = unit;
-                } else{
+                } else {
                     if (!scouts.contains(unit.getID())) {
                         return unit;
                     }
                 }
-
             }
-            if(AvailbleWorker == null)
-                return workers.get(0);
-            else
-                return AvailbleWorker;
         }
+        return AvailbleWorker;
     }
 
     /**
@@ -764,7 +742,6 @@ public class IntelligenceAgent {
                 break;
             case Protoss:
                 numBases = unitMemory.get(UnitType.Protoss_Nexus);
-                numBases = this.getUnitCountOfType(self, UnitType.Protoss_Nexus);
                 break;
         }
 
@@ -926,7 +903,6 @@ public class IntelligenceAgent {
                 return true;
             }
         }
-
         return false;
     }
 

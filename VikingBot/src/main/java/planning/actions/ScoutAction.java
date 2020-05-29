@@ -49,7 +49,7 @@ public class ScoutAction implements Action {
             if (validOption){
                 name.append('_');
                 name.append(inputOptionsList[i]);
-                unitToScout = inputOptionsList[i];
+                unitToScout = currentOptionComponents[1];
             }
             //said for loop would end here
 

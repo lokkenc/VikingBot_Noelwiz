@@ -153,6 +153,7 @@ public class StarcraftEnvironment implements Environment {
                 }
 
                 strategyAgent.attackEnemy(IntelligenceAgent.getInstance(game).getCombatUnits(self));
+
                 break;
 
             case BUILD:
@@ -176,13 +177,17 @@ public class StarcraftEnvironment implements Environment {
 
             case SCOUT:
                 ScoutAction scoutAction = (ScoutAction) action;
+                intelligenceAgent.setScoutTimer();
+
                 if (scoutAction.getUnitToScout().equalsIgnoreCase("worker")) {
                     Unit scout = intelligenceAgent.getAvailableWorker();
+                    intelligenceAgent.addScout(scout.getID());
                     strategyAgent.scoutEnemy(scout);
                 }
                 else if (scoutAction.getUnitToScout().equalsIgnoreCase("combatUnit")) {
                     UnitType mostCommonCombatUnit = intelligenceAgent.getMostCommonCombatUnit();
                     Unit scout = intelligenceAgent.getAvailableUnit(self, mostCommonCombatUnit);
+                    intelligenceAgent.addScout(scout.getID());
                     strategyAgent.scoutEnemy(scout);
                 }
                 break;
