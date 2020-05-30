@@ -251,7 +251,7 @@ public class StrategyAgent {
                                     whatUnit = UnitType.Protoss_Probe;
                                     break;
                                 case "combatUnit":
-                                    if( intel.getUnitCountOfType(self, UnitType.Protoss_Gateway) > 0){
+                                    if( intel.getUnitCountOfType(UnitType.Protoss_Gateway) > 0){
                                         whatUnit = UnitType.Protoss_Zealot;
                                     } //else we can't train this.
                                     break;
@@ -278,21 +278,21 @@ public class StrategyAgent {
                 break;
 
             case EXPAND:
-                if(availMinerals >= 400 && intel.getUnitCountOfType(self, UnitType.Protoss_Probe) > 0
+                if(availMinerals >= 400 && intel.getUnitCountOfType(UnitType.Protoss_Probe) > 0
                         && expandVisionState == canExpand.ExpandScouted){
                     result = true;
                 }
                 break;
             case BUILD:
                 //we need a worker
-                if(intel.getUnitCountOfType(self, UnitType.Protoss_Probe) > 0){
+                if(intel.getUnitCountOfType(UnitType.Protoss_Probe) > 0){
                     String what = a.actionName().split("_")[1];
                     //check cost of building
                     UnitType whatUnit = ProtossBuildingParserHelper.translateBuilding(what);
                     if((what.equals("pop") || what.equals("gas") ) && availMinerals > whatUnit.mineralPrice()){
                         result = true;
                         //TODO: MORE general function to test if there's a space to build on
-                    } else if(intel.getUnitCountOfType(self, UnitType.Protoss_Pylon) > 1){
+                    } else if(intel.getUnitCountOfType(UnitType.Protoss_Pylon) >= 1){
                         if(availMinerals > whatUnit.mineralPrice()){
                             result = true;
                         }
@@ -307,10 +307,10 @@ public class StrategyAgent {
 
             case GATHER:
                 //if we have probes
-                if(intel.getUnitCountOfType(self, UnitType.Protoss_Probe) > 0){
+                if(intel.getUnitCountOfType(UnitType.Protoss_Probe) > 0){
                     //check if we have the ability to get gass.
                     if(a.actionName().endsWith("gas")){
-                        if(intel.getUnitCountOfType(self, UnitType.Protoss_Assimilator) > 0){
+                        if(intel.getUnitCountOfType(UnitType.Protoss_Assimilator) > 0){
                             result = true;
                         }
                     } else {
@@ -344,7 +344,7 @@ public class StrategyAgent {
         //Unit worker = intel.getAvailableWorkerNotGathering(isMinerals);
         Unit worker = intel.getAvailableWorker();
 
-        if(isMinerals && intel.getBuildingUnitsOfType(self, UnitType.Protoss_Nexus) > 0){
+        if(isMinerals && intel.getBuildingUnitsOfType(UnitType.Protoss_Nexus) > 0){
             //economy.gatherMinerals(game, worker);
             Unit base = intel.getUnitsListOfType(UnitType.Protoss_Nexus).get(0);
             economy.gatherMinerals(worker, base);
