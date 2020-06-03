@@ -291,11 +291,10 @@ public class IntelligenceAgent {
 
     /**
      * Returns the total count of units of type
-     * @param self the player who's units we want to know about.
      * @param type UnitType to get the count of
      * @return The count of units of type
      */
-    public int getUnitCountOfType(Player self, UnitType type) {
+    public int getUnitCountOfType(UnitType type) {
         int numOfUnits = 0;
 
         for (Unit unit : self.getUnits()) {
@@ -576,11 +575,10 @@ public class IntelligenceAgent {
     /**
      * Returns the total amount of buildings of type.
      * NOTE: will include buildings being constructed.
-     * @param self Player assigned to the bot
      * @param type UnitType to get the count of
      * @return Total count of building unit of type type
      */
-    public int getBuildingUnitsOfType(Player self, UnitType type) {
+    public int getBuildingUnitsOfType(UnitType type) {
         int numberOfBuildingUnits = 0;
 
         for (Unit unit : self.getUnits()) {
@@ -1002,7 +1000,8 @@ public class IntelligenceAgent {
      */
     public int getPopulationCapacity() {
 
-        return self.supplyTotal();
+        return (((getBuildingUnitsOfType(UnitType.Protoss_Pylon) + getUnitCountOfType(UnitType.Protoss_Pylon)) * 8)
+                + 9 * ((getBuildingUnitsOfType(UnitType.Protoss_Nexus) + getUnitCountOfType(UnitType.Protoss_Nexus))));
     }
 
     /**

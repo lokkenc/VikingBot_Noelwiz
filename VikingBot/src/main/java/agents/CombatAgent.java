@@ -213,7 +213,11 @@ public class CombatAgent {
         }
 
         closestEnemy = new Distance(closest);
-        friendlyHp = new Hp((unit.getHitPoints() / unit.getInitialHitPoints()) * 100);
+        if(unit.getInitialHitPoints() != 0) {
+            friendlyHp = new Hp((unit.getHitPoints() / unit.getInitialHitPoints()) * 100);
+        } else {
+            friendlyHp = new Hp(0);
+        }
         if(enemiesInRange > 0) {
             enemyHp = new Hp((closestEnemyUnit.getHitPoints() / closestEnemyUnit.getInitialHitPoints()) * 100);
         } else {

@@ -150,13 +150,12 @@ public class PlanningRewardFunction implements RewardFunction {
         int populationCap = ps.getPopulationCapacity();
 
         //tarets
-        int targetNumWorkers = 12 * (int) s.get("numBases");
+        int targetNumWorkers = 8 * (int) s.get("numBases");
         int targetMineralProduction = 500; //500 minerals per minute
         int targetGasProduction = 250; //250 units per minute
         int targetMilitaryTrainingCapacity = 4;
-        //8 because the planner will consistantly get to 8 units
-        int targetArmySize = 15;
-        int maxTimeSinceLastScout = 1200;
+        int targetArmySize = 15 + (10 * ps.getUnitMemory().getOrDefault(UnitType.Protoss_Nexus, 0));
+        int maxTimeSinceLastScout = 1600;
 
         //planing stuff
         int incentiveMultiplier = 100;
@@ -208,19 +207,15 @@ public class PlanningRewardFunction implements RewardFunction {
                             reward -= 50;
                         }
 
-                        if( popreamaining/populationCap < 0.25){
+                        if( popreamaining/populationCap > 0.75){
                             reward += 15;
                         }
-                        if( popreamaining/populationCap < 0.1){
+                        if( popreamaining/populationCap > 0.9){
                             reward += 5;
                         }
 
-                        if( popreamaining/populationCap < 0.05){
+                        if( popreamaining/populationCap > 0.95){
                             reward += 20;
-                        }
-
-                        if(popreamaining <= 4){
-                            reward += 80;
                         }
 
                         if ((int) s.get("numWorkers") == populationCap) {
@@ -231,17 +226,21 @@ public class PlanningRewardFunction implements RewardFunction {
                     }
                 } else if (toBuild.equals("train")) {
                     int[][] capacity = ps.getTrainingCapacity();
-                    if (capacity[1][0] + capacity[1][1] <= targetMilitaryTrainingCapacity){
+                    if (ps.getUnitMemory().getOrDefault(UnitType.Protoss_Gateway, 0) < 2){
                         reward += 50;
+                    } else {
+                        reward -= 50;
                     }
 
                     if ((int) s.get("numWorkers") < targetNumWorkers) {
-                        reward -= 25;
+                        reward -= 50;
                     }
 
                 } else if(toBuild.equals("gas") && ps.getGasProductionRate() == 0) {
                     //will eventually build a gas
-                    if(ps.getUnitMemory().getOrDefault(UnitType.Protoss_Assimilator,0) < 1){
+                    if(ps.getUnitMemory().getOrDefault(UnitType.Protoss_Assimilator,0) < 1
+                            && ps.getUnitMemory().getOrDefault(UnitType.Protoss_Gateway, 0) >= 2
+                            && ps.getArmySize() >= targetArmySize / 2){
                         reward += 50;
                     } else {
                         reward -= 25;
@@ -267,9 +266,11 @@ public class PlanningRewardFunction implements RewardFunction {
                 if ((int) s.get("numBases") < 2) {
                     //Give reward if preconditions for expanding are met
                     if ( ps.getNumWorkers() >= targetNumWorkers && ps.getMineralProductionRate() >= targetMineralProduction
-                            && (int) s.get("gasProductionRate") >= targetGasProduction) {
+                            && (int) s.get("gasProductionRate") >= targetGasProduction
+                            && ps.getUnitMemory().getOrDefault(UnitType.Protoss_Gateway, 0) >= 2
+                            && ps.getArmySize() >= targetArmySize) {
                         reward += 275;
-                    } else if((int) s.get("numWorkers") >= targetNumWorkers - 3){
+                    } else if((int) s.get("numWorkers") >= targetNumWorkers - 3 && ps.getArmySize() >= targetArmySize - 3){
                         reward += 75;
                     }
                     else {
@@ -283,7 +284,7 @@ public class PlanningRewardFunction implements RewardFunction {
             case SCOUT :
                 //Checks the last time scouted and gives reward based on that
                 if ((int) s.get("timeSinceLastScout") > maxTimeSinceLastScout) {
-                    reward += (int) s.get("timeSinceLastScout") / 100 + 100;
+                    reward += (int) s.get("timeSinceLastScout") / 100.00 + 100;
                 } else {
                     if ((int) s.get("timeSinceLastScout") == 0) {
                         reward -= maxTimeSinceLastScout;
@@ -310,7 +311,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     }
 
                     if(ps.getArmySize() < targetArmySize){
-                        reward += 150;
+                        reward += 400;
                     }
                 }
                 break;
@@ -325,7 +326,7 @@ public class PlanningRewardFunction implements RewardFunction {
                     if( (int) s.get("gasProductionRate") > 0){
                         reward -= 100;
                     }else {
-                        reward += 25;
+                        reward += 20;
                     }
                 }else {
                     if( (int) s.get("mineralProductionRate") <= 0){

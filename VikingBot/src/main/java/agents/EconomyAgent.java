@@ -3,7 +3,6 @@ package agents;
 import bwapi.*;
 import bwta.BWTA;
 import bwta.BaseLocation;
-import com.sun.istack.internal.NotNull;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class EconomyAgent {
      * tell a worker to go gather gas at the closest gas local
      * @param worker a worker, presumed probe.
      */
-    protected void gatherGas(@NotNull Unit worker){
+    protected void gatherGas(Unit worker){
        List<Unit> gasLocals;
        switch (intel.getPlayerRace()){
            case Protoss:

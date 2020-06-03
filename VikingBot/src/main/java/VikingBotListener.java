@@ -8,6 +8,8 @@ import bwta.BWTA;
 import listener.GameListener;
 import listener.ListenerType;
 
+import java.io.*;
+
 /**
  * The main GameListener used for initializing the agents and updating them every frame.
  */
@@ -62,9 +64,7 @@ public class VikingBotListener extends GameListener {
      * @param isWinner a boolean which is true if the bot won the game.
      */
     @Override
-    public void onEnd(boolean isWinner) {
-        combat.storeModels();
-    }
+    public void onEnd(boolean isWinner) { combat.storeModels(); }
 
     /**
      * Renders general information on screen and updates the agents.
