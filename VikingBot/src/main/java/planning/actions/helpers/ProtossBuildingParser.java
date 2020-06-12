@@ -3,7 +3,7 @@ package planning.actions.helpers;
 import bwapi.UnitType;
 import planning.actions.BuildAction;
 
-public class ProtossBuildingParserHelper {
+public class ProtossBuildingParser {
 
     public static UnitType translateBuilding(BuildAction action){
         return translateBuilding(action.actionName().split("_")[1]);

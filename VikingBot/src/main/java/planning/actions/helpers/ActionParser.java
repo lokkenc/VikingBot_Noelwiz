@@ -9,7 +9,7 @@ import burlap.mdp.core.action.Action;
  * Why this exists: So that the code to parse the type
  * of action isn't repeated frequently.
  */
-public class ActionParserHelper {
+public class ActionParser {
 
     /**
      * Enum for what type of action a given action is

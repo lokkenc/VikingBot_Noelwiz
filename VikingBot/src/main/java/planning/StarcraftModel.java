@@ -12,8 +12,8 @@ import knowledge.GeneralRaceProductionKnowledge;
 import knowledge.ProtossGeneralKnowledge;
 import knowledge.TerrenGeneralKnowledge;
 import knowledge.ZergGeneralKnowledge;
-import planning.actions.helpers.ActionParserHelper;
-import planning.actions.helpers.ProtossBuildingParserHelper;
+import planning.actions.helpers.ActionParser;
+import planning.actions.helpers.ProtossBuildingParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,7 +93,7 @@ public class StarcraftModel implements FullModel {
 
 
         /* * * start account for action specific changes * * */
-        ActionParserHelper.ActionEnum actiontype = ActionParserHelper.GetActionType(action);
+        ActionParser.ActionEnum actiontype = ActionParser.GetActionType(action);
         switch (actiontype){
             case SCOUT:
                 //maybe consider changing this to be a negitive number or something
@@ -149,7 +149,7 @@ public class StarcraftModel implements FullModel {
             case BUILD:
                 numworkers = (int) state.get("numWorkers");
                 mineralproduction = (int) state.get("mineralProductionRate");
-                UnitType what = ProtossBuildingParserHelper.translateBuilding(action.actionName());
+                UnitType what = ProtossBuildingParser.translateBuilding(action.actionName());
                 int popcapchange = 0;
                 if(what == UnitType.Protoss_Pylon){
                     popcapchange += 8;
@@ -438,7 +438,7 @@ public class StarcraftModel implements FullModel {
                 enemyknowledge = new ProtossGeneralKnowledge();
         }
 
-        if (ActionParserHelper.ActionEnum.SCOUT == ActionParserHelper.GetActionType(action)
+        if (ActionParser.ActionEnum.SCOUT == ActionParser.GetActionType(action)
                 || timeSinceLastScout < (30 /* fps */ * 30 /* seconds */) ){
             return newProbabilities;
         } else {

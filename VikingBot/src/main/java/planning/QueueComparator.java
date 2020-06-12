@@ -1,7 +1,7 @@
 package planning;
 
 
-import planning.actions.helpers.ActionParserHelper;
+import planning.actions.helpers.ActionParser;
 import burlap.mdp.core.action.Action;
 
 import java.util.Comparator;
@@ -55,8 +55,8 @@ public class QueueComparator implements Comparator {
         Action action1 = (Action) o1;
         Action action2 = (Action) o2;
 
-        ActionParserHelper.ActionEnum a1type = ActionParserHelper.GetActionType(action1);
-        ActionParserHelper.ActionEnum a2type = ActionParserHelper.GetActionType(action2);
+        ActionParser.ActionEnum a1type = ActionParser.GetActionType(action1);
+        ActionParser.ActionEnum a2type = ActionParser.GetActionType(action2);
 
         String a1name;
         String a2name;
@@ -96,7 +96,7 @@ public class QueueComparator implements Comparator {
      * @return an integer representing the priority of the action for the starcraft bot
      *         to do.
      */
-    private static int ActionTypeValues(ActionParserHelper.ActionEnum atype){
+    private static int ActionTypeValues(ActionParser.ActionEnum atype){
         int value = 0;
         switch (atype){
             case UPGRADE:

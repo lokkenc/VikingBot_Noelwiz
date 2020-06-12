@@ -9,11 +9,11 @@ import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import burlap.mdp.singleagent.model.RewardFunction;
 import bwapi.*;
-import planning.actions.helpers.ActionParserHelper;
+import planning.actions.helpers.ActionParser;
 import planning.actions.BuildAction;
 import planning.actions.ScoutAction;
 import planning.actions.TrainAction;
-import planning.actions.helpers.ProtossBuildingParserHelper;
+import planning.actions.helpers.ProtossBuildingParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,7 +101,7 @@ public class StarcraftEnvironment implements Environment {
      * @return the {@link EnvironmentOutcome} that results from the action being taken
      */
     public EnvironmentOutcome executeAction(Action action) {
-        ActionParserHelper aph = new ActionParserHelper();
+        ActionParser aph = new ActionParser();
         //TODO: interperate actions based on their name.
         String actionName = action.actionName();
         switch (aph.GetActionType(action)) {
@@ -158,7 +158,7 @@ public class StarcraftEnvironment implements Environment {
 
             case BUILD:
                 BuildAction buildAction = (BuildAction) action;
-                economyAgent.createBuildingOfType(ProtossBuildingParserHelper.translateBuilding(buildAction));
+                economyAgent.createBuildingOfType(ProtossBuildingParser.translateBuilding(buildAction));
                 break;
 
             case EXPAND:

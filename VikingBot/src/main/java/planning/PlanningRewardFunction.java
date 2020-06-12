@@ -6,7 +6,7 @@ import burlap.mdp.singleagent.model.RewardFunction;
 import bwapi.UnitType;
 import planning.actions.BuildAction;
 import planning.actions.TrainAction;
-import planning.actions.helpers.ActionParserHelper;
+import planning.actions.helpers.ActionParser;
 
 import java.util.ArrayList;
 
@@ -161,7 +161,7 @@ public class PlanningRewardFunction implements RewardFunction {
         int incentiveMultiplier = 100;
         double reward = 0.0;
 
-        ActionParserHelper aph = new ActionParserHelper();
+        ActionParser aph = new ActionParser();
         switch(aph.GetActionType(a)) {
             case ATTACK :
                 String target = "";

@@ -6,8 +6,8 @@ import bwta.BWTA;
 import planning.SharedPriorityQueue;
 import planning.StarcraftPlanner;
 import planning.actions.BuildAction;
-import planning.actions.helpers.ActionParserHelper;
-import planning.actions.helpers.ProtossBuildingParserHelper;
+import planning.actions.helpers.ActionParser;
+import planning.actions.helpers.ProtossBuildingParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,7 +225,7 @@ public class StrategyAgent {
         //the minerals used and about to be used.
         int availMinerals = self.minerals() - intel.getOrderedMineralUse();
 
-        switch (ActionParserHelper.GetActionType(a)){
+        switch (ActionParser.GetActionType(a)){
             //TODO: IMPLEMENT THIS ACTION, RETURN true when possible
             case UPGRADE:
                 //TODO: check cost of upgrade
@@ -288,7 +288,7 @@ public class StrategyAgent {
                 if(intel.getUnitCountOfType(UnitType.Protoss_Probe) > 0){
                     String what = a.actionName().split("_")[1];
                     //check cost of building
-                    UnitType whatUnit = ProtossBuildingParserHelper.translateBuilding(what);
+                    UnitType whatUnit = ProtossBuildingParser.translateBuilding(what);
                     if((what.equals("pop") || what.equals("gas") ) && availMinerals > whatUnit.mineralPrice()){
                         result = true;
                         //TODO: MORE general function to test if there's a space to build on
