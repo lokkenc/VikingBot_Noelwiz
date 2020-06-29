@@ -20,7 +20,7 @@ Refer to [SSCAI Tutorial](https://sscaitournament.com/index.php?action=tutorial)
 
 
 ## Components
-TODO
+There are agents which interact with starcraft, knowledge which is some quick huristics for efficiency, listeners for the machine learning, ml (the machine learning), planning (the AI planning)< and then a few classes that actually run the bot.
 
 ### Agents
 ## Intelligence Agent
@@ -36,10 +36,10 @@ Handels combat information, and Machine Learning/AI Planning interaction.
 Handles building buildings, and the economy.
 
 ### ML
-todo
+The Machine Learnign controlls the Units movement and fighting, it consists of the ML package, and is used by the agents via the Combat Agent. 
 
 ### Planning
-todo
+The planning package handles the AI Planing, based on burlap. It consists of a few different actions, helper classes for parsing them in the agents, and other classes needed for BURLAP to work. 
 
 
 ## Replays
