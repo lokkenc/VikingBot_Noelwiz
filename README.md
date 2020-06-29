@@ -22,7 +22,7 @@ Refer to [SSCAI Tutorial](https://sscaitournament.com/index.php?action=tutorial)
 ## Components
 There are agents which interact with starcraft, knowledge which is some quick huristics for efficiency, listeners for the machine learning, ml (the machine learning), planning (the AI planning)< and then a few classes that actually run the bot.
 
-### Agents
+# Agents
 ## Intelligence Agent
 Singleton for knowledge about starcraft, and telling the AI Planning about the game
 
