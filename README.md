@@ -46,8 +46,8 @@ The planning package handles the AI Planing, based on burlap. It consists of a f
 A list of replays recorded at the end of each milestone
 
 
-## Making the Bot Play Itself
-# Ideal version
+# Making the Bot Play Itself
+## Ideal version
 1. in intellij, compile the bot into a jar. (https://www.jetbrains.com/help/idea/compiling-applications.html#package_into_jar)
 2. Convert the jar to a .exe https://www.genuinecoder.com/convert-java-jar-to-exe/
 3. move the file to a place bwapi can find it (so basically into the bapi data folder)
@@ -56,7 +56,7 @@ A list of replays recorded at the end of each milestone
 6. multiplayer -> local pc, and join the game (make sure the config is expecting the right races and game mode)
 7. start the match
 
-#If That Fails
+## If That Fails
 Same process as above almost, but when making the .exe in Launch4j, go to the header section and change the header type from GUI to console.
 1. in intellij, compile the bot into a jar. (https://www.jetbrains.com/help/idea/compiling-applications.html#package_into_jar)
 2. Convert the jar to a .exe https://www.genuinecoder.com/convert-java-jar-to-exe/
